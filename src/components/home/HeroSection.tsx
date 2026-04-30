@@ -109,8 +109,8 @@ const HeroSection = () => {
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg md:text-xl text-charcoal/80 mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-up delay-100 px-2">
-            Cursuri, audio, PDF-uri, comunitate și acces controlat —{" "}
-            <span className="font-semibold text-navy">totul într-un singur loc, la 9€/lună.</span>
+            Cursuri, comunitate, email marketing, funnel cu pagină de captură și sales page generat cu AI —{" "}
+            <span className="font-semibold text-navy">totul într-un singur loc, de la 9€/lună.</span>
           </p>
 
           {/* CTAs */}
@@ -138,10 +138,11 @@ const HeroSection = () => {
           {/* Trust indicators */}
           <div className="mt-10 md:mt-14 pt-8 border-t border-border/50 animate-fade-up delay-300">
             <p className="text-xs sm:text-sm text-muted-foreground mb-6 uppercase tracking-wider">De încredere pentru creatori din România</p>
-            <div className="grid grid-cols-3 gap-3 sm:gap-8 max-w-xs sm:max-w-md mx-auto">
+            <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-sm sm:max-w-xl mx-auto">
               {[
                 { label: "Cursuri", sub: "Nelimitate", path: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" },
-                { label: "Fișiere", sub: "Nelimitate", path: "M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" },
+                { label: "Email lists", sub: "Marketing", path: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+                { label: "Funnel", sub: "Captură + AI", path: "M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" },
                 { label: "Acces", sub: "Public / privat", path: "M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" },
               ].map((item) => (
                 <div key={item.label} className="flex flex-col items-center text-center gap-2 group">

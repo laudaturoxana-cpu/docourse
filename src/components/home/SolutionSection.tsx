@@ -33,6 +33,16 @@ const features = [
     description: "Curs și comunitate în același loc. Fără Facebook Groups, fără WhatsApp extern.",
   },
   {
+    emoji: "📧",
+    title: "Email marketing inclus",
+    description: "Creezi liste de abonați, trimiți emailuri și îți construiești audiența direct din platformă. Fără Mailchimp, fără costuri extra.",
+  },
+  {
+    emoji: "🎯",
+    title: "Funnel complet cu AI",
+    description: "Pagină de captură + pagină de mulțumire legate de lista ta de email. Perfect pentru lead magnet gratuit — ghid, webinar, mini-curs.",
+  },
+  {
     emoji: "🔗",
     title: "URL-uri curate și personalizabile",
     description: "Cursul tău are o adresă simplă, clară, ușor de distribuit. O personalizezi tu.",

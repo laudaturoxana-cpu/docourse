@@ -101,12 +101,12 @@ export default function Pricing() {
 
       <Header />
 
-      <main className="min-h-screen bg-background pt-32 pb-16 px-4">
+      <main className="min-h-screen bg-background pt-28 md:pt-36 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
 
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-navy mb-4">Prețuri simple și transparente</h1>
-            <p className="text-muted-foreground text-lg">
+            <h1 className="text-2xl md:text-4xl font-bold text-navy mb-4">Prețuri simple și transparente</h1>
+            <p className="text-muted-foreground text-base md:text-lg">
               Fără comisioane din vânzările tale. Primele 7 zile sunt gratuite.
             </p>
 

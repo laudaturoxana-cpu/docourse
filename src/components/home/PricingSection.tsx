@@ -24,6 +24,10 @@ const proFeatures = [
   "Sales page generat cu AI (Gemini)",
   "Buton de plată Stripe pe sales page",
   "Sau link Calendly / WhatsApp",
+  "Email marketing — liste nelimitate de abonați",
+  "Funnel complet: pagină captură + pagină mulțumire",
+  "Lead magnet gratuit conectat la lista ta",
+  "Pagini de captură cu formular de înscriere",
   "Statistici vânzări avansate",
   "Suport prioritar",
 ];
@@ -205,7 +209,7 @@ const PricingSection = () => {
                 {/* Header */}
                 <div className="relative z-10 px-8 pt-8 pb-6 text-center border-b border-gold/20">
                   <h3 className="text-2xl font-black text-white mb-1">Pro</h3>
-                  <p className="text-beige/50 text-sm">Sales page cu AI și unelte de vânzare</p>
+                  <p className="text-beige/50 text-sm">Sales page AI + email marketing + funnel complet</p>
                 </div>
 
                 {/* Price */}
