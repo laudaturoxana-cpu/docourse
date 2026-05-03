@@ -350,11 +350,14 @@ export default function CreatorCommunityPage() {
       <div className="min-h-screen bg-[#fafaf8] font-sans">
         {/* Back nav for logged-in students */}
         {user && !isCreator && (
-          <div className="bg-[#0a192f] border-b border-white/10 px-4 py-2">
-            <div className="max-w-2xl mx-auto">
-              <Link href="/student" className="inline-flex items-center gap-1.5 text-xs text-white/60 hover:text-white transition-colors">
-                <ArrowLeft className="w-3 h-3" />
-                Înapoi la cursurile mele
+          <div className="bg-[#0a192f] border-b border-white/10 px-4 py-3">
+            <div className="max-w-2xl mx-auto flex items-center gap-3">
+              <Link href="/student" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors">
+                <ArrowLeft className="w-4 h-4" />
+                Cursurile mele
+              </Link>
+              <Link href="/student" className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition-colors">
+                Dashboard cursant
               </Link>
             </div>
           </div>

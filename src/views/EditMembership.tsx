@@ -60,8 +60,8 @@ interface Member {
 }
 
 const EditMembership = () => {
-  const _params = useParams<{ id: string }>();
-  const id = _params?.id;
+  const _params = useParams<{ membershipId: string }>();
+  const id = _params?.membershipId;
   const router = useRouter();
   const { user, profile, signOut } = useAuth();
   const { updatePlan } = useMembership();

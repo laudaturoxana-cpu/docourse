@@ -96,8 +96,8 @@ interface Course {
 }
 
 const EditCourse = () => {
-  const _params = useParams<{ id: string }>();
-  const id = _params?.id;
+  const _params = useParams<{ courseId: string }>();
+  const id = _params?.courseId;
   const router = useRouter();
   const { user, profile, isLoading: authLoading } = useAuth();
   const { isPro } = useSubscriptionCheck();

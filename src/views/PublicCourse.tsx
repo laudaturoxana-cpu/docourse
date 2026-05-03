@@ -865,6 +865,13 @@ const PublicCourse = () => {
             <p className="text-xs text-muted-foreground truncate leading-tight">{activeLesson.title}</p>
           )}
         </div>
+        {user && (
+          <Link href="/student"
+            className="flex-shrink-0 text-xs font-semibold text-navy bg-beige/80 hover:bg-beige px-3 py-1.5 rounded-lg transition-colors"
+          >
+            Cursurile mele
+          </Link>
+        )}
       </div>
 
       <div className="min-h-screen bg-beige/30 flex flex-col lg:flex-row pt-14 lg:pt-0">
@@ -905,7 +912,7 @@ const PublicCourse = () => {
             )}
             {user && (
               <Link href="/student"
-                className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-navy transition-colors mb-4"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-navy bg-beige/60 hover:bg-beige px-3 py-2 rounded-xl transition-colors mb-4 w-full"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Toate cursurile mele
