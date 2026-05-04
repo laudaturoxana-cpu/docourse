@@ -1,131 +1,193 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+"use client";
+import { useState, useEffect } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Info, Users, Unlock, X } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Label } from "@/components/ui/label";
+import { Users, Link2, Clock, Lightbulb, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/lib/supabase/browser";
+import { useAuth } from "@/hooks/useAuth";
 
-interface CommunityData {
-  name: string;
-  accessType: "free";
-  communityOption: "free" | "skip";
+interface ExistingCommunity {
+  membershipPlanId: string;
+  communityId: string;
+  communityName: string;
 }
 
 interface CommunityStepProps {
-  data: CommunityData;
-  courseTitle: string;
-  onChange: (field: keyof CommunityData, value: string) => void;
+  communityOption: "link" | "skip";
+  selectedMembershipPlanId: string | null;
+  selectedCommunityId: string | null;
+  onOptionChange: (option: "link" | "skip") => void;
+  onSelectCommunity: (membershipPlanId: string, communityId: string, communityName: string) => void;
 }
 
-const CommunityStep = ({ data, courseTitle, onChange }: CommunityStepProps) => {
-  const showForm = data.communityOption === "free";
+const CommunityStep = ({
+  communityOption,
+  selectedMembershipPlanId,
+  selectedCommunityId,
+  onOptionChange,
+  onSelectCommunity,
+}: CommunityStepProps) => {
+  const { profile } = useAuth();
+  const [communities, setCommunities] = useState<ExistingCommunity[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Set access type based on community option
-  const handleOptionChange = (value: string) => {
-    onChange('communityOption', value);
-    if (value === "free") {
-      onChange('accessType', "free");
-    }
-  };
+  useEffect(() => {
+    const fetchCommunities = async () => {
+      if (!profile?.id) return;
+      setIsLoading(true);
+
+      const { data } = await supabase
+        .from("membership_plans")
+        .select("id, title, community_groups(id, name)")
+        .eq("creator_id", profile.id);
+
+      const result: ExistingCommunity[] = [];
+      for (const plan of data || []) {
+        const groups = (plan as { id: string; title: string; community_groups: { id: string; name: string }[] }).community_groups;
+        if (groups && groups.length > 0) {
+          for (const group of groups) {
+            result.push({
+              membershipPlanId: plan.id,
+              communityId: group.id,
+              communityName: group.name,
+            });
+          }
+        }
+      }
+
+      setCommunities(result);
+      setIsLoading(false);
+    };
+
+    fetchCommunities();
+  }, [profile?.id]);
 
   return (
     <div className="space-y-6">
-      {/* Info Box */}
-      <div className="flex items-start gap-3 p-4 bg-sky/10 rounded-xl">
-        <Users className="w-5 h-5 text-sky mt-0.5 flex-shrink-0" />
+      {/* Sfat */}
+      <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+        <Lightbulb className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
         <div className="text-sm">
-          <p className="font-medium text-navy mb-1">Ce este o comunitate?</p>
-          <p className="text-muted-foreground">
-            Un spațiu privat unde membrii pot posta, întreba, comenta, la fel ca într-un grup Facebook, 
-            dar mult mai profesionist. Crește engagement-ul și ajută studenții să rămână activi.
+          <p className="font-medium text-amber-800 mb-1">Sfat util</p>
+          <p className="text-amber-700">
+            Dacă cursul nu are încă lecții sau module adăugate, e mai bine să îl legi de comunitate
+            mai târziu, după ce ai adăugat conținut — cursanții au astfel ceva de explorat din prima zi.
+            Dacă este un curs mic și poți adăuga modulele acum, poți bifa opțiunea de mai jos.
           </p>
         </div>
       </div>
 
-      {/* Choice Options */}
+      {/* Alegere */}
       <div className="space-y-3">
         <Label className="text-base font-semibold text-navy">
-          Vrei să creezi o comunitate?
+          Vrei să legi cursul de comunitatea ta?
         </Label>
-        
+
         <RadioGroup
-          value={data.communityOption}
-          onValueChange={handleOptionChange}
+          value={communityOption}
+          onValueChange={(v) => onOptionChange(v as "link" | "skip")}
           className="space-y-3"
         >
-          {/* Option 1: Free Community */}
-          <div 
+          {/* Opțiunea: Da */}
+          <div
             className={`flex items-start space-x-3 p-4 rounded-xl border-2 transition-all cursor-pointer ${
-              data.communityOption === "free" 
-                ? "border-green-500 bg-green-50" 
-                : "border-border hover:border-green-300"
+              communityOption === "link"
+                ? "border-sky bg-sky/5"
+                : "border-border hover:border-sky/40"
             }`}
+            onClick={() => onOptionChange("link")}
           >
-            <RadioGroupItem value="free" id="free_community" className="mt-0.5" />
+            <RadioGroupItem value="link" id="opt_link" className="mt-0.5" />
             <div className="flex-1">
-              <Label htmlFor="free_community" className="cursor-pointer font-medium text-navy flex items-center gap-2">
-                <Unlock className="w-4 h-4 text-green-600" />
-                Comunitate pentru curs
+              <Label htmlFor="opt_link" className="cursor-pointer font-medium text-navy flex items-center gap-2">
+                <Link2 className="w-4 h-4 text-sky" />
+                Da, leagă cursul de o comunitate acum
               </Label>
               <p className="text-sm text-muted-foreground mt-1">
-                Creezi un spațiu dedicat cursului, unde cursanții pot discuta, pune întrebări și primi suport.
+                Cursanții care cumpără cursul vor primi automat acces în comunitate.
               </p>
             </div>
           </div>
 
-          {/* Option 2: Skip */}
-          <div 
+          {/* Opțiunea: Mai târziu */}
+          <div
             className={`flex items-start space-x-3 p-4 rounded-xl border-2 transition-all cursor-pointer ${
-              data.communityOption === "skip" 
-                ? "border-muted-foreground/50 bg-muted/20" 
+              communityOption === "skip"
+                ? "border-muted-foreground/50 bg-muted/20"
                 : "border-border hover:border-muted-foreground/30"
             }`}
+            onClick={() => onOptionChange("skip")}
           >
-            <RadioGroupItem value="skip" id="skip_community" className="mt-0.5" />
+            <RadioGroupItem value="skip" id="opt_skip" className="mt-0.5" />
             <div className="flex-1">
-              <Label htmlFor="skip_community" className="cursor-pointer font-medium text-navy flex items-center gap-2">
-                <X className="w-4 h-4 text-muted-foreground" />
-                Fără comunitate
+              <Label htmlFor="opt_skip" className="cursor-pointer font-medium text-navy flex items-center gap-2">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                Nu acum, adaug mai târziu
               </Label>
               <p className="text-sm text-muted-foreground mt-1">
-                Cursul va fi disponibil fără comunitate. Poți adăuga una oricând mai târziu.
+                Poți lega cursul de o comunitate oricând din setările cursului.
               </p>
             </div>
           </div>
         </RadioGroup>
       </div>
 
-      {/* Community Form - Show only if selected */}
-      {showForm && (
-        <div className="space-y-6 pt-4 border-t border-border animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="community-name">Nume comunitate</Label>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Info className="w-4 h-4 text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="max-w-xs">Numele va fi vizibil pentru toți membrii. Ex: „Comunitatea {courseTitle}"</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-            <Input
-              id="community-name"
-              placeholder={`Ex: Comunitatea ${courseTitle}`}
-              value={data.name}
-              onChange={(e) => onChange('name', e.target.value)}
-              className="h-12"
-            />
-          </div>
+      {/* Lista de comunități existente */}
+      {communityOption === "link" && (
+        <div className="space-y-3 pt-2 border-t border-border animate-in fade-in slide-in-from-top-2 duration-300">
+          <Label className="text-sm font-semibold text-navy">Selectează comunitatea:</Label>
 
-          {/* Access Type Summary */}
-          <div className="p-4 rounded-xl bg-green-50 border border-green-200">
-            <div className="flex items-center gap-2 text-sm">
-              <Unlock className="w-4 h-4 text-green-600" />
-              <span className="font-medium text-green-700">Comunitate dedicată cursului</span>
-              <span className="text-green-600">- acces pe bază de link, fără cont</span>
+          {isLoading && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
+              <div className="w-4 h-4 border-2 border-sky border-t-transparent rounded-full animate-spin" />
+              Se încarcă comunitățile...
             </div>
-          </div>
+          )}
+
+          {!isLoading && communities.length === 0 && (
+            <div className="flex items-start gap-3 p-4 bg-muted/30 rounded-xl">
+              <Users className="w-5 h-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+              <div className="text-sm">
+                <p className="font-medium text-charcoal mb-1">Nu ai nicio comunitate creată încă</p>
+                <p className="text-muted-foreground">
+                  Creează o comunitate din Dashboard → Comunități, apoi revino să legi cursul.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {!isLoading && communities.length > 0 && (
+            <div className="space-y-2">
+              {communities.map((c) => {
+                const isSelected = selectedCommunityId === c.communityId;
+                return (
+                  <div
+                    key={c.communityId}
+                    onClick={() => onSelectCommunity(c.membershipPlanId, c.communityId, c.communityName)}
+                    className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                      isSelected
+                        ? "border-sky bg-sky/5"
+                        : "border-border hover:border-sky/40"
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      isSelected ? "bg-sky/20" : "bg-muted"
+                    }`}>
+                      <Users className={`w-5 h-5 ${isSelected ? "text-sky" : "text-muted-foreground"}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`font-medium text-sm ${isSelected ? "text-navy" : "text-charcoal"}`}>
+                        {c.communityName}
+                      </p>
+                    </div>
+                    {isSelected && (
+                      <CheckCircle2 className="w-5 h-5 text-sky flex-shrink-0" />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>

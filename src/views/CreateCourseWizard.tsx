@@ -41,19 +41,21 @@ const CreateCourseWizard = () => {
 
   // Community data
   const [communityData, setCommunityData] = useState<{
-    name: string;
-    accessType: "free";
-    communityOption: "free" | "skip";
+    communityOption: "link" | "skip";
+    selectedMembershipPlanId: string | null;
+    selectedCommunityId: string | null;
+    selectedCommunityName: string;
   }>({
-    name: "",
-    accessType: "free",
-    communityOption: "skip"
+    communityOption: "skip",
+    selectedMembershipPlanId: null,
+    selectedCommunityId: null,
+    selectedCommunityName: "",
   });
 
-  // Created IDs
+  // Created / linked IDs
   const [createdCourseId, setCreatedCourseId] = useState<string>("");
-  const [createdCommunityPlanId, setCreatedCommunityPlanId] = useState<string>("");
-  const [createdCommunityId, setCreatedCommunityId] = useState<string>("");
+  const [linkedCommunityPlanId, setLinkedCommunityPlanId] = useState<string>("");
+  const [linkedCommunityId, setLinkedCommunityId] = useState<string>("");
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -82,8 +84,17 @@ const CreateCourseWizard = () => {
     setImagePreview(null);
   };
 
-  const handleCommunityChange = (field: keyof typeof communityData, value: string) => {
-    setCommunityData(prev => ({ ...prev, [field]: value }));
+  const handleCommunityOptionChange = (option: "link" | "skip") => {
+    setCommunityData(prev => ({ ...prev, communityOption: option }));
+  };
+
+  const handleSelectCommunity = (membershipPlanId: string, communityId: string, communityName: string) => {
+    setCommunityData(prev => ({
+      ...prev,
+      selectedMembershipPlanId: membershipPlanId,
+      selectedCommunityId: communityId,
+      selectedCommunityName: communityName,
+    }));
   };
 
   const generateSlug = (title: string) => {
@@ -113,7 +124,7 @@ const CreateCourseWizard = () => {
     }
   };
 
-  const hasCommunity = communityData.communityOption !== "skip";
+  const hasCommunity = communityData.communityOption === "link" && !!communityData.selectedMembershipPlanId;
 
   const handleNext = async () => {
     if (currentStep === 1) {
@@ -227,50 +238,24 @@ const CreateCourseWizard = () => {
       if (courseError) throw courseError;
       setCreatedCourseId(course.id);
 
-      // 3. Create community if selected
-      if (hasCommunity && communityData.name.trim()) {
-        const communityMembershipSlug = await generateUniqueSlug(`${courseData.title} community`);
-        const { data: communityMembership, error: cmError } = await supabase
+      // 3. Link course to existing community if selected
+      if (hasCommunity && communityData.selectedMembershipPlanId) {
+        const { data: plan } = await supabase
           .from("membership_plans")
-          .insert({
-            creator_id: profileId,
-            title: `${courseData.title} - Comunitate`,
-            slug: communityMembershipSlug,
-            price_info: null,
-            includes_courses: [course.id],
-            status: "inactive"
-          })
-          .select()
+          .select("includes_courses")
+          .eq("id", communityData.selectedMembershipPlanId)
           .single();
 
-        if (cmError) throw cmError;
-        setCreatedCommunityPlanId(communityMembership.id);
-
-        const { data: existingCommunity } = await supabase
-          .from("community_groups")
-          .select("id, name")
-          .eq("membership_plan_id", communityMembership.id)
-          .maybeSingle();
-
-        if (existingCommunity) {
-          setCreatedCommunityId(existingCommunity.id);
-        } else {
-          const communityPayload = {
-            membership_plan_id: communityMembership.id,
-            name: communityData.name || `Comunitatea ${courseData.title}`,
-            description: `Comunitate pentru ${courseData.title}`,
-            type: "membership"
-          };
-
-          const { data: community, error: communityError } = await supabase
-            .from("community_groups")
-            .insert(communityPayload)
-            .select()
-            .single();
-
-          if (communityError) throw communityError;
-          setCreatedCommunityId(community.id);
+        const existingCourses = (plan?.includes_courses as string[]) || [];
+        if (!existingCourses.includes(course.id)) {
+          await supabase
+            .from("membership_plans")
+            .update({ includes_courses: [...existingCourses, course.id] })
+            .eq("id", communityData.selectedMembershipPlanId);
         }
+
+        setLinkedCommunityPlanId(communityData.selectedMembershipPlanId);
+        setLinkedCommunityId(communityData.selectedCommunityId || "");
       }
 
       setIsComplete(true);
@@ -371,9 +356,11 @@ const CreateCourseWizard = () => {
                   Comunitatea crește engagement-ul și retenția studenților. Alege tipul de acces.
                 </p>
                 <CommunityStep
-                  data={communityData}
-                  courseTitle={courseData.title}
-                  onChange={handleCommunityChange}
+                  communityOption={communityData.communityOption}
+                  selectedMembershipPlanId={communityData.selectedMembershipPlanId}
+                  selectedCommunityId={communityData.selectedCommunityId}
+                  onOptionChange={handleCommunityOptionChange}
+                  onSelectCommunity={handleSelectCommunity}
                 />
               </>
             )}
@@ -382,9 +369,9 @@ const CreateCourseWizard = () => {
               <SuccessSummary
                 courseId={createdCourseId}
                 courseTitle={courseData.title}
-                communityPlanId={createdCommunityPlanId || undefined}
-                communityId={createdCommunityId || undefined}
-                communityName={communityData.name || undefined}
+                communityPlanId={linkedCommunityPlanId || undefined}
+                communityId={linkedCommunityId || undefined}
+                communityName={communityData.selectedCommunityName || undefined}
                 onClose={() => router.push("/dashboard")}
               />
             )}

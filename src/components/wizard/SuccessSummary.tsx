@@ -62,8 +62,8 @@ const SuccessSummary = ({
                 <Users className="w-6 h-6 text-sky" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-navy mb-1">✅ Comunitate creată cu succes</h3>
-                <p className="text-sm text-muted-foreground mb-3">{communityName || "Comunitatea " + courseTitle}</p>
+                <h3 className="font-semibold text-navy mb-1">✅ Curs adăugat în comunitate</h3>
+                <p className="text-sm text-muted-foreground mb-3">{communityName || "Comunitatea ta"}</p>
                 <div className="flex flex-wrap gap-2">
                   <Link href={`/community/${communityPlanId}`}>
                     <Button variant="outline" size="sm">
