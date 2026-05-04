@@ -43,15 +43,14 @@ const CommunityStep = ({
 
       const result: ExistingCommunity[] = [];
       for (const plan of data || []) {
-        const groups = (plan as { id: string; title: string; community_groups: { id: string; name: string }[] }).community_groups;
-        if (groups && groups.length > 0) {
-          for (const group of groups) {
-            result.push({
-              membershipPlanId: plan.id,
-              communityId: group.id,
-              communityName: group.name,
-            });
-          }
+        const raw = (plan as unknown as { id: string; title: string; community_groups: { id: string; name: string } | { id: string; name: string }[] | null }).community_groups;
+        const groups: { id: string; name: string }[] = Array.isArray(raw) ? raw : raw ? [raw] : [];
+        for (const group of groups) {
+          result.push({
+            membershipPlanId: plan.id,
+            communityId: group.id,
+            communityName: group.name,
+          });
         }
       }
 
