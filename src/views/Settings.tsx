@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, User, Mail, Upload, Briefcase, Loader2, CreditCard, XCircle, Pencil, CheckCircle2, Zap } from "lucide-react";
-import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -235,9 +234,7 @@ const Settings = () => {
       
 
       <div className="min-h-screen flex flex-col bg-background">
-        <Header />
-        
-        <main className="flex-1 container mx-auto px-4 pt-28 pb-8">
+        <main className="flex-1 container mx-auto px-4 pt-8 pb-8">
           <div className="max-w-2xl mx-auto">
             <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="mb-6 -ml-2">

@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase/browser";
 import { useAuth } from "@/hooks/useAuth";
 import { SubscriptionRequired } from "@/components/SubscriptionRequired";
-import Header from "@/components/Header";
+
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -284,9 +284,7 @@ const AdminCommunity = () => {
       
       
       <div className="min-h-screen flex flex-col bg-background">
-        <Header />
-        
-        <main className="flex-1 container mx-auto px-4 pt-28 pb-8">
+        <main className="flex-1 container mx-auto px-4 pt-8 pb-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex gap-2 mb-6 -ml-2">
               <Link href="/dashboard">

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { SubscriptionRequired } from "@/components/SubscriptionRequired";
 import { useMembership } from "@/hooks/useMembership";
-import Header from "@/components/Header";
+
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -98,9 +98,7 @@ const CreateMembership = () => {
       
       
       <div className="min-h-screen flex flex-col bg-background">
-        <Header />
-        
-        <main className="flex-1 container mx-auto px-4 py-12">
+        <main className="flex-1 container mx-auto px-4 py-8">
           <div className="max-w-3xl mx-auto">
             <Button
               variant="ghost"

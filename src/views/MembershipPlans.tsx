@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useMembership } from "@/hooks/useMembership";
-import Header from "@/components/Header";
+
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -131,9 +131,7 @@ const MembershipPlans = () => {
       
       
       <div className="min-h-screen flex flex-col bg-background">
-        <Header />
-        
-        <main className="flex-1 container mx-auto px-4 pt-28 pb-8">
+        <main className="flex-1 container mx-auto px-4 pt-8 pb-8">
           <div className="max-w-6xl mx-auto">
             <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="mb-6 -ml-2">

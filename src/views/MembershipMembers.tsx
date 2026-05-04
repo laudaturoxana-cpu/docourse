@@ -15,7 +15,7 @@ import {
   Loader2,
   UserMinus
 } from "lucide-react";
-import Header from "@/components/Header";
+
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -267,9 +267,7 @@ const MembershipMembers = () => {
       
 
       <div className="min-h-screen flex flex-col bg-background">
-        <Header />
-
-        <main className="flex-1 container mx-auto px-4 pt-28 pb-8">
+        <main className="flex-1 container mx-auto px-4 pt-8 pb-8">
           <div className="max-w-6xl mx-auto">
             {/* Back button */}
             <div className="flex gap-2 mb-6 -ml-2">
