@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Logo from "./Logo";
 
 const Footer = () => {
@@ -98,11 +99,12 @@ const Footer = () => {
                 rel="noreferrer"
                 className="inline-flex items-center"
               >
-                <img
+                <Image
                   src="/legal/anpc-sal.svg"
                   alt="ANPC - Soluționarea alternativă a litigiilor"
+                  width={120}
+                  height={56}
                   className="h-14 w-auto rounded-md bg-white"
-                  loading="lazy"
                 />
               </a>
               <a
@@ -111,11 +113,12 @@ const Footer = () => {
                 rel="noreferrer"
                 className="inline-flex items-center"
               >
-                <img
+                <Image
                   src="/legal/odr-sol.svg"
                   alt="Soluționarea online a litigiilor (ODR)"
+                  width={120}
+                  height={56}
                   className="h-14 w-auto rounded-md bg-white"
-                  loading="lazy"
                 />
               </a>
             </div>

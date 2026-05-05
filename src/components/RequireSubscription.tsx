@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function RequireSubscription({ children }: { children: React.ReactNode }) {
   const { user, profile, isLoading, isAdmin, refreshProfile } = useAuth();
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
   const [polling, setPolling] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
