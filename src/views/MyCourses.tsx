@@ -22,6 +22,7 @@ import {
   Users
 } from "lucide-react";
 import Logo from "@/components/Logo";
+import DashboardSidebar from "@/components/DashboardSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -166,13 +167,6 @@ const MyCourses = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-    { icon: BookOpen, label: "Cursurile mele", href: "/dashboard/courses", active: true },
-    { icon: Users, label: "Comunitate", href: "/my-communities" },
-    { icon: PlusCircle, label: "Creează curs", href: "/dashboard/courses/new" },
-    { icon: Settings, label: "Setări profil", href: "/dashboard/settings" },
-  ];
 
   if (authLoading) {
     return (
@@ -197,79 +191,7 @@ const MyCourses = () => {
       
 
       <div className="min-h-screen bg-beige/30 flex">
-        {/* Sidebar - Desktop */}
-        <aside className="hidden lg:flex flex-col w-64 bg-background border-r border-border">
-          <div className="p-6 border-b border-border">
-            <Link href="/">
-              <Logo size="md" />
-            </Link>
-          </div>
-
-          <nav className="flex-1 p-4">
-            <ul className="space-y-1">
-              {menuItems.map((item) => (
-                <li key={item.label}>
-                  <Link href={item.href}
-                    className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
-                      item.active
-                        ? "bg-gold/10 text-gold font-medium"
-                        : "text-charcoal hover:bg-beige hover:text-navy"
-                    )}
-                  >
-                    <item.icon className="w-5 h-5" />
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="p-4 border-t border-border">
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors w-full"
-            >
-              <LogOut className="w-5 h-5" />
-              Deconectare
-            </button>
-          </div>
-        </aside>
-
-        {/* Mobile sidebar */}
-        {sidebarOpen && (
-          <div className="lg:hidden fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-navy/50" onClick={() => setSidebarOpen(false)} />
-            <aside className="absolute left-0 top-0 bottom-0 w-64 bg-background animate-slide-in-left">
-              <div className="p-6 border-b border-border flex items-center justify-between">
-                <Logo size="sm" />
-                <button onClick={() => setSidebarOpen(false)}>
-                  <X className="w-6 h-6 text-charcoal" />
-                </button>
-              </div>
-              <nav className="p-4">
-                <ul className="space-y-1">
-                  {menuItems.map((item) => (
-                    <li key={item.label}>
-                      <Link href={item.href}
-                        onClick={() => setSidebarOpen(false)}
-                        className={cn(
-                          "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
-                          item.active
-                            ? "bg-gold/10 text-gold font-medium"
-                            : "text-charcoal hover:bg-beige hover:text-navy"
-                        )}
-                      >
-                        <item.icon className="w-5 h-5" />
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </aside>
-          </div>
-        )}
+        <DashboardSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* Main content */}
         <div className="flex-1 flex flex-col">
