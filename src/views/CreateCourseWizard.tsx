@@ -42,19 +42,18 @@ const CreateCourseWizard = () => {
   // Community data
   const [communityData, setCommunityData] = useState<{
     communityOption: "link" | "skip";
-    selectedMembershipPlanId: string | null;
     selectedCommunityId: string | null;
     selectedCommunityName: string;
+    selectedCommunitySlug: string;
   }>({
     communityOption: "skip",
-    selectedMembershipPlanId: null,
     selectedCommunityId: null,
     selectedCommunityName: "",
+    selectedCommunitySlug: "",
   });
 
   // Created / linked IDs
   const [createdCourseId, setCreatedCourseId] = useState<string>("");
-  const [linkedCommunityPlanId, setLinkedCommunityPlanId] = useState<string>("");
   const [linkedCommunityId, setLinkedCommunityId] = useState<string>("");
 
   useEffect(() => {
@@ -88,12 +87,12 @@ const CreateCourseWizard = () => {
     setCommunityData(prev => ({ ...prev, communityOption: option }));
   };
 
-  const handleSelectCommunity = (membershipPlanId: string, communityId: string, communityName: string) => {
+  const handleSelectCommunity = (communityId: string, communityName: string, communitySlug: string) => {
     setCommunityData(prev => ({
       ...prev,
-      selectedMembershipPlanId: membershipPlanId,
       selectedCommunityId: communityId,
       selectedCommunityName: communityName,
+      selectedCommunitySlug: communitySlug,
     }));
   };
 
@@ -124,7 +123,7 @@ const CreateCourseWizard = () => {
     }
   };
 
-  const hasCommunity = communityData.communityOption === "link" && !!communityData.selectedMembershipPlanId;
+  const hasCommunity = communityData.communityOption === "link" && !!communityData.selectedCommunityId;
 
   const handleNext = async () => {
     if (currentStep === 1) {
@@ -238,24 +237,15 @@ const CreateCourseWizard = () => {
       if (courseError) throw courseError;
       setCreatedCourseId(course.id);
 
-      // 3. Link course to existing community if selected
-      if (hasCommunity && communityData.selectedMembershipPlanId) {
-        const { data: plan } = await supabase
-          .from("membership_plans")
-          .select("includes_courses")
-          .eq("id", communityData.selectedMembershipPlanId)
-          .single();
+      // 3. Link course to existing creator_community if selected
+      if (hasCommunity && communityData.selectedCommunityId) {
+        await supabase.from("community_course_settings").insert({
+          community_id: communityData.selectedCommunityId,
+          course_id: course.id,
+          access_type: "free",
+        });
 
-        const existingCourses = (plan?.includes_courses as string[]) || [];
-        if (!existingCourses.includes(course.id)) {
-          await supabase
-            .from("membership_plans")
-            .update({ includes_courses: [...existingCourses, course.id] })
-            .eq("id", communityData.selectedMembershipPlanId);
-        }
-
-        setLinkedCommunityPlanId(communityData.selectedMembershipPlanId);
-        setLinkedCommunityId(communityData.selectedCommunityId || "");
+        setLinkedCommunityId(communityData.selectedCommunityId);
       }
 
       setIsComplete(true);
@@ -357,7 +347,6 @@ const CreateCourseWizard = () => {
                 </p>
                 <CommunityStep
                   communityOption={communityData.communityOption}
-                  selectedMembershipPlanId={communityData.selectedMembershipPlanId}
                   selectedCommunityId={communityData.selectedCommunityId}
                   onOptionChange={handleCommunityOptionChange}
                   onSelectCommunity={handleSelectCommunity}
@@ -369,9 +358,9 @@ const CreateCourseWizard = () => {
               <SuccessSummary
                 courseId={createdCourseId}
                 courseTitle={courseData.title}
-                communityPlanId={linkedCommunityPlanId || undefined}
                 communityId={linkedCommunityId || undefined}
                 communityName={communityData.selectedCommunityName || undefined}
+                communitySlug={communityData.selectedCommunitySlug || undefined}
                 onClose={() => router.push("/dashboard")}
               />
             )}

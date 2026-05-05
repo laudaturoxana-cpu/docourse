@@ -5,18 +5,18 @@ import Link from "next/link";
 interface SuccessSummaryProps {
   courseId: string;
   courseTitle: string;
-  communityPlanId?: string;
   communityId?: string;
   communityName?: string;
+  communitySlug?: string;
   onClose: () => void;
 }
 
 const SuccessSummary = ({
   courseId,
   courseTitle,
-  communityPlanId,
   communityId,
   communityName,
+  communitySlug,
   onClose
 }: SuccessSummaryProps) => {
   return (
@@ -55,7 +55,7 @@ const SuccessSummary = ({
         </div>
 
         {/* Community Card */}
-        {communityId && communityPlanId && (
+        {communityId && (
           <div className="bg-background rounded-xl border border-sky/30 p-6 text-left">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-sky/10 flex items-center justify-center flex-shrink-0">
@@ -65,13 +65,15 @@ const SuccessSummary = ({
                 <h3 className="font-semibold text-navy mb-1">✅ Curs adăugat în comunitate</h3>
                 <p className="text-sm text-muted-foreground mb-3">{communityName || "Comunitatea ta"}</p>
                 <div className="flex flex-wrap gap-2">
-                  <Link href={`/community/${communityPlanId}`}>
-                    <Button variant="outline" size="sm">
-                      <Users className="w-4 h-4 mr-2" />
-                      Intră în comunitate
-                    </Button>
-                  </Link>
-                  <Link href={`/dashboard/community/${communityPlanId}`}>
+                  {communitySlug && (
+                    <Link href={`/community/${communitySlug}`}>
+                      <Button variant="outline" size="sm">
+                        <Users className="w-4 h-4 mr-2" />
+                        Intră în comunitate
+                      </Button>
+                    </Link>
+                  )}
+                  <Link href="/dashboard/community">
                     <Button variant="outline" size="sm">
                       <Edit className="w-4 h-4 mr-2" />
                       Admin comunitate

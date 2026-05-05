@@ -7,59 +7,51 @@ import { supabase } from "@/lib/supabase/browser";
 import { useAuth } from "@/hooks/useAuth";
 
 interface ExistingCommunity {
-  membershipPlanId: string;
   communityId: string;
   communityName: string;
+  communitySlug: string;
 }
 
 interface CommunityStepProps {
   communityOption: "link" | "skip";
-  selectedMembershipPlanId: string | null;
   selectedCommunityId: string | null;
   onOptionChange: (option: "link" | "skip") => void;
-  onSelectCommunity: (membershipPlanId: string, communityId: string, communityName: string) => void;
+  onSelectCommunity: (communityId: string, communityName: string, communitySlug: string) => void;
 }
 
 const CommunityStep = ({
   communityOption,
-  selectedMembershipPlanId,
   selectedCommunityId,
   onOptionChange,
   onSelectCommunity,
 }: CommunityStepProps) => {
-  const { profile } = useAuth();
+  const { user } = useAuth();
   const [communities, setCommunities] = useState<ExistingCommunity[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchCommunities = async () => {
-      if (!profile?.id) return;
+      if (!user?.id) return;
       setIsLoading(true);
 
       const { data } = await supabase
-        .from("membership_plans")
-        .select("id, title, community_groups(id, name)")
-        .eq("creator_id", profile.id);
+        .from("creator_communities")
+        .select("id, name, slug")
+        .eq("creator_id", user.id)
+        .order("name");
 
-      const result: ExistingCommunity[] = [];
-      for (const plan of data || []) {
-        const raw = (plan as unknown as { id: string; title: string; community_groups: { id: string; name: string } | { id: string; name: string }[] | null }).community_groups;
-        const groups: { id: string; name: string }[] = Array.isArray(raw) ? raw : raw ? [raw] : [];
-        for (const group of groups) {
-          result.push({
-            membershipPlanId: plan.id,
-            communityId: group.id,
-            communityName: group.name,
-          });
-        }
-      }
-
-      setCommunities(result);
+      setCommunities(
+        (data || []).map((c) => ({
+          communityId: c.id,
+          communityName: c.name,
+          communitySlug: c.slug,
+        }))
+      );
       setIsLoading(false);
     };
 
     fetchCommunities();
-  }, [profile?.id]);
+  }, [user?.id]);
 
   return (
     <div className="space-y-6">
@@ -162,7 +154,7 @@ const CommunityStep = ({
                 return (
                   <div
                     key={c.communityId}
-                    onClick={() => onSelectCommunity(c.membershipPlanId, c.communityId, c.communityName)}
+                    onClick={() => onSelectCommunity(c.communityId, c.communityName, c.communitySlug)}
                     className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
                       isSelected
                         ? "border-sky bg-sky/5"
