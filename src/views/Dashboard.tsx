@@ -22,15 +22,11 @@ import {
   Zap,
   Shield,
 } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+import dynamic from "next/dynamic";
+const DashboardChart = dynamic(() => import("@/components/DashboardChart"), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-muted/30 animate-pulse rounded-xl" />,
+});
 import Logo from "@/components/Logo";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { Button } from "@/components/ui/button";
@@ -227,8 +223,8 @@ const Dashboard = () => {
         : Promise.resolve(0);
 
       const [enrollmentsResult, progressResult, modulesResult, communitiesCount] = await Promise.all([
-        supabase.from("enrollments").select("user_id, course_id, enrolled_at").in("course_id", courseIds).limit(3000),
-        supabase.from("lesson_progress").select("course_id, lesson_id, user_id, completed").in("course_id", courseIds).limit(10000),
+        supabase.from("enrollments").select("user_id, course_id, enrolled_at").in("course_id", courseIds).limit(1000),
+        supabase.from("lesson_progress").select("course_id, lesson_id, user_id, completed").in("course_id", courseIds).limit(2000),
         supabase.from("modules").select("id, course_id, lessons(id, title, position)").in("course_id", courseIds),
         communitiesCountPromise,
       ]);
@@ -582,18 +578,7 @@ const Dashboard = () => {
                 {loadingAnalytics ? (
                   <div className="h-48 bg-muted/30 animate-pulse rounded-xl" />
                 ) : (
-                  <ResponsiveContainer width="100%" height={200}>
-                    <BarChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0ede8" />
-                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                      <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
-                      <Tooltip
-                        contentStyle={{ borderRadius: 8, fontSize: 12 }}
-                        formatter={(v: number) => [`${v} cursanți`, ""]}
-                      />
-                      <Bar dataKey="cursanți" fill="#C9A84C" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <DashboardChart data={chartData} />
                 )}
               </div>
             )}
