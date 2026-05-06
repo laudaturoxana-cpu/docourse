@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, PlusCircle, Users, Zap, Settings, LogOut, X } from "lucide-react";
+import { LayoutDashboard, BookOpen, PlusCircle, Users, Zap, Settings, LogOut, X, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/Logo";
 import { useAuth } from "@/hooks/useAuth";
@@ -52,14 +52,24 @@ export default function DashboardSidebar({ isOpen, onClose }: Props) {
     </ul>
   );
 
-  const SignOutButton = () => (
-    <button
-      onClick={() => signOut()}
-      className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors w-full"
-    >
-      <LogOut className="w-5 h-5" />
-      Deconectare
-    </button>
+  const BottomActions = ({ onClick }: { onClick?: () => void }) => (
+    <div className="space-y-1">
+      <Link
+        href="/student"
+        onClick={onClick}
+        className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-beige hover:text-navy transition-colors w-full text-sm"
+      >
+        <GraduationCap className="w-5 h-5" />
+        Contul meu de cursant
+      </Link>
+      <button
+        onClick={() => signOut()}
+        className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors w-full"
+      >
+        <LogOut className="w-5 h-5" />
+        Deconectare
+      </button>
+    </div>
   );
 
   return (
@@ -73,7 +83,7 @@ export default function DashboardSidebar({ isOpen, onClose }: Props) {
           <NavItems />
         </nav>
         <div className="p-4 border-t border-border">
-          <SignOutButton />
+          <BottomActions />
         </div>
       </aside>
 
@@ -90,7 +100,7 @@ export default function DashboardSidebar({ isOpen, onClose }: Props) {
               <NavItems onClick={onClose} />
             </nav>
             <div className="p-4 border-t border-border">
-              <SignOutButton />
+              <BottomActions onClick={onClose} />
             </div>
           </aside>
         </div>
