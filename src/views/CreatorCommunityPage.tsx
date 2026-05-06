@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Users, MessageSquare, BookOpen, Pin, Send, SmilePlus, Lock, Trash2, ArrowLeft } from "lucide-react";
+import { Users, MessageSquare, BookOpen, Pin, Send, SmilePlus, Lock, Trash2, ArrowLeft, LayoutDashboard, GraduationCap } from "lucide-react";
 import { supabase } from "@/lib/supabase/browser";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
@@ -348,17 +348,27 @@ export default function CreatorCommunityPage() {
       
 
       <div className="min-h-screen bg-[#fafaf8] font-sans">
-        {/* Back nav for logged-in students */}
-        {user && !isCreator && (
+        {/* Back nav */}
+        {user && (
           <div className="bg-[#0a192f] border-b border-white/10 px-4 py-3">
             <div className="max-w-2xl mx-auto flex items-center gap-3">
-              <Link href="/student" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors">
-                <ArrowLeft className="w-4 h-4" />
-                Cursurile mele
-              </Link>
-              <Link href="/student" className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition-colors">
-                Dashboard cursant
-              </Link>
+              {isCreator ? (
+                <>
+                  <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors">
+                    <ArrowLeft className="w-4 h-4" />
+                    Dashboard creator
+                  </Link>
+                  <Link href="/dashboard/community" className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition-colors">
+                    <LayoutDashboard className="w-3.5 h-3.5" />
+                    Gestionează comunitatea
+                  </Link>
+                </>
+              ) : (
+                <Link href="/student" className="inline-flex items-center gap-1.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors">
+                  <GraduationCap className="w-4 h-4" />
+                  Dashboard cursant
+                </Link>
+              )}
             </div>
           </div>
         )}
