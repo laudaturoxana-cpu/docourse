@@ -1,19 +1,24 @@
 import { useAuth } from '@/hooks/useAuth';
 
 export function useSubscriptionCheck() {
-  const { profile, isLoading } = useAuth();
+  const { profile, isLoading, isAdmin } = useAuth();
 
-  // Check if user has active subscription (or is beta tester / lifetime)
-  const hasActiveSubscription =
+  const hasActiveSubscription = !!(
     profile?.subscription_active ||
     profile?.beta_tester ||
-    profile?.lifetime_access;
+    profile?.lifetime_access
+  );
 
   const planType = profile?.plan_type ?? null;
-  const isPro = !!hasActiveSubscription && planType === 'pro';
+
+  // Consistent with RequirePro: lifetime_access and admins are always Pro
+  const isPro =
+    (hasActiveSubscription && planType === 'pro') ||
+    !!profile?.lifetime_access ||
+    !!isAdmin;
 
   return {
-    hasActiveSubscription: !!hasActiveSubscription,
+    hasActiveSubscription,
     planType,
     isPro,
     isLoading,

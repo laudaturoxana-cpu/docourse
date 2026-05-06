@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Zap, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
