@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase/browser';
 
 interface FormInscriereProps {
   placeholder?: string;
   ctaText?: string;
   redirectTo?: string;
+  listId?: string;
 }
 
 export default function FormInscriere({
   placeholder = 'Numele tău',
   ctaText = 'REZERVĂ-MI LOCUL',
   redirectTo = '/multumesc-grupa',
+  listId,
 }: FormInscriereProps) {
   const router = useRouter();
   const [nume, setNume] = useState('');
@@ -43,22 +46,17 @@ export default function FormInscriere({
     e.preventDefault();
     if (!validate()) return;
 
-    try {
-      await fetch('https://api.brevo.com/v3/contacts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'api-key': process.env.NEXT_PUBLIC_BREVO_API_KEY ?? '',
-        },
-        body: JSON.stringify({
-          email,
-          attributes: { FIRSTNAME: nume },
-          listIds: [Number(process.env.NEXT_PUBLIC_BREVO_LIST_ID)],
-          updateEnabled: true,
-        }),
-      });
-    } catch {
-      // silently continue — nu blocăm userul dacă Brevo e down
+    if (listId) {
+      try {
+        await supabase.from('email_contacts').insert({
+          list_id: listId,
+          email: email.trim().toLowerCase(),
+          full_name: nume.trim(),
+          source: 'funnel',
+        });
+      } catch {
+        // silently continue
+      }
     }
 
     setSubmitted(true);
