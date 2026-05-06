@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, PlusCircle, Users, Zap, Settings, LogOut, X } from "lucide-react";
+import { LayoutDashboard, BookOpen, PlusCircle, Users, Zap, Settings, LogOut, X, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/Logo";
 import { useAuth } from "@/hooks/useAuth";
@@ -24,6 +24,7 @@ export default function DashboardSidebar({ isOpen, onClose }: Props) {
     { icon: PlusCircle, label: "Creează curs", href: "/dashboard/courses/new" },
     { icon: Users, label: "Comunitate", href: "/dashboard/community" },
     ...(isPro ? [{ icon: Zap, label: "Email Marketing", href: "/dashboard/email" }] : []),
+    { icon: Globe, label: "Integrări API", href: "/dashboard/integrations" },
     { icon: Settings, label: "Setări profil", href: "/dashboard/settings" },
   ];
 
