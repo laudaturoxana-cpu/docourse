@@ -171,19 +171,41 @@ const StudentDashboard = () => {
           .maybeSingle();
         if (profileData) setIsCreator(true);
 
-        // Comunități din noul sistem (creator_communities unde user e membru)
+        // 1. Comunități unde studentul e membru direct
         const { data: membershipData } = await supabase
           .from("community_memberships")
           .select("community_id, creator_communities(id, name, slug)")
           .eq("user_id", user.id);
 
-        if (membershipData) {
-          const comms: CreatorCommunity[] = membershipData
-            .map((m: any) => m.creator_communities)
+        const directComms: CreatorCommunity[] = (membershipData || [])
+          .map((m: any) => m.creator_communities)
+          .filter(Boolean)
+          .map((c: any) => ({ id: c.id, name: c.name, slug: c.slug }));
+
+        // 2. Comunități accesibile prin cursuri la care e înscris
+        const enrolledCourseIds = courses.map((c) => c.course_id);
+        let courseLinkedComms: CreatorCommunity[] = [];
+        if (enrolledCourseIds.length > 0) {
+          const { data: courseCommsData } = await supabase
+            .from("community_course_settings")
+            .select("creator_communities(id, name, slug)")
+            .in("course_id", enrolledCourseIds);
+
+          courseLinkedComms = (courseCommsData || [])
+            .map((r: any) => r.creator_communities)
             .filter(Boolean)
             .map((c: any) => ({ id: c.id, name: c.name, slug: c.slug }));
-          setCommunities(comms);
         }
+
+        // Combină și deduplică după id
+        const allComms = [...directComms, ...courseLinkedComms];
+        const seen = new Set<string>();
+        const uniqueComms = allComms.filter((c) => {
+          if (seen.has(c.id)) return false;
+          seen.add(c.id);
+          return true;
+        });
+        setCommunities(uniqueComms);
       } catch (error) {
         console.error("Error fetching student data:", error);
       } finally {
@@ -399,12 +421,25 @@ const StudentDashboard = () => {
               </div>
 
               {/* Communities */}
-              {communities.length > 0 && (
-                <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
-                  <div className="flex items-center gap-2 mb-5">
-                    <Users className="w-5 h-5 text-gold" />
-                    <h2 className="text-lg font-semibold text-navy">Comunitățile mele</h2>
+              <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+                <div className="flex items-center gap-2 mb-5">
+                  <Users className="w-5 h-5 text-gold" />
+                  <h2 className="text-lg font-semibold text-navy">Comunitățile mele</h2>
+                </div>
+
+                {loadingCourses ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
                   </div>
+                ) : communities.length === 0 ? (
+                  <div className="text-center py-8 px-4">
+                    <Users className="w-10 h-10 mx-auto mb-3 text-muted-foreground/30" />
+                    <p className="text-sm font-medium text-navy mb-1">Nicio comunitate încă</p>
+                    <p className="text-sm text-muted-foreground">
+                      Comunitățile la care ai acces vor apărea automat aici.
+                    </p>
+                  </div>
+                ) : (
                   <div className="space-y-3">
                     {communities.map((community) => (
                       <Link key={community.id}
@@ -423,8 +458,8 @@ const StudentDashboard = () => {
                       </Link>
                     ))}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Right: Account settings */}
