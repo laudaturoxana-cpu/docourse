@@ -197,8 +197,23 @@ const StudentDashboard = () => {
             .map((c: any) => ({ id: c.id, name: c.name, slug: c.slug }));
         }
 
-        // Combină și deduplică după id
-        const allComms = [...directComms, ...courseLinkedComms];
+        // 3. Comunități pe care le-a creat el (creator_communities.creator_id = profile.id)
+        let ownedComms: CreatorCommunity[] = [];
+        if (profileData?.id) {
+          const { data: ownedData } = await supabase
+            .from("creator_communities")
+            .select("id, name, slug")
+            .eq("creator_id", profileData.id);
+
+          ownedComms = (ownedData || []).map((c) => ({
+            id: c.id,
+            name: c.name,
+            slug: c.slug,
+          }));
+        }
+
+        // Combină toate sursele și deduplică după id
+        const allComms = [...directComms, ...courseLinkedComms, ...ownedComms];
         const seen = new Set<string>();
         const uniqueComms = allComms.filter((c) => {
           if (seen.has(c.id)) return false;
