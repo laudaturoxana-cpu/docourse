@@ -1384,7 +1384,7 @@ const PublicCourse = () => {
                 </div>
               )}
 
-              {!activeLesson.video_url && !activeLesson.content && activeLesson.files.length === 0 && (
+              {!activeLesson.video_url && activeLesson.videos.length === 0 && !activeLesson.content && activeLesson.files.length === 0 && (
                 <div className="bg-background rounded-2xl border border-border p-6 sm:p-8 mb-6">
                   <p className="text-muted-foreground text-center">
                     Conținutul acestei lecții nu este disponibil încă.
