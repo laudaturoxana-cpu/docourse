@@ -3,12 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
-  BookOpen,
-  Settings,
-  LogOut,
   Menu,
-  X,
   Crown,
   Calendar,
   CheckCircle,
@@ -21,7 +16,9 @@ import {
   PowerOff,
   XCircle,
   Loader2,
-  Mail
+  Mail,
+  Settings,
+  BookOpen,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -34,7 +31,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import Logo from "@/components/Logo";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { Button } from "@/components/ui/button";
@@ -72,7 +68,7 @@ interface MembershipSubscription {
 
 const MyMemberships = () => {
   const router = useRouter();
-  const { user, signOut, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [createdMemberships, setCreatedMemberships] = useState<MembershipSubscription[]>([]);
   const [subscribedMemberships, setSubscribedMemberships] = useState<MembershipSubscription[]>([]);
@@ -195,11 +191,6 @@ const MyMemberships = () => {
       fetchData();
     }
   }, [user?.id]);
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
 
   const handleCancelSubscription = async () => {
     if (!user?.email) return;

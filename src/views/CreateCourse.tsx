@@ -140,7 +140,7 @@ const CreateCourse = () => {
       const fileExt = imageFile.name.split(".").pop();
       const fileName = `${profileId}/${Date.now()}.${fileExt}`;
       
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from("lesson-files")
         .upload(fileName, imageFile);
 
@@ -189,7 +189,7 @@ const CreateCourse = () => {
     if (createMembership && membershipData.title.trim()) {
       const membershipSlug = generateSlug(membershipData.title);
       
-      const { data: membershipResult, error: membershipError } = await supabase
+      const { error: membershipError } = await supabase
         .from("membership_plans")
         .insert({
           creator_id: profile!.id,
@@ -312,6 +312,7 @@ const CreateCourse = () => {
                   <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-gold/50 transition-colors">
                     {imagePreview ? (
                       <div className="relative">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={imagePreview}
                           alt="Preview"

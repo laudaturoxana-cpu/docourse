@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Play, Sparkles, TrendingUp, Users, BookOpen, CheckCircle2 } from "lucide-react";
+import { Play, Sparkles, TrendingUp, Users, BookOpen, CheckCircle2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import PlanSelectionDialog from "./PlanSelectionDialog";

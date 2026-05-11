@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ImageIcon, X, Send, Smile } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface CreatePostFormProps {
@@ -119,6 +118,7 @@ const CreatePostForm = ({ userName, onCreatePost, onUploadImage }: CreatePostFor
               <>
                 {imagePreview && (
                   <div className="relative rounded-xl overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={imagePreview} alt="Preview" className="max-h-48 lg:max-h-64 w-full object-cover" />
                     <button
                       onClick={clearImage}

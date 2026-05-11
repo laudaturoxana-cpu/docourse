@@ -82,8 +82,8 @@ const PlanSelectionDialog = ({ open, onOpenChange }: PlanSelectionDialogProps) =
       if (data?.url) {
         window.location.href = data.url;
       }
-    } catch (err: any) {
-      toast.error(err?.message || "Eroare. Încearcă din nou.");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Eroare. Încearcă din nou.");
     } finally {
       setLoading(false);
     }

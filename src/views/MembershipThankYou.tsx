@@ -14,7 +14,7 @@ import { toast } from "sonner";
 const MembershipThankYou = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [processing, setProcessing] = useState(true);
   const [subscriptionActivated, setSubscriptionActivated] = useState(false);
   const [membershipTitle, setMembershipTitle] = useState<string>("");
@@ -37,6 +37,7 @@ const MembershipThankYou = () => {
 
       try {
         // Verifică dacă subscription-ul există deja pentru acest session
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data: existingSubscription } = await (supabase as any)
           .from("membership_subscriptions")
           .select("id, membership_plans(title)")
@@ -75,7 +76,8 @@ const MembershipThankYou = () => {
         }
 
         // Creează subscription nou
-        const { data: newSubscription, error: subscriptionError } = await (supabase as any)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error: subscriptionError } = await (supabase as any)
           .from("membership_subscriptions")
           .insert({
             user_id: user.id,

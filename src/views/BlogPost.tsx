@@ -715,7 +715,7 @@ const BlogPost = () => {
           title: post?.title,
           url: url,
         });
-      } catch (err) {
+      } catch {
         // User cancelled
       }
     } else {
@@ -743,175 +743,98 @@ const BlogPost = () => {
   }
 
   return (
-    <>
-      
-
-
-        <meta name="keywords" content={post.keywords.join(", ")} />
-        <link rel="canonical" href={`https://docourse.ro/blog/${slug}`} />
-
-        {/* Open Graph */}
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={post.metaTitle} />
-        <meta property="og:description" content={post.metaDescription} />
-        <meta property="og:url" content={`https://docourse.ro/blog/${slug}`} />
-        <meta property="og:image" content={post.featuredImage} />
-        <meta property="og:image:alt" content={post.featuredImageAlt} />
-
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={post.metaTitle} />
-        <meta name="twitter:description" content={post.metaDescription} />
-        <meta name="twitter:image" content={post.featuredImage} />
-
-        {/* Article Schema */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": post.title,
-            "description": post.metaDescription,
-            "image": post.featuredImage,
-            "datePublished": "2025-02-23",
-            "dateModified": "2025-02-23",
-            "author": {
-              "@type": "Organization",
-              "name": "DoCourse"
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "DoCourse",
-              "url": "https://docourse.ro"
-            },
-            "mainEntityOfPage": {
-              "@type": "WebPage",
-              "@id": `https://docourse.ro/blog/${slug}`
-            }
-          })}
-        </script>
-
-        {/* BreadcrumbList Schema */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Acasă",
-                "item": "https://docourse.ro"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Blog",
-                "item": "https://docourse.ro/blog"
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": post.title,
-                "item": `https://docourse.ro/blog/${slug}`
-              }
-            ]
-          })}
-        </script>
-      
-
-      <div className="min-h-screen bg-background">
-        <BlogHeader />
-        <main>
-          {/* Hero Section */}
-          <section className="bg-gradient-to-b from-beige/60 to-background">
-            <div className="container mx-auto px-4 py-12 lg:py-20 pt-24 lg:pt-32">
-              <div className="max-w-3xl mx-auto">
-                {/* Back link */}
-                <Link
-                  href="/blog"
-                  className="inline-flex items-center gap-2 text-muted-foreground hover:text-navy mb-6 transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Înapoi la blog
-                </Link>
-
-                {/* Meta info */}
-                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{post.date}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    <span>{post.readTime} de citit</span>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h1 className="text-3xl lg:text-4xl font-bold text-navy mb-4">
-                  {post.title}
-                </h1>
-
-                {/* Excerpt */}
-                <p className="text-lg text-muted-foreground">
-                  {post.excerpt}
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Content */}
-          <section className="container mx-auto px-4 py-8">
-            <article className="max-w-3xl mx-auto">
-              <div
-                className="prose prose-lg max-w-none prose-headings:text-navy prose-a:text-gold prose-a:no-underline hover:prose-a:underline prose-li:my-1"
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content, { USE_PROFILES: { html: true } }) }}
-              />
-            </article>
-          </section>
-
-          {/* Share & Keywords */}
-          <section className="container mx-auto px-4 py-8">
-            <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-b border-border py-6">
-              <div className="flex flex-wrap gap-2">
-                {post.keywords.map((keyword) => (
-                  <span
-                    key={keyword}
-                    className="text-sm bg-beige/50 text-muted-foreground px-3 py-1 rounded-full"
-                  >
-                    {keyword}
-                  </span>
-                ))}
-              </div>
-              <Button variant="outline" size="sm" onClick={handleShare}>
-                <Share2 className="w-4 h-4 mr-2" />
-                Distribuie
-              </Button>
-            </div>
-          </section>
-
-          {/* CTA */}
-          <section className="container mx-auto px-4 py-12">
-            <div className="max-w-3xl mx-auto bg-gradient-to-br from-navy to-navy/90 rounded-2xl p-8 text-center text-white">
-              <h2 className="text-2xl font-bold mb-3">
-                Vrei să creezi propriul curs online?
-              </h2>
-              <p className="text-white/80 mb-6">
-                DoCourse te ajută să publici cursuri rapid, simplu și fără complicații tehnice.
-              </p>
-              <Link href="/">
-                <Button variant="gold" size="lg">
-                  Începe gratuit acum
-                </Button>
+    <div className="min-h-screen bg-background">
+      <BlogHeader />
+      <main>
+        {/* Hero Section */}
+        <section className="bg-gradient-to-b from-beige/60 to-background">
+          <div className="container mx-auto px-4 py-12 lg:py-20 pt-24 lg:pt-32">
+            <div className="max-w-3xl mx-auto">
+              {/* Back link */}
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-navy mb-6 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Înapoi la blog
               </Link>
-            </div>
-          </section>
 
-          <FinalCTASection />
-        </main>
-        <Footer />
-      </div>
-    </>
+              {/* Meta info */}
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>{post.date}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>{post.readTime} de citit</span>
+                </div>
+              </div>
+
+              {/* Title */}
+              <h1 className="text-3xl lg:text-4xl font-bold text-navy mb-4">
+                {post.title}
+              </h1>
+
+              {/* Excerpt */}
+              <p className="text-lg text-muted-foreground">
+                {post.excerpt}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Content */}
+        <section className="container mx-auto px-4 py-8">
+          <article className="max-w-3xl mx-auto">
+            <div
+              className="prose prose-lg max-w-none prose-headings:text-navy prose-a:text-gold prose-a:no-underline hover:prose-a:underline prose-li:my-1"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content, { USE_PROFILES: { html: true } }) }}
+            />
+          </article>
+        </section>
+
+        {/* Share & Keywords */}
+        <section className="container mx-auto px-4 py-8">
+          <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-b border-border py-6">
+            <div className="flex flex-wrap gap-2">
+              {post.keywords.map((keyword) => (
+                <span
+                  key={keyword}
+                  className="text-sm bg-beige/50 text-muted-foreground px-3 py-1 rounded-full"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+            <Button variant="outline" size="sm" onClick={handleShare}>
+              <Share2 className="w-4 h-4 mr-2" />
+              Distribuie
+            </Button>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="container mx-auto px-4 py-12">
+          <div className="max-w-3xl mx-auto bg-gradient-to-br from-navy to-navy/90 rounded-2xl p-8 text-center text-white">
+            <h2 className="text-2xl font-bold mb-3">
+              Vrei să creezi propriul curs online?
+            </h2>
+            <p className="text-white/80 mb-6">
+              DoCourse te ajută să publici cursuri rapid, simplu și fără complicații tehnice.
+            </p>
+            <Link href="/">
+              <Button variant="gold" size="lg">
+                Începe gratuit acum
+              </Button>
+            </Link>
+          </div>
+        </section>
+
+        <FinalCTASection />
+      </main>
+      <Footer />
+    </div>
   );
 };
 

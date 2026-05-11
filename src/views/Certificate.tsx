@@ -101,7 +101,7 @@ const Certificate = () => {
           text: `Am obținut certificatul pentru cursul "${certificate?.course_title}" pe DoCourse!`,
           url: url,
         });
-      } catch (err) {
+      } catch {
         // User cancelled or error
       }
     } else {

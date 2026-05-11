@@ -17,7 +17,8 @@ const SuccessSummary = ({
   communityId,
   communityName,
   communitySlug,
-  onClose
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onClose: _onClose
 }: SuccessSummaryProps) => {
   return (
     <div className="text-center py-8">

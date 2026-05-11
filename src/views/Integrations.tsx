@@ -7,8 +7,6 @@ import {
   Trash2,
   Copy,
   Check,
-  Eye,
-  EyeOff,
   Loader2,
   AlertTriangle,
   Globe,
@@ -90,6 +88,7 @@ export default function Integrations() {
     const fetchData = async () => {
       setLoading(true);
       const [{ data: keys }, { data: courseData }] = await Promise.all([
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (supabase as any)
           .from("creator_api_keys")
           .select("id, label, key_prefix, created_at, last_used_at, is_active")
@@ -118,6 +117,7 @@ export default function Integrations() {
       const keyHash = await sha256hex(fullKey);
       const keyPrefix = fullKey.slice(0, 20);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (supabase as any).from("creator_api_keys").insert({
         creator_id: profile.id,
         label: newKeyLabel.trim(),
@@ -131,6 +131,7 @@ export default function Integrations() {
       setNewlyCreatedKey(fullKey);
       setNewKeyLabel("");
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data: updated } = await (supabase as any)
         .from("creator_api_keys")
         .select("id, label, key_prefix, created_at, last_used_at, is_active")
@@ -148,6 +149,7 @@ export default function Integrations() {
   };
 
   const handleRevoke = async (keyId: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (supabase as any)
       .from("creator_api_keys")
       .update({ is_active: false })

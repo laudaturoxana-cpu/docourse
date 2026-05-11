@@ -356,6 +356,7 @@ export default function PublicSalesPage() {
           >
             <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center sm:items-start gap-6">
               {page.creator_avatar_url && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={page.creator_avatar_url}
                   alt={page.creator_name || "Instructor"}

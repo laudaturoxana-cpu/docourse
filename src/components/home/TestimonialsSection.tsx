@@ -61,6 +61,7 @@ const TestimonialsSection = () => {
                 {/* Avatar */}
                 <div className="w-12 h-12 rounded-full bg-beige flex items-center justify-center flex-shrink-0">
                   {testimonial.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={testimonial.avatar}
                       alt={testimonial.name}

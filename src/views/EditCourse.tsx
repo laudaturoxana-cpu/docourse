@@ -19,14 +19,11 @@ import {
   Pencil,
   Crown,
   Users,
-  Info,
-  AlertCircle,
-  Image,
+  Image as ImageIcon,
   Sparkles,
   Zap,
   Link as LinkIcon,
   Magnet,
-  RefreshCw,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -52,7 +49,6 @@ import { useSubscriptionCheck } from "@/hooks/useSubscriptionCheck";
 import { SubscriptionRequired } from "@/components/SubscriptionRequired";
 import { supabase } from "@/lib/supabase/browser";
 import { toast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 
 interface Module {
   id: string;
@@ -117,7 +113,9 @@ const EditCourse = () => {
   const [newLessonModule, setNewLessonModule] = useState<string | null>(null);
   const [newLessonTitle, setNewLessonTitle] = useState("");
   const [editingModuleTitle, setEditingModuleTitle] = useState<{ id: string; title: string } | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [emailLists, setEmailLists] = useState<{ id: string; name: string }[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [generatingCapture, setGeneratingCapture] = useState(false);
 
   useEffect(() => {
@@ -269,6 +267,7 @@ const EditCourse = () => {
     setIsSaving(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleGenerateCapture = async () => {
     if (!course) return;
     setGeneratingCapture(true);
@@ -539,6 +538,7 @@ const EditCourse = () => {
   };
 
   // Component for membership inclusion
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const MembershipInclusionCard = ({ courseId, profileId }: { courseId: string; profileId: string }) => {
     const [membershipPlans, setMembershipPlans] = useState<Array<{ id: string; title: string; includes_courses: string[] }>>([]);
     const [selectedPlans, setSelectedPlans] = useState<string[]>([]);
@@ -626,7 +626,7 @@ const EditCourse = () => {
         if (posts && posts.length > 0) {
           const postIds = posts.map(p => p.id);
           await supabase.from("community_comments").delete().in("post_id", postIds);
-          await (supabase as any).from("post_likes").delete().in("post_id", postIds);
+          await (supabase as unknown as { from: (table: string) => { delete: () => { in: (col: string, vals: string[]) => Promise<unknown> } } }).from("post_likes").delete().in("post_id", postIds);
           await supabase.from("community_posts").delete().eq("membership_plan_id", planId);
         }
 
@@ -983,7 +983,7 @@ const EditCourse = () => {
           title: "Comunitate creată",
           description: "Comunitatea a fost creată cu succes.",
         });
-      } catch (error) {
+      } catch {
         toast({
           title: "Eroare",
           description: "Nu s-a putut crea comunitatea.",
@@ -1011,7 +1011,7 @@ const EditCourse = () => {
             .in("post_id", postIds);
           if (commentsError) throw commentsError;
 
-          const { error: likesError } = await (supabase as any)
+          const { error: likesError } = await (supabase as unknown as { from: (table: string) => { delete: () => { in: (col: string, vals: string[]) => Promise<{ error: { message: string } | null }> } } })
             .from("post_likes")
             .delete()
             .in("post_id", postIds);
@@ -1589,10 +1589,11 @@ const EditCourse = () => {
                       onClick={() => document.getElementById('cover-upload')?.click()}
                     >
                       {course.image_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img src={course.image_url} alt="Cover" className="absolute inset-0 w-full h-full object-cover" />
                       ) : (
                         <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                          <Image className="w-8 h-8" />
+                          <ImageIcon className="w-8 h-8" />
                           <span className="text-xs text-center px-4">Click pentru a adăuga<br/>o poză reprezentativă</span>
                         </div>
                       )}

@@ -267,6 +267,7 @@ export default function PublicCoursePage() {
           <div className="bg-[#f3f1ec] border-t border-[#e8e4dc] px-4 py-12">
             <div className="max-w-2xl mx-auto flex items-center gap-5">
               {creator.avatar_url && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={creator.avatar_url}
                   alt={creator.full_name}

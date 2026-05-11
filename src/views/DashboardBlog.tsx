@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
@@ -24,13 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  LayoutDashboard,
-  BookOpen,
-  Users,
-  Settings,
-  LogOut,
   Menu,
-  X,
   Plus,
   MoreHorizontal,
   Pencil,
@@ -38,10 +32,8 @@ import {
   Eye,
   FileText,
 } from "lucide-react";
-import Logo from "@/components/Logo";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/browser";
 import { toast } from "sonner";
 
@@ -57,7 +49,7 @@ interface BlogPost {
 const DashboardBlog = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { user, profile, signOut, isLoading: authLoading } = useAuth();
+  const { user, profile, isLoading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<BlogPost | null>(null);
@@ -111,12 +103,6 @@ const DashboardBlog = () => {
       toast.error("Nu s-a putut șterge articolul.");
     },
   });
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
-
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("ro-RO", {

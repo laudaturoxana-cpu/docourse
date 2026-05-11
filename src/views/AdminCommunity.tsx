@@ -73,8 +73,9 @@ const AdminCommunity = () => {
     enabled: !!membershipId,
   });
 
-  // Fetch membership plan
-  const { data: membership } = useQuery({
+  // Fetch membership plan (kept for side effect / query caching)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data: _membership } = useQuery({
     queryKey: ["membershipPlan", membershipId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -362,6 +363,7 @@ const AdminCommunity = () => {
                   
                   {imagePreview && (
                     <div className="relative w-full max-w-md">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={imagePreview} alt="Preview" className="rounded-lg w-full" />
                       <Button
                         variant="destructive"
@@ -465,6 +467,7 @@ const AdminCommunity = () => {
                     <CardContent>
                       <p className="whitespace-pre-wrap mb-4">{post.content}</p>
                       {post.image_url && (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={post.image_url}
                           alt="Post"

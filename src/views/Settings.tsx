@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, User, Mail, Upload, Briefcase, Loader2, CreditCard, XCircle, Pencil, CheckCircle2, Zap } from "lucide-react";
+import { ArrowLeft, User, Mail, Upload, Briefcase, Loader2, CreditCard, XCircle, Pencil, CheckCircle2, Zap, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +37,7 @@ const Settings = () => {
   const [isSavingEmail, setIsSavingEmail] = useState(false);
   const [emailChangeSent, setEmailChangeSent] = useState(false);
   const [showPlanDialog, setShowPlanDialog] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -214,6 +215,22 @@ const Settings = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setIsDeletingAccount(true);
+    try {
+      const { error } = await supabase.functions.invoke("delete-account");
+      if (error) throw error;
+      await signOut();
+      router.push("/");
+      toast.success("Contul tău a fost șters. La revedere!");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Eroare necunoscută";
+      toast.error(`Eroare: ${msg}`);
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  };
+
   const hasChanges = fullName !== (profile?.full_name || "") || activity !== (profile?.activity || "");
 
   if (authLoading) {
@@ -256,8 +273,9 @@ const Settings = () => {
                 <div className="flex items-center gap-6 pb-6 border-b border-border">
                   <div className="relative">
                     {avatarUrl ? (
-                      <img 
-                        src={avatarUrl} 
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={avatarUrl}
                         alt="Avatar"
                         className="w-20 h-20 rounded-full object-cover"
                       />
@@ -536,13 +554,50 @@ const Settings = () => {
 
                 {/* Save button */}
                 <div className="pt-4">
-                  <Button 
+                  <Button
                     onClick={handleUpdateProfile}
                     disabled={isLoading || !fullName || !hasChanges}
                     className="w-full sm:w-auto"
                   >
                     {isLoading ? "Se salvează..." : "Salvează modificările"}
                   </Button>
+                </div>
+
+                {/* Danger zone */}
+                <div className="pt-6 border-t border-destructive/20">
+                  <h3 className="text-sm font-semibold text-destructive mb-1 flex items-center gap-2">
+                    <Trash2 className="w-4 h-4" /> Zona de pericol
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Ștergerea contului este ireversibilă. Toate datele tale — cursuri, comunități, abonament — vor fi șterse permanent.
+                  </p>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="sm"
+                        className="border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                        disabled={isDeletingAccount}>
+                        {isDeletingAccount
+                          ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Se șterge...</>
+                          : <><Trash2 className="w-4 h-4 mr-2" />Șterge contul meu</>}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Ești absolut sigur?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Această acțiune <strong>nu poate fi anulată</strong>. Contul tău și toate datele asociate — profilul, cursurile, comunitățile, istoricul de plăți — vor fi șterse permanent.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Anulează</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleDeleteAccount}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                          Da, șterge contul definitiv
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             </div>

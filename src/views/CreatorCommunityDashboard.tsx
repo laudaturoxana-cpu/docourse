@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Users, Plus, Save, ExternalLink, Copy, CheckCheck, ArrowLeft, Trash2, Lock, Unlock } from "lucide-react";
+import { Users, Plus, Save, ExternalLink, Copy, CheckCheck, ArrowLeft, Lock, Unlock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -72,7 +72,7 @@ export default function CreatorCommunityDashboard() {
 
         const settingsMap: Record<string, CourseSetting> = {};
         (myCoursesData || []).forEach((c) => {
-          const existing = (settingsData || []).find((s: any) => s.community_id === comm.id && s.course_id === c.id);
+          const existing = (settingsData || []).find((s: { community_id: string; course_id: string; access_type?: string }) => s.community_id === comm.id && s.course_id === c.id);
           settingsMap[c.id] = {
             course_id: c.id,
             access_type: (existing?.access_type ?? "free") as "free" | "paid",

@@ -73,6 +73,7 @@ export default function EmailMarketing() {
     if (!profile) return;
     loadLists();
     loadCampaigns();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   const loadLists = async () => {

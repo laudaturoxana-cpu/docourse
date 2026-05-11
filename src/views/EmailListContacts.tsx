@@ -67,6 +67,7 @@ export default function EmailListContacts() {
     if (!profile || !listId) return;
     loadList();
     loadCourses();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, listId]);
 
   const loadList = async () => {
@@ -179,12 +180,12 @@ export default function EmailListContacts() {
     const userIds = enrollments.map((e) => e.user_id);
 
     // Get profiles + emails
-    const { data: profiles } = await supabase
+    await supabase
       .from("profiles")
       .select("user_id, full_name")
       .in("user_id", userIds);
 
-    const { data: authUsers } = await supabase
+    await supabase
       .from("profiles")
       .select("user_id")
       .in("user_id", userIds);

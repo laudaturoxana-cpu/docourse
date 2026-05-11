@@ -24,11 +24,7 @@ import {
   MessageSquare,
   Crown,
   Calendar,
-  ExternalLink,
-  LayoutDashboard,
-  LogOut,
   Menu,
-  X,
   UserPlus,
   Search
 } from "lucide-react";
@@ -41,7 +37,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Logo from "@/components/Logo";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/browser";
@@ -64,7 +59,7 @@ const EditMembership = () => {
   const _params = useParams<{ membershipId: string }>();
   const id = _params?.membershipId;
   const router = useRouter();
-  const { user, profile, signOut } = useAuth();
+  const { user, profile } = useAuth();
   const { updatePlan } = useMembership();
 
   // Check if user has active subscription
@@ -197,11 +192,6 @@ const EditMembership = () => {
         ? prev.filter(cid => cid !== courseId)
         : [...prev, courseId]
     );
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
   };
 
   const handleSearchUser = async () => {

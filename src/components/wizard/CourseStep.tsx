@@ -20,13 +20,14 @@ interface CourseStepProps {
   onImageRemove: () => void;
 }
 
-const CourseStep = ({ 
-  data, 
-  imageFile, 
-  imagePreview, 
-  onChange, 
+const CourseStep = ({
+  data,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  imageFile: _imageFile,
+  imagePreview,
+  onChange,
   onImageChange,
-  onImageRemove 
+  onImageRemove
 }: CourseStepProps) => {
   return (
     <div className="space-y-6">
@@ -92,6 +93,7 @@ const CourseStep = ({
         <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-gold/50 transition-colors">
           {imagePreview ? (
             <div className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imagePreview}
                 alt="Preview"

@@ -14,7 +14,6 @@ import {
   ArrowLeft,
   Save,
   Eye,
-  Image as ImageIcon,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase/browser";
 import { toast } from "sonner";
@@ -84,7 +83,7 @@ const EditBlogPost = () => {
 
       if (error) throw error;
 
-      const d = data as any;
+      const d = data as BlogPostData;
       setPost({
         id: d.id,
         title: d.title || "",
@@ -171,12 +170,12 @@ const EditBlogPost = () => {
       queryClient.invalidateQueries({ queryKey: ["blogPosts"] });
       toast.success(isNew ? "Articol creat cu succes!" : "Articol salvat!");
 
-      if (isNew && (data as any)?.id) {
-        router.push(`/dashboard/blog/${(data as any).id}`);
+      if (isNew && (data as BlogPostData)?.id) {
+        router.push(`/dashboard/blog/${(data as BlogPostData).id}`);
       }
     },
-    onError: (error: any) => {
-      if (error?.code === "23505") {
+    onError: (error: unknown) => {
+      if ((error as { code?: string })?.code === "23505") {
         toast.error("Un articol cu acest slug există deja.");
       } else {
         toast.error("Nu s-a putut salva articolul.");
@@ -364,6 +363,7 @@ const EditBlogPost = () => {
                   </div>
                   {post.cover_image && (
                     <div className="mt-3 aspect-video bg-beige/50 rounded-lg overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={post.cover_image}
                         alt="Cover"

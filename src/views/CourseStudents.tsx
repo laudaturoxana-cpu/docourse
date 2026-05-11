@@ -95,9 +95,6 @@ const CourseStudents = () => {
   const [removingStudent, setRemovingStudent] = useState<Student | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
 
-  // Access control — only subscription-active creators
-  const hasAccess = profile?.subscription_active || profile?.lifetime_access || profile?.beta_tester;
-
   useEffect(() => {
     if (!user || !profile || !courseId) return;
 

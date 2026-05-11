@@ -48,6 +48,7 @@ const PublicMembership = () => {
 
       try {
         // Use RPC function to get safe public membership data (hides sensitive Stripe/creator data)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data, error } = await (supabase as any)
           .rpc("get_public_membership", { _slug: slug });
 
@@ -115,6 +116,7 @@ const PublicMembership = () => {
       }
 
       // Create free subscription
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (supabase as any)
         .from("membership_subscriptions")
         .insert({
@@ -319,6 +321,7 @@ const PublicMembership = () => {
                         style={{ zIndex: members.length - idx }}
                       >
                         {member.avatar_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
                           <img
                             src={member.avatar_url}
                             alt={member.full_name}

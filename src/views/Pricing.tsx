@@ -32,7 +32,7 @@ const PRO_FEATURES = [
 ];
 
 export default function Pricing() {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user } = useAuth();
   const { planType, hasActiveSubscription } = useSubscriptionCheck();
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">("monthly");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
@@ -72,8 +72,8 @@ export default function Pricing() {
       if (data?.url) {
         window.location.href = data.url;
       }
-    } catch (err: any) {
-      toast.error(err?.message || "Eroare. Încearcă din nou.");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Eroare. Încearcă din nou.");
     } finally {
       setLoadingPlan(null);
     }
@@ -83,7 +83,8 @@ export default function Pricing() {
     hasActiveSubscription && planType === plan;
 
   // Never block — if subscription seems active but user tries to pay, let Stripe handle it
-  const btnDisabled = (plan: "starter" | "pro") =>
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const btnDisabled = (_plan: "starter" | "pro") =>
     loadingPlan !== null;
 
   const btnLabel = (plan: "starter" | "pro") => {

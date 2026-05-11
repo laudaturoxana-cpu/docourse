@@ -3,25 +3,18 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
   BookOpen,
   PlusCircle,
-  Settings,
-  LogOut,
   Menu,
-  X,
   ArrowRight,
   MoreHorizontal,
-  Eye,
   Edit,
   Trash2,
   Copy,
   ExternalLink,
   Search,
   Filter,
-  Users
 } from "lucide-react";
-import Logo from "@/components/Logo";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { Button } from "@/components/ui/button";
@@ -68,7 +61,7 @@ interface Course {
 
 const MyCourses = () => {
   const router = useRouter();
-  const { user, profile, signOut, isLoading: authLoading } = useAuth();
+  const { user, profile, isLoading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Check if user has active subscription
@@ -108,11 +101,6 @@ const MyCourses = () => {
       fetchCourses();
     }
   }, [profile?.id]);
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
 
   const copyLink = (course: Course) => {
     const url = `${window.location.origin}/course/${course.slug}/${course.access_token}`;
@@ -376,6 +364,7 @@ const MyCourses = () => {
                   >
                     <div className="aspect-video bg-beige relative">
                       {course.image_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={course.image_url}
                           alt={course.title}

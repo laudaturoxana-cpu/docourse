@@ -25,20 +25,13 @@ import {
 import {
   Users,
   MessageSquare,
-  LayoutDashboard,
-  BookOpen,
-  Settings,
-  LogOut,
   Menu,
-  X,
   ArrowRight,
   MoreHorizontal,
   Trash2
 } from "lucide-react";
-import Logo from "@/components/Logo";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/browser";
 import { toast } from "sonner";
 
@@ -55,7 +48,7 @@ interface Community {
 
 const MyCommunities = () => {
   const router = useRouter();
-  const { user, profile, signOut, isLoading: authLoading } = useAuth();
+  const { user, profile, isLoading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Check if user is a creator (has active subscription)
@@ -79,7 +72,7 @@ const MyCommunities = () => {
       try {
         // Use RPC to get all communities for this user (bypasses RLS)
         const { data: communityData, error } = await (supabase
-          .rpc as any)("get_my_communities");
+          .rpc as unknown as (fn: string) => Promise<{ data: Community[] | null; error: { message: string } | null }>)("get_my_communities");
 
         if (error) {
           console.error("Error fetching communities:", error);
@@ -125,11 +118,6 @@ const MyCommunities = () => {
     }
   }, [user?.id]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
-
   const openDeleteDialog = (community: Community) => {
     setCommunityToDelete(community);
     setDeleteDialogOpen(true);
@@ -149,6 +137,7 @@ const MyCommunities = () => {
       if (posts && posts.length > 0) {
         const postIds = posts.map(post => post.id);
         await supabase.from("community_comments").delete().in("post_id", postIds);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (supabase as any).from("post_likes").delete().in("post_id", postIds);
         await supabase.from("community_posts").delete().eq("membership_plan_id", planId);
       }

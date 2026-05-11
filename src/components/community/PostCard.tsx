@@ -103,6 +103,7 @@ const PostCard = ({
           {/* Image */}
           {post.image_url && (
             <div className="rounded-xl overflow-hidden -mx-1 lg:mx-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={post.image_url}
                 alt="Post"

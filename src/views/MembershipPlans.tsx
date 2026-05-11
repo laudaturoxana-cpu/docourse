@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, ExternalLink, Copy, Users, Calendar, Mail, Lock, Unlock, ArrowLeft } from "lucide-react";
+import { Plus, Edit, Trash2, ExternalLink, Copy, Users, Calendar, Lock, Unlock, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/browser";

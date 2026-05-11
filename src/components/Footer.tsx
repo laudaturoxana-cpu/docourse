@@ -33,9 +33,9 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#pret" className="text-beige/80 hover:text-gold transition-colors">
+                <Link href="/pricing" className="text-beige/80 hover:text-gold transition-colors">
                   Prețuri
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/blog" className="text-beige/80 hover:text-gold transition-colors">

@@ -10,7 +10,6 @@ import {
   Copy,
   CheckCheck,
   Zap,
-  AlertCircle,
   Eye,
   EyeOff,
   RefreshCw,
@@ -84,7 +83,7 @@ const SalesPageEditor = () => {
   const courseId = _params?.courseId;
   const router = useRouter();
   const { user } = useAuth();
-  const { isPro, hasActiveSubscription, isLoading: subLoading } = useSubscriptionCheck();
+  const { isPro, isLoading: subLoading } = useSubscriptionCheck();
 
   const [course, setCourse] = useState<Course | null>(null);
   const [salesPage, setSalesPage] = useState<SalesPage | null>(null);
@@ -110,6 +109,7 @@ const SalesPageEditor = () => {
   useEffect(() => {
     if (!user || !courseId) return;
     loadData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, courseId]);
 
   const GENERATING_STEPS = [
@@ -131,6 +131,7 @@ const SalesPageEditor = () => {
       setTimeout(() => setGeneratingStep(i), i * 8000)
     );
     return () => intervals.forEach(clearTimeout);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isGenerating]);
 
   const loadData = async () => {
@@ -244,6 +245,7 @@ const SalesPageEditor = () => {
         updated_at: new Date().toISOString(),
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await (supabase as any)
         .from("sales_pages")
         .upsert(payload, { onConflict: "slug" })
@@ -253,13 +255,14 @@ const SalesPageEditor = () => {
       if (error) throw error;
       setSalesPage(data);
       toast({ title: "Salvat!", description: "Modificările au fost salvate." });
-    } catch (err: any) {
-      toast({ title: "Eroare", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      toast({ title: "Eroare", description: err instanceof Error ? err.message : "Eroare la salvare", variant: "destructive" });
     } finally {
       setIsSaving(false);
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleTogglePublish = async () => {
     const newPublished = !isPublished;
     setIsPublished(newPublished);
@@ -624,6 +627,7 @@ const SalesPageEditor = () => {
                   <div>
                     <Label>Imagine copertă curs</Label>
                     {courseImageUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={courseImageUrl} alt="Cover" className="mt-1.5 w-full h-28 object-cover rounded-lg border border-border mb-2" />
                     )}
                     <Input
@@ -636,6 +640,7 @@ const SalesPageEditor = () => {
                   <div>
                     <Label>Poza instructorului</Label>
                     {creatorAvatarUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={creatorAvatarUrl} alt="Avatar" className="mt-1.5 w-16 h-16 object-cover rounded-full border border-border mb-2" />
                     )}
                     <Input

@@ -1,12 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
-  LayoutDashboard,
-  BookOpen,
-  Settings,
-  LogOut,
   Menu,
   X,
   Users,
@@ -14,15 +10,15 @@ import {
   ArrowLeft,
   Search,
   Lock,
-  UserPlus
+  UserPlus,
+  Settings,
+  BookOpen,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import Logo from "@/components/Logo";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useCommunity, CommunityPost, CommunityComment } from "@/hooks/useCommunity";
 import { supabase } from "@/lib/supabase/browser";
@@ -35,8 +31,7 @@ import CommentsDialog from "@/components/community/CommentsDialog";
 const Community = () => {
   const _params = useParams<{ membershipId: string }>();
   const membershipId = _params?.membershipId;
-  const router = useRouter();
-  const { user, profile, signOut, isLoading: authLoading } = useAuth();
+  const { user, profile, isLoading: authLoading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [membershipPlan, setMembershipPlan] = useState<{
     title: string;
@@ -116,7 +111,7 @@ const Community = () => {
       // Auto-create membership subscription for students accessing the community
       // This ensures they can find this community in "My Communities" later
       if (user && !userIsCreator) {
-        await (supabase.rpc as any)("ensure_community_membership", { _plan_id: membershipId });
+        await (supabase.rpc as unknown as (fn: string, args: Record<string, string>) => Promise<unknown>)("ensure_community_membership", { _plan_id: membershipId });
       }
 
       const courseId = (planData.includes_courses as string[] | null)?.[0];
@@ -145,12 +140,8 @@ const Community = () => {
     };
 
     fetchMembershipPlan();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [membershipId, profile?.id, user?.id]);
-
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
 
   const handleCreatePost = (content: string, imageUrl: string | null, tags: string[]) => {
     createPost({

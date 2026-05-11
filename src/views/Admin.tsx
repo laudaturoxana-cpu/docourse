@@ -313,7 +313,6 @@ const Admin = () => {
                   </thead>
                   <tbody className="divide-y divide-border">
                     {filteredCreators.map((creator) => {
-                      const isActive = creator.subscription_active || creator.beta_tester || creator.lifetime_access;
                       return (
                         <tr key={creator.id} className="hover:bg-beige/20 transition-colors">
                           <td className="px-6 py-4">

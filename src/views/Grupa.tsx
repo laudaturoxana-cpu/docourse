@@ -6,7 +6,7 @@ import FormInscriere from '../components/funnel/FormInscriere';
 import Divider from '../components/funnel/Divider';
 import BadgeUrgenta from '../components/funnel/BadgeUrgenta';
 import { useFadeIn } from '../hooks/useFadeIn';
-import { WHATSAPP, INSTAGRAM } from '../constants/links';
+import { WHATSAPP } from '../constants/links';
 
 const saptamani = [
   {

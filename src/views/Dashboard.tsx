@@ -5,13 +5,8 @@ import { useRouter } from "next/navigation";
 import { useInView } from "@/hooks/useInView";
 import { useCountUp } from "@/hooks/useCountUp";
 import {
-  LayoutDashboard,
   BookOpen,
-  PlusCircle,
-  Settings,
-  LogOut,
   Menu,
-  X,
   ArrowRight,
   Users,
   TrendingUp,
@@ -27,7 +22,6 @@ const DashboardChart = dynamic(() => import("@/components/DashboardChart"), {
   ssr: false,
   loading: () => <div className="h-48 bg-muted/30 animate-pulse rounded-xl" />,
 });
-import Logo from "@/components/Logo";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { Button } from "@/components/ui/button";
@@ -153,7 +147,7 @@ const StatCard = ({ label, value, sub, icon: Icon, color, loading }: StatCardPro
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user, profile, signOut, isLoading: authLoading, isAdmin } = useAuth();
+  const { user, profile, isLoading: authLoading, isAdmin } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [stats, setStats] = useState({
@@ -237,7 +231,7 @@ const Dashboard = () => {
       // Flatten nested lessons out of modules response
       const modulesData = rawModules.map((m) => ({ id: m.id, course_id: m.course_id }));
       const lessonsData = rawModules.flatMap((m) =>
-        ((m as any).lessons || []).map((l: any) => ({ id: l.id, title: l.title, module_id: m.id, position: l.position }))
+        ((m as { lessons?: { id: string; title: string; position: number }[] }).lessons || []).map((l) => ({ id: l.id, title: l.title, module_id: m.id, position: l.position }))
       );
 
       // Unique students
@@ -380,13 +374,6 @@ const Dashboard = () => {
     fetchAnalytics();
   }, [profile?.id]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
-  };
-
-  const hasActive = profile?.subscription_active || profile?.lifetime_access || profile?.beta_tester;
-  const isPro = (!!hasActive && profile?.plan_type === "pro") || profile?.lifetime_access || isAdmin;
 
 
   if (authLoading) {

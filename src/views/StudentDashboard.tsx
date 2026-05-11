@@ -77,6 +77,7 @@ const StudentDashboard = () => {
       setLoadingCourses(true);
       try {
         // Cursuri înscrise (via enrollments) + progres calculat
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data: enrolledData } = await (supabase as any)
           .rpc("get_my_enrolled_courses");
 
@@ -84,6 +85,7 @@ const StudentDashboard = () => {
           const coursesWithProgress = await Promise.all(
             (enrolledData as Array<{ course_id: string; course_title: string; course_slug: string; course_image: string | null; requires_login: boolean; enrolled_at: string; last_accessed_at: string | null }>).map(async (ec) => {
               // Calculăm progresul via RPC (bypass RLS pe modules/lessons)
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const { data: progressData } = await (supabase as any)
                 .rpc('get_course_progress_for_student', {
                   _user_id: user.id,
@@ -178,9 +180,9 @@ const StudentDashboard = () => {
           .eq("user_id", user.id);
 
         const directComms: CreatorCommunity[] = (membershipData || [])
-          .map((m: any) => m.creator_communities)
-          .filter(Boolean)
-          .map((c: any) => ({ id: c.id, name: c.name, slug: c.slug }));
+          .map((m: { creator_communities: { id: string; name: string; slug: string } | null }) => m.creator_communities)
+          .filter((c): c is { id: string; name: string; slug: string } => c !== null)
+          .map((c) => ({ id: c.id, name: c.name, slug: c.slug }));
 
         // 2. Comunități accesibile prin cursuri la care e înscris
         const enrolledCourseIds = courses.map((c) => c.course_id);
@@ -192,9 +194,9 @@ const StudentDashboard = () => {
             .in("course_id", enrolledCourseIds);
 
           courseLinkedComms = (courseCommsData || [])
-            .map((r: any) => r.creator_communities)
-            .filter(Boolean)
-            .map((c: any) => ({ id: c.id, name: c.name, slug: c.slug }));
+            .map((r: { creator_communities: { id: string; name: string; slug: string } | null }) => r.creator_communities)
+            .filter((c): c is { id: string; name: string; slug: string } => c !== null)
+            .map((c) => ({ id: c.id, name: c.name, slug: c.slug }));
         }
 
         // 3. Comunități pe care le-a creat el (creator_communities.creator_id = profile.id)
@@ -229,6 +231,7 @@ const StudentDashboard = () => {
     };
 
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   const handleSignOut = async () => {
@@ -393,6 +396,7 @@ const StudentDashboard = () => {
                           {/* Thumbnail */}
                           <div className="w-14 h-14 rounded-lg bg-beige flex-shrink-0 overflow-hidden">
                             {course.course_image ? (
+                              // eslint-disable-next-line @next/next/no-img-element
                               <img
                                 src={course.course_image}
                                 alt={course.course_title}

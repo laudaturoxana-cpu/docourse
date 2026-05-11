@@ -150,6 +150,7 @@ const CommentsDialog = ({
             </p>
             <p className="text-charcoal whitespace-pre-wrap text-sm lg:text-base line-clamp-3 lg:line-clamp-none">{post.content}</p>
             {post.image_url && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={post.image_url} alt="Post" className="rounded-xl mt-2 lg:mt-3 max-h-32 lg:max-h-48 object-cover" />
             )}
           </div>

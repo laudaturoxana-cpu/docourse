@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/browser";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 interface CaptureData {
   id: string;
@@ -203,6 +201,7 @@ export default function CapturePage() {
           <div className="bg-[#f3f1ec] border-t border-[#e8e4dc] px-4 py-10">
             <div className="max-w-5xl mx-auto flex items-center gap-5">
               {data.creator_avatar && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img src={data.creator_avatar} alt={data.creator_full_name}
                   className="w-14 h-14 rounded-full object-cover border-2 border-[#d4a017]" />
               )}

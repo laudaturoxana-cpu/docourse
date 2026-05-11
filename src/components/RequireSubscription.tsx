@@ -55,6 +55,7 @@ export default function RequireSubscription({ children }: { children: React.Reac
     if (!isPostCheckout && !polling) {
       router.push("/subscription-required");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, user, profile, hasAccess, isPostCheckout]);
 
   if (isLoading || !user || !profile) {

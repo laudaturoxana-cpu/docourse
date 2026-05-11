@@ -195,7 +195,7 @@ const CommunityMembers = ({ membershipPlanId, creatorId }: CommunityMembersProps
         .in("user_id", userIds);
 
       const membersData: Member[] = (profiles || []).map(profile => {
-        const subscription = (subscriptions as any[])?.find((s: any) => s.user_id === profile.user_id);
+        const subscription = (subscriptions as { user_id: string; created_at: string }[])?.find((s) => s.user_id === profile.user_id);
         return {
           id: profile.id,
           user_id: profile.user_id,
