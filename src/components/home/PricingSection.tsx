@@ -1,3 +1,4 @@
+"use client";
 import { Check, ArrowRight, Sparkles, Gift, Zap, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";

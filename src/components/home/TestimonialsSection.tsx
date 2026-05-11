@@ -1,3 +1,4 @@
+"use client";
 import { Star, Quote } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { cn } from "@/lib/utils";

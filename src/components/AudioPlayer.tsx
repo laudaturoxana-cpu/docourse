@@ -1,3 +1,4 @@
+"use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Play, Pause, Volume2, VolumeX, RotateCcw, Loader2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";

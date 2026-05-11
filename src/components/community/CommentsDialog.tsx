@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { CommunityPost, CommunityComment } from "@/hooks/useCommunity";
 import {

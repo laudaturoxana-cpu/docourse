@@ -1,3 +1,4 @@
+"use client";
 import { Users, BookOpen, Mic, Brain, Briefcase, GraduationCap, Stethoscope } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { cn } from "@/lib/utils";

@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { CreditCard, UserPlus, BookPlus, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
