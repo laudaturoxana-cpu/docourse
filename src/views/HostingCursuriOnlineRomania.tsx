@@ -22,33 +22,6 @@ const HostingCursuriOnlineRomania = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Hosting cursuri online în România: publicare rapidă, acces prin link și fără servicii externe. DoCourse include hosting complet."
-        />
-        <meta
-          name="keywords"
-          content="hosting cursuri online romania, gazduire cursuri online, platforma cursuri online"
-        />
-        <link rel="canonical" href="https://docourse.ro/hosting-cursuri-online-romania" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

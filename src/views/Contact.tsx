@@ -70,16 +70,6 @@ const Contact = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Contactează echipa DoCourse pentru întrebări, suport tehnic sau parteneriate. Răspundem în maxim 24 de ore."
-        />
-        <meta name="keywords" content="contact docourse, suport cursuri online, întrebări platformă cursuri" />
-        <link rel="canonical" href="https://docourse.ro/contact" />
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

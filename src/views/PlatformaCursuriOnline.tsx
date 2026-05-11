@@ -47,33 +47,6 @@ const PlatformaCursuriOnline = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă cursuri online în România pentru creatori: simplă, rapidă și pe domeniul tău. Creează cursul, distribuie linkul și crești comunitatea."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri online, platforma cursuri online Romania, creare cursuri online, cursuri online"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-online" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

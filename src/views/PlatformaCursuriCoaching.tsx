@@ -24,31 +24,6 @@ const PlatformaCursuriCoaching = () => {
     <>
       
 
-        <meta
-          name="description"
-          content="Platformă cursuri online pentru coachi, psihologi și mentori. Publici rapid, livrezi prin link și activezi comunitatea."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri coaching, platforma cursuri pentru coachi, cursuri online psihologi"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-coaching" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

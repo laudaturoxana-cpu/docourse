@@ -22,33 +22,6 @@ const PlatformaCursuriIeftina = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă cursuri online ieftină pentru România: publicare rapidă, acces prin link și comunitate opțională."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri online ieftina, platforma cursuri online Romania, creare cursuri online"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-online-ieftina" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

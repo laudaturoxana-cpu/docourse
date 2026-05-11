@@ -22,33 +22,6 @@ const PlatformaCursuriDomeniuPropriu = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă cursuri pe domeniu propriu: publicare rapidă, acces prin link și brandul tău."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri pe domeniu propriu, cursuri online domeniu propriu, platforma cursuri online"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-domeniu-propriu" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

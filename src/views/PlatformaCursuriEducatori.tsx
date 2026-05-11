@@ -22,33 +22,6 @@ const PlatformaCursuriEducatori = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă cursuri online pentru educatori: lecții structurate, resurse PDF și comunitate opțională."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri educatori, platforma cursuri online educatie, cursuri online profesori"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-educatori" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

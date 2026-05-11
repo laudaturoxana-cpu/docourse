@@ -40,33 +40,6 @@ const AlternativaTeachableRomania = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Cauți o alternativă Teachable în România? DoCourse este simplu, în română și adaptat pieței locale."
-        />
-        <meta
-          name="keywords"
-          content="alternativa teachable romania, platforma cursuri online romania, platforma simpla cursuri online"
-        />
-        <link rel="canonical" href="https://docourse.ro/alternativa-teachable-romania" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

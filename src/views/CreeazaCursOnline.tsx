@@ -45,33 +45,6 @@ const CreeazaCursOnline = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Ghid rapid pentru creare curs online: structura, materiale, publicare și comunitate. Pornește cu DoCourse în câteva minute."
-        />
-        <meta
-          name="keywords"
-          content="cum sa creezi un curs online, creare cursuri online, platforma cursuri online Romania"
-        />
-        <link rel="canonical" href="https://docourse.ro/cum-sa-creezi-un-curs-online" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

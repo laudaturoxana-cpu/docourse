@@ -22,33 +22,6 @@ const AlternativaKajabiIeftina = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Cauți alternativa Kajabi mai ieftină? DoCourse este simplu, în română și adaptat pieței locale."
-        />
-        <meta
-          name="keywords"
-          content="alternativa kajabi mai ieftina, alternativa kajabi romania, platforma cursuri online"
-        />
-        <link rel="canonical" href="https://docourse.ro/alternativa-kajabi-ieftina" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

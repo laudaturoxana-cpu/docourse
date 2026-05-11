@@ -5,18 +5,6 @@ import Footer from "@/components/Footer";
 const PoliticaConfidentialitate = () => {
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Politica de confidențialitate și GDPR DoCourse."
-        />
-        <link
-          rel="canonical"
-          href="https://docourse.ro/politica-de-confidentialitate"
-        />
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main className="container mx-auto px-4 py-16">

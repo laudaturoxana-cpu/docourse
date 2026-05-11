@@ -22,33 +22,6 @@ const PlatformaCursuriPsihologi = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă cursuri online pentru psihologi și terapeuți: publicare rapidă, acces prin link și comunitate opțională."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri psihologi, cursuri online terapeuti, platforma cursuri online Romania"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-psihologi" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

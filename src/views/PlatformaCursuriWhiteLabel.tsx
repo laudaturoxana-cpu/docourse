@@ -22,33 +22,6 @@ const PlatformaCursuriWhiteLabel = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă cursuri white label în România: brandul tău, acces simplu și comunitate opțională."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri white label romania, platforma cursuri white label, cursuri online brand propriu"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-white-label-romania" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

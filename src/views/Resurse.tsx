@@ -85,15 +85,6 @@ const Resurse = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Ghiduri și resurse pentru creatori de cursuri online: pași, comparații și exemple practice."
-        />
-        <link rel="canonical" href="https://docourse.ro/resurse" />
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

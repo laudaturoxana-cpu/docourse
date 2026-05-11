@@ -22,33 +22,6 @@ const PlatformaCursuriMentori = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă cursuri online pentru mentori: publicare rapidă, acces prin link și comunitate opțională."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri mentori, platforma cursuri online mentori, cursuri online mentoring"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-mentori" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

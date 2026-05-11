@@ -22,33 +22,6 @@ const PlatformaSimplaCursuriOnline = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă simplă pentru cursuri online: încarci lecțiile, publici și trimiți linkul. Ideal pentru începători."
-        />
-        <meta
-          name="keywords"
-          content="platforma simpla cursuri online, cursuri online pentru incepatori, platforma cursuri online Romania"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-simpla-cursuri-online" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>

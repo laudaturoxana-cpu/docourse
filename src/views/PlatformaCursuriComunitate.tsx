@@ -40,33 +40,6 @@ const PlatformaCursuriComunitate = () => {
 
   return (
     <>
-      
-
-        <meta
-          name="description"
-          content="Platformă cursuri cu comunitate pentru creatori: curs + spațiu de discuții într-un singur loc. DoCourse pentru România."
-        />
-        <meta
-          name="keywords"
-          content="platforma cursuri cu comunitate, curs online cu comunitate, comunitate cursanti online"
-        />
-        <link rel="canonical" href="https://docourse.ro/platforma-cursuri-cu-comunitate" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          })}
-        </script>
-      
-
       <div className="min-h-screen bg-background">
         <Header />
         <main>
