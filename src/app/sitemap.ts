@@ -3,30 +3,33 @@ import { createClient } from "@supabase/supabase-js";
 
 const BASE = "https://docourse.ro";
 
+const NOW = new Date("2025-02-23");
+const YEAR_START = new Date("2025-01-01");
+
 const staticRoutes: MetadataRoute.Sitemap = [
-  { url: BASE, priority: 1.0, changeFrequency: "weekly" },
-  { url: `${BASE}/platforma-cursuri-online`, priority: 0.9, changeFrequency: "monthly" },
-  { url: `${BASE}/pricing`, priority: 0.9, changeFrequency: "weekly" },
-  { url: `${BASE}/platforma-cursuri-mentori`, priority: 0.8, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-cursuri-coaching`, priority: 0.8, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-cursuri-educatori`, priority: 0.8, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-cursuri-psihologi`, priority: 0.8, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-cursuri-traineri`, priority: 0.8, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-cursuri-domeniu-propriu`, priority: 0.8, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-cursuri-white-label-romania`, priority: 0.8, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-simpla-cursuri-online`, priority: 0.7, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-cursuri-cu-comunitate`, priority: 0.7, changeFrequency: "monthly" },
-  { url: `${BASE}/platforma-cursuri-online-ieftina`, priority: 0.7, changeFrequency: "monthly" },
-  { url: `${BASE}/hosting-cursuri-online-romania`, priority: 0.7, changeFrequency: "monthly" },
-  { url: `${BASE}/alternativa-kajabi-ieftina`, priority: 0.7, changeFrequency: "monthly" },
-  { url: `${BASE}/alternativa-teachable-romania`, priority: 0.7, changeFrequency: "monthly" },
-  { url: `${BASE}/cum-sa-creezi-un-curs-online`, priority: 0.7, changeFrequency: "monthly" },
-  { url: `${BASE}/blog`, priority: 0.8, changeFrequency: "weekly" },
-  { url: `${BASE}/contact`, priority: 0.5, changeFrequency: "yearly" },
-  { url: `${BASE}/resurse`, priority: 0.5, changeFrequency: "monthly" },
-  { url: `${BASE}/termeni-si-conditii`, priority: 0.2, changeFrequency: "yearly" },
-  { url: `${BASE}/politica-de-confidentialitate`, priority: 0.2, changeFrequency: "yearly" },
-  { url: `${BASE}/politica-cookies`, priority: 0.2, changeFrequency: "yearly" },
+  { url: BASE, lastModified: NOW, priority: 1.0, changeFrequency: "weekly" },
+  { url: `${BASE}/platforma-cursuri-online`, lastModified: YEAR_START, priority: 0.9, changeFrequency: "monthly" },
+  { url: `${BASE}/pricing`, lastModified: NOW, priority: 0.9, changeFrequency: "weekly" },
+  { url: `${BASE}/platforma-cursuri-mentori`, lastModified: YEAR_START, priority: 0.8, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-cursuri-coaching`, lastModified: YEAR_START, priority: 0.8, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-cursuri-educatori`, lastModified: YEAR_START, priority: 0.8, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-cursuri-psihologi`, lastModified: YEAR_START, priority: 0.8, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-cursuri-traineri`, lastModified: YEAR_START, priority: 0.8, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-cursuri-domeniu-propriu`, lastModified: YEAR_START, priority: 0.8, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-cursuri-white-label-romania`, lastModified: YEAR_START, priority: 0.8, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-simpla-cursuri-online`, lastModified: YEAR_START, priority: 0.7, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-cursuri-cu-comunitate`, lastModified: YEAR_START, priority: 0.7, changeFrequency: "monthly" },
+  { url: `${BASE}/platforma-cursuri-online-ieftina`, lastModified: YEAR_START, priority: 0.7, changeFrequency: "monthly" },
+  { url: `${BASE}/hosting-cursuri-online-romania`, lastModified: YEAR_START, priority: 0.7, changeFrequency: "monthly" },
+  { url: `${BASE}/alternativa-kajabi-ieftina`, lastModified: YEAR_START, priority: 0.7, changeFrequency: "monthly" },
+  { url: `${BASE}/alternativa-teachable-romania`, lastModified: YEAR_START, priority: 0.7, changeFrequency: "monthly" },
+  { url: `${BASE}/cum-sa-creezi-un-curs-online`, lastModified: YEAR_START, priority: 0.7, changeFrequency: "monthly" },
+  { url: `${BASE}/blog`, lastModified: NOW, priority: 0.8, changeFrequency: "weekly" },
+  { url: `${BASE}/contact`, lastModified: YEAR_START, priority: 0.5, changeFrequency: "yearly" },
+  { url: `${BASE}/resurse`, lastModified: YEAR_START, priority: 0.5, changeFrequency: "monthly" },
+  { url: `${BASE}/termeni-si-conditii`, lastModified: YEAR_START, priority: 0.2, changeFrequency: "yearly" },
+  { url: `${BASE}/politica-de-confidentialitate`, lastModified: YEAR_START, priority: 0.2, changeFrequency: "yearly" },
+  { url: `${BASE}/politica-cookies`, lastModified: YEAR_START, priority: 0.2, changeFrequency: "yearly" },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

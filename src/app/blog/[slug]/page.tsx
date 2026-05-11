@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import BlogPost from "@/views/BlogPost";
 
+export function generateStaticParams() {
+  return [
+    { slug: "cum-sa-creezi-si-sa-vinzi-curs-online-ghid-complet" },
+    { slug: "platforma-simpla-cursuri-online" },
+    { slug: "alternativa-teachable-romania" },
+  ];
+}
+
 const blogMeta: Record<string, { title: string; description: string; image: string; isoDate: string }> = {
   "cum-sa-creezi-si-sa-vinzi-curs-online-ghid-complet": {
     title: "Cum să creezi și să vinzi un curs online în 2025 – Ghid complet pas cu pas",

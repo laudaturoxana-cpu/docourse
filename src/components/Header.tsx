@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
@@ -9,14 +11,6 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPlanDialog, setShowPlanDialog] = useState(false);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsMenuOpen(false);
-  };
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4">
@@ -27,24 +21,24 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <button
-              onClick={() => scrollToSection("pentru-cine")}
+            <Link
+              href="/#pentru-cine"
               className="text-charcoal hover:text-navy font-medium transition-colors"
             >
               Pentru cine
-            </button>
-            <button
-              onClick={() => scrollToSection("cum-functioneaza")}
+            </Link>
+            <Link
+              href="/#cum-functioneaza"
               className="text-charcoal hover:text-navy font-medium transition-colors"
             >
               Cum funcționează
-            </button>
-            <button
-              onClick={() => scrollToSection("pret")}
+            </Link>
+            <Link
+              href="/#pret"
               className="text-charcoal hover:text-navy font-medium transition-colors"
             >
               Preț
-            </button>
+            </Link>
             <Link
               href="/blog"
               className="text-charcoal hover:text-navy font-medium transition-colors"
@@ -82,24 +76,27 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border animate-fade-in">
             <nav className="flex flex-col gap-4">
-              <button
-                onClick={() => scrollToSection("pentru-cine")}
-                className="text-charcoal hover:text-navy font-medium py-2 text-left"
+              <Link
+                href="/#pentru-cine"
+                onClick={() => setIsMenuOpen(false)}
+                className="text-charcoal hover:text-navy font-medium py-2"
               >
                 Pentru cine
-              </button>
-              <button
-                onClick={() => scrollToSection("cum-functioneaza")}
-                className="text-charcoal hover:text-navy font-medium py-2 text-left"
+              </Link>
+              <Link
+                href="/#cum-functioneaza"
+                onClick={() => setIsMenuOpen(false)}
+                className="text-charcoal hover:text-navy font-medium py-2"
               >
                 Cum funcționează
-              </button>
-              <button
-                onClick={() => scrollToSection("pret")}
-                className="text-charcoal hover:text-navy font-medium py-2 text-left"
+              </Link>
+              <Link
+                href="/#pret"
+                onClick={() => setIsMenuOpen(false)}
+                className="text-charcoal hover:text-navy font-medium py-2"
               >
                 Preț
-              </button>
+              </Link>
               <Link
                 href="/blog"
                 onClick={() => setIsMenuOpen(false)}
