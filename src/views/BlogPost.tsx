@@ -1,13 +1,10 @@
-"use client";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { Calendar, ArrowLeft, Share2, Clock } from "lucide-react";
+import { Calendar, ArrowLeft, Clock } from "lucide-react";
 import BlogHeader from "@/components/BlogHeader";
 import Footer from "@/components/Footer";
 import FinalCTASection from "@/components/home/FinalCTASection";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import DOMPurify from "dompurify";
+import ShareButton from "@/components/ShareButton";
 
 // Conținut static pentru articole
 const blogPostsContent: Record<string, {
@@ -701,28 +698,8 @@ const blogPostsContent: Record<string, {
   }
 };
 
-const BlogPost = () => {
-  const params = useParams<{ slug: string }>();
-  const slug = params?.slug;
-
-  const post = slug ? blogPostsContent[slug] : null;
-
-  const handleShare = async () => {
-    const url = window.location.href;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: post?.title,
-          url: url,
-        });
-      } catch {
-        // User cancelled
-      }
-    } else {
-      await navigator.clipboard.writeText(url);
-      toast.success("Link copiat!");
-    }
-  };
+const BlogPost = ({ slug }: { slug: string }) => {
+  const post = blogPostsContent[slug] ?? null;
 
   if (!post) {
     return (
@@ -789,7 +766,7 @@ const BlogPost = () => {
           <article className="max-w-3xl mx-auto">
             <div
               className="prose prose-lg max-w-none prose-headings:text-navy prose-a:text-gold prose-a:no-underline hover:prose-a:underline prose-li:my-1"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content, { USE_PROFILES: { html: true } }) }}
+              dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </article>
         </section>
@@ -807,10 +784,7 @@ const BlogPost = () => {
                 </span>
               ))}
             </div>
-            <Button variant="outline" size="sm" onClick={handleShare}>
-              <Share2 className="w-4 h-4 mr-2" />
-              Distribuie
-            </Button>
+            <ShareButton title={post.title} />
           </div>
         </section>
 

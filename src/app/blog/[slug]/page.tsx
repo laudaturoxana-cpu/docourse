@@ -92,7 +92,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
-      <BlogPost />
+      <BlogPost slug={slug} />
     </>
   );
 }

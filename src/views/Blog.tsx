@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { Calendar, ArrowRight } from "lucide-react";
 import BlogHeader from "@/components/BlogHeader";
@@ -32,32 +31,7 @@ const blogPosts = [
 
 const Blog = () => {
   return (
-    <>
-      
-
-        <meta
-          name="description"
-          content="Articole, ghiduri și sfaturi pentru creatori de cursuri online. Învață cum să creezi, promovezi și vinzi cursuri digitale."
-        />
-        <meta name="keywords" content="blog cursuri online, ghiduri creatori, cum sa faci cursuri online, marketing cursuri" />
-        <link rel="canonical" href="https://docourse.ro/blog" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Blog",
-            "name": "Blog DoCourse",
-            "description": "Ghiduri și articole pentru creatori de cursuri online",
-            "url": "https://docourse.ro/blog",
-            "publisher": {
-              "@type": "Organization",
-              "name": "DoCourse",
-              "url": "https://docourse.ro"
-            }
-          })}
-        </script>
-      
-
-      <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
         <BlogHeader />
         <main>
           {/* Hero Section */}
@@ -132,7 +106,6 @@ const Blog = () => {
         </main>
         <Footer />
       </div>
-    </>
   );
 };
 
