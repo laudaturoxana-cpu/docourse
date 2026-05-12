@@ -1,6 +1,81 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const ROBOTS_TXT = `Content-Signal: ai-train=no, search=yes, ai-input=no
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+Disallow: /student-login
+Disallow: /student-register
+Disallow: /onboarding
+Disallow: /reset-password
+Disallow: /create-course
+Disallow: /create-membership
+Disallow: /memberships
+Disallow: /my-memberships
+Disallow: /my-communities
+Disallow: /subscription-required
+Disallow: /integrations
+Disallow: /capture
+Disallow: /certificate
+Disallow: /multumesc-grupa
+Disallow: /multumesc-tutorial
+Disallow: /membership-thank-you
+
+User-agent: GPTBot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+Sitemap: https://docourse.ro/sitemap.xml
+`;
+
 const HOME_MARKDOWN = `# DoCourse — Platformă cursuri online România
 
 > Platforma românească pentru creatori de cursuri online. Simplu, rapid, profesionist.
@@ -38,9 +113,22 @@ Creatori de cursuri din România: coachi, traineri, psihologi, profesori, consul
 `;
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Robots.txt cu Content-Signal directive (contentsignals.org)
+  if (pathname === "/robots.txt") {
+    return new NextResponse(ROBOTS_TXT, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "public, max-age=86400",
+      },
+    });
+  }
+
   // Markdown for Agents (RFC agent-readiness) — returnează markdown când agentul cere text/markdown
   const accept = request.headers.get("accept") ?? "";
-  if (accept.includes("text/markdown") && request.nextUrl.pathname === "/") {
+  if (accept.includes("text/markdown") && pathname === "/") {
     return new NextResponse(HOME_MARKDOWN, {
       status: 200,
       headers: {

@@ -1,47 +1,11 @@
 import type { MetadataRoute } from "next";
 
-const PRIVATE_PATHS = [
-  "/dashboard",
-  "/admin",
-  "/student",
-  "/student-login",
-  "/student-register",
-  "/onboarding",
-  "/reset-password",
-  "/create-course",
-  "/create-membership",
-  "/memberships",
-  "/my-memberships",
-  "/my-communities",
-  "/subscription-required",
-  "/integrations",
-  "/capture",
-  "/certificate",
-  "/multumesc-grupa",
-  "/multumesc-tutorial",
-  "/membership-thank-you",
-];
-
+// robots.txt este servit de middleware (src/middleware.ts) pentru a putea include
+// directiva Content-Signal (contentsignals.org spec). Acest fișier există doar
+// pentru compatibilitate cu build-ul Next.js.
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: PRIVATE_PATHS,
-      },
-      // AI search bots — allow public content, block private paths
-      {
-        userAgent: ["GPTBot", "ClaudeBot", "anthropic-ai", "PerplexityBot", "Amazonbot", "Google-Extended"],
-        allow: "/",
-        disallow: PRIVATE_PATHS,
-      },
-      // AI training bots — block entirely
-      {
-        userAgent: ["CCBot", "omgilibot", "omgili", "FacebookBot", "Diffbot", "Bytespider", "ImagesiftBot"],
-        disallow: ["/"],
-      },
-    ],
+    rules: [{ userAgent: "*", allow: "/" }],
     sitemap: "https://docourse.ro/sitemap.xml",
   };
 }

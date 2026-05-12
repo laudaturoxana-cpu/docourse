@@ -1,0 +1,108 @@
+Content-Signal: ai-train=no, search=yes, ai-input=no
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+Disallow: /student-login
+Disallow: /student-register
+Disallow: /onboarding
+Disallow: /reset-password
+Disallow: /create-course
+Disallow: /create-membership
+Disallow: /memberships
+Disallow: /my-memberships
+Disallow: /my-communities
+Disallow: /subscription-required
+Disallow: /integrations
+Disallow: /capture
+Disallow: /certificate
+Disallow: /multumesc-grupa
+Disallow: /multumesc-tutorial
+Disallow: /membership-thank-you
+
+User-agent: GPTBot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+Disallow: /student-login
+Disallow: /student-register
+Disallow: /onboarding
+Disallow: /reset-password
+Disallow: /create-course
+Disallow: /create-membership
+Disallow: /memberships
+Disallow: /my-memberships
+Disallow: /my-communities
+Disallow: /subscription-required
+Disallow: /integrations
+Disallow: /capture
+Disallow: /certificate
+Disallow: /multumesc-grupa
+Disallow: /multumesc-tutorial
+Disallow: /membership-thank-you
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+Disallow: /student-login
+Disallow: /student-register
+Disallow: /onboarding
+Disallow: /reset-password
+Disallow: /create-course
+Disallow: /create-membership
+Disallow: /memberships
+Disallow: /my-memberships
+Disallow: /my-communities
+Disallow: /subscription-required
+Disallow: /integrations
+Disallow: /capture
+Disallow: /certificate
+Disallow: /multumesc-grupa
+Disallow: /multumesc-tutorial
+Disallow: /membership-thank-you
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /student
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: omgilibot
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+Sitemap: https://docourse.ro/sitemap.xml
