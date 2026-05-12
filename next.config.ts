@@ -68,7 +68,24 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/(.*)",
-        headers: securityHeaders,
+        headers: [
+          ...securityHeaders,
+          {
+            key: "Link",
+            value: [
+              '</.well-known/api-catalog>; rel="api-catalog"',
+              '</sitemap.xml>; rel="sitemap"',
+              '</.well-known/mcp/server-card.json>; rel="mcp-server-card"',
+              '</.well-known/agent-skills/index.json>; rel="agent-skills"',
+              '</.well-known/openid-configuration>; rel="openid-configuration"',
+              '</llms.txt>; rel="llms"',
+            ].join(", "),
+          },
+          {
+            key: "Content-Signal",
+            value: "ai-train=no, search=yes, ai-input=no",
+          },
+        ],
       },
       {
         source: "/_next/static/(.*)",

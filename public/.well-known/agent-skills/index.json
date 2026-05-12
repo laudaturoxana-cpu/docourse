@@ -1,0 +1,30 @@
+{
+  "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
+  "provider": {
+    "name": "DoCourse",
+    "url": "https://docourse.ro"
+  },
+  "skills": [
+    {
+      "name": "course-creation",
+      "type": "informational",
+      "description": "Creare și publicare cursuri online cu video, PDF și audio pe DoCourse",
+      "url": "https://docourse.ro/.well-known/agent-skills/course-creation/SKILL.md",
+      "sha256": "071d6a523ffbcba577eb2fcb34dfcd61802deff7180c3cad12d57812c35f7229"
+    },
+    {
+      "name": "community",
+      "type": "informational",
+      "description": "Comunitate online integrată pentru cursanți pe DoCourse",
+      "url": "https://docourse.ro/.well-known/agent-skills/community/SKILL.md",
+      "sha256": "7f90c5c6199b89a9f0925ebd8910a712866d496b211bcea1fef37629429cf864"
+    },
+    {
+      "name": "sales-page",
+      "type": "informational",
+      "description": "Sales page generat cu AI și plată Stripe pentru cursuri online",
+      "url": "https://docourse.ro/.well-known/agent-skills/sales-page/SKILL.md",
+      "sha256": "8393c174c9b9c169523392387a829e8553d2c66bd7554b6cd249d21a2ecdd528"
+    }
+  ]
+}

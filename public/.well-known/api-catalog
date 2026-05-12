@@ -1,0 +1,9 @@
+{
+  "apis": [],
+  "provider": {
+    "name": "DoCourse",
+    "url": "https://docourse.ro",
+    "contact": "https://docourse.ro/contact"
+  },
+  "description": "DoCourse este o platformă SaaS pentru creatori de cursuri online din România. Nu expune un API public în acest moment."
+}

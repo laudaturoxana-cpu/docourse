@@ -1,0 +1,25 @@
+{
+  "serverInfo": {
+    "name": "DoCourse",
+    "version": "1.0.0",
+    "description": "Platforma românească pentru creatori de cursuri online"
+  },
+  "transport": [
+    {
+      "type": "http",
+      "url": "https://docourse.ro/api/mcp"
+    }
+  ],
+  "capabilities": {
+    "tools": true,
+    "resources": false,
+    "prompts": false
+  },
+  "contact": {
+    "url": "https://docourse.ro/contact"
+  },
+  "legal": {
+    "terms_of_service": "https://docourse.ro/termeni-si-conditii",
+    "privacy_policy": "https://docourse.ro/politica-de-confidentialitate"
+  }
+}

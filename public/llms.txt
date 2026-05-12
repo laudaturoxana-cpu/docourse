@@ -1,0 +1,40 @@
+# DoCourse — Platformă cursuri online România
+
+> Platforma românească pentru creatori de cursuri online. Simplu, rapid, profesionist.
+
+DoCourse este un SaaS pentru creatorii din România care vor să publice și să vândă cursuri online,
+să construiască comunități și să ofere acces controlat la conținut — totul la 9€/lună.
+
+## Funcționalități principale
+
+- Creare și publicare cursuri video, PDF, audio
+- Acces controlat pentru cursanți (prin link sau cont)
+- Comunitate online integrată
+- Sales page generat cu AI (Gemini)
+- Email marketing și funneluri de vânzare
+- Hosting video inclus — fără Vimeo sau YouTube
+- Certificat de absolvire automatizat
+- Domeniu propriu (white label)
+
+## Prețuri
+
+- **Starter**: 9€/lună — cursuri, acces controlat, comunitate, certificat
+- **Pro**: 19€/lună — tot Starter + sales page AI, Stripe, email marketing, funneluri
+
+## Pagini utile
+
+- [Prezentare](https://docourse.ro)
+- [Prețuri](https://docourse.ro/pricing)
+- [Blog](https://docourse.ro/blog)
+- [Contact](https://docourse.ro/contact)
+- [Termeni și condiții](https://docourse.ro/termeni-si-conditii)
+- [Politică de confidențialitate](https://docourse.ro/politica-de-confidentialitate)
+
+## Drepturi de conținut
+
+Conținutul acestui site nu poate fi utilizat pentru antrenarea modelelor AI fără permisiune scrisă.
+Utilizarea pentru indexare și căutare web este permisă.
+
+## Contact
+
+Email: contact@docourse.ro
