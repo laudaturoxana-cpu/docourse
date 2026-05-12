@@ -76,6 +76,14 @@ Disallow: /
 Sitemap: https://docourse.ro/sitemap.xml
 `;
 
+const OAUTH_PROTECTED_RESOURCE = JSON.stringify({
+  resource: "https://docourse.ro",
+  authorization_servers: ["https://eecfmmijezfrnqeewhhr.supabase.co/auth/v1"],
+  scopes_supported: ["openid", "email", "profile"],
+  bearer_methods_supported: ["header"],
+  resource_signing_alg_values_supported: ["RS256"],
+}, null, 2);
+
 const HOME_MARKDOWN = `# DoCourse — Platformă cursuri online România
 
 > Platforma românească pentru creatori de cursuri online. Simplu, rapid, profesionist.
@@ -121,6 +129,17 @@ export async function middleware(request: NextRequest) {
       status: 200,
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "public, max-age=86400",
+      },
+    });
+  }
+
+  // OAuth Protected Resource Metadata (RFC 9728)
+  if (pathname === "/.well-known/oauth-protected-resource") {
+    return new NextResponse(OAUTH_PROTECTED_RESOURCE, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
         "Cache-Control": "public, max-age=86400",
       },
     });
