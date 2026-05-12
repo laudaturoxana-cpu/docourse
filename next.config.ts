@@ -78,6 +78,7 @@ const nextConfig: NextConfig = {
               '</.well-known/mcp/server-card.json>; rel="mcp-server-card"',
               '</.well-known/agent-skills/index.json>; rel="agent-skills"',
               '</.well-known/openid-configuration>; rel="openid-configuration"',
+              '</.well-known/agent-card.json>; rel="https://google.com/a2a/agent-card"',
               '</llms.txt>; rel="llms"',
             ].join(", "),
           },
