@@ -33,6 +33,10 @@ const PRO_FEATURES = [
   "Sales page generat cu AI (Gemini)",
   "Buton de plată Stripe pe sales page",
   "Sau link Calendly / WhatsApp",
+  "Email marketing — liste nelimitate de abonați",
+  "Funnel complet: pagină captură + pagină mulțumire",
+  "Lead magnet gratuit conectat la lista ta",
+  "Pagini de captură cu formular de înscriere",
   "Statistici vânzări avansate",
   "Suport prioritar",
 ];
@@ -186,7 +190,7 @@ const PlanSelectionDialog = ({ open, onOpenChange }: PlanSelectionDialogProps) =
             <div className="flex items-center justify-between">
               <div>
                 <div className="font-semibold text-foreground">Pro</div>
-                <div className="text-sm text-muted-foreground">Starter + sales page AI și vânzări</div>
+                <div className="text-sm text-muted-foreground">Sales page AI + email marketing + funnel</div>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-navy">
