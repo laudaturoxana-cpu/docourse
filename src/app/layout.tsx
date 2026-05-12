@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   verification: {
     other: {
-      "msvalidate.01": "74291723EFA920717D6DFFF2A09F1CB7",
+      "msvalidate.01": "65BAE6956AC6F2846C305A73112D054F",
       "facebook-domain-verification": "f9sg20pqrljfemhn6nxjkmv6t7u9uw",
     },
   },
