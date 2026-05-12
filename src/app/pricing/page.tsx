@@ -11,6 +11,12 @@ export const metadata: Metadata = {
     url: "https://docourse.ro/pricing",
     images: [{ url: "https://docourse.ro/og-image.png", width: 1200, height: 630 }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Prețuri DoCourse — cursuri online de la 9€/lună",
+    description: "Planuri accesibile pentru creatori de cursuri. 7 zile gratuit, fără comisioane.",
+    images: ["https://docourse.ro/og-image.png"],
+  },
 };
 
 const pricingLd = {

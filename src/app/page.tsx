@@ -14,6 +14,12 @@ export const metadata: Metadata = {
     type: "website",
     images: [{ url: "https://docourse.ro/og-image.png", width: 1200, height: 630 }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "DoCourse — Platformă cursuri online în România",
+    description: "Platforma românească pentru creatori de cursuri online. Simplu, rapid, profesionist. Cursuri, comunitate și acces controlat — totul la 9€/lună.",
+    images: ["https://docourse.ro/og-image.png"],
+  },
 };
 
 const softwareAppLd = {
