@@ -29,13 +29,13 @@ const securityHeaders = [
       // Images: own domain, Supabase storage, Unsplash, data URIs, blobs
       "img-src 'self' https: data: blob:",
       // API calls: Supabase REST + Realtime WS, Stripe
-      `connect-src 'self' ${ALLOWED_ORIGINS} https://*.supabase.co wss://*.supabase.co https://api.stripe.com`,
+      `connect-src 'self' ${ALLOWED_ORIGINS} https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://checkout.stripe.com https://q.stripe.com https://r.stripe.com https://m.stripe.com https://m.stripe.network`,
       // Fonts
       "font-src 'self' https://fonts.gstatic.com data:",
       // Audio/video: Supabase Storage files + blobs
       "media-src 'self' https://*.supabase.co blob: data:",
       // iframes: Stripe payments + YouTube + Vimeo embeds
-      "frame-src https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://youtube.com https://player.vimeo.com https://vimeo.com",
+      "frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://pay.stripe.com https://www.youtube.com https://youtube.com https://player.vimeo.com https://vimeo.com",
       // Block plugins (Flash, etc.)
       "object-src 'none'",
       // Prevent base tag hijacking
