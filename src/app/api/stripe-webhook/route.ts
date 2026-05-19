@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
+
+function verifyStripeSignature(body: string, signature: string, secret: string): boolean {
+  const parts: Record<string, string> = {};
+  for (const part of signature.split(",")) {
+    const [k, v] = part.split("=");
+    parts[k] = v;
+  }
+  if (!parts.t || !parts.v1) return false;
+  const signed = `${parts.t}.${body}`;
+  const expected = crypto.createHmac("sha256", secret).update(signed, "utf8").digest("hex");
+  return crypto.timingSafeEqual(Buffer.from(parts.v1), Buffer.from(expected));
+}
 
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -10,13 +22,8 @@ export async function POST(request: NextRequest) {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!webhookSecret || !supabaseUrl || !supabaseServiceKey) {
-    console.error("Missing env vars:", { webhookSecret: !!webhookSecret, supabaseUrl: !!supabaseUrl, supabaseServiceKey: !!supabaseServiceKey });
     return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
   }
-
-  // Only used for signature verification — no API calls needed
-  const stripe = new Stripe("sk_placeholder");
-  const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   const body = await request.text();
   const signature = request.headers.get("stripe-signature");
@@ -25,20 +32,27 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No signature" }, { status: 400 });
   }
 
-  let event: Stripe.Event;
+  let valid: boolean;
   try {
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-  } catch (err) {
-    console.error("Stripe signature verification failed:", err);
+    valid = verifyStripeSignature(body, signature, webhookSecret);
+  } catch {
+    valid = false;
+  }
+
+  if (!valid) {
+    console.error("Invalid Stripe signature");
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
-  console.log("Stripe webhook event:", event.type);
+  const event = JSON.parse(body);
+  console.log("Stripe event:", event.type);
+
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
   try {
     switch (event.type) {
       case "checkout.session.completed": {
-        const session = event.data.object as Stripe.Checkout.Session;
+        const session = event.data.object;
         if (session.mode !== "subscription") break;
         if (session.metadata?.membership_plan_id) break;
         const email = session.customer_email || session.customer_details?.email;
@@ -50,27 +64,25 @@ export async function POST(request: NextRequest) {
 
       case "invoice.payment_succeeded":
       case "invoice.paid": {
-        const invoice = event.data.object as Stripe.Invoice;
+        const invoice = event.data.object;
         if (!invoice.subscription) break;
-        // Skip membership invoices
-        if ((invoice as any).lines?.data?.[0]?.metadata?.membership_plan_id) break;
         const email = invoice.customer_email;
         if (!email) break;
-        const planType = (invoice as any).lines?.data?.[0]?.price?.metadata?.plan_type || "starter";
+        const planType = invoice.lines?.data?.[0]?.price?.metadata?.plan_type || "starter";
         await activateByEmail(supabase, email, planType);
         break;
       }
 
       case "invoice.payment_failed": {
-        const invoice = event.data.object as Stripe.Invoice;
-        if (!(invoice as any).subscription) break;
+        const invoice = event.data.object;
+        if (!invoice.subscription) break;
         const email = invoice.customer_email;
         if (email) await deactivateByEmail(supabase, email);
         break;
       }
     }
   } catch (err) {
-    console.error("Error processing webhook event:", err);
+    console.error("Error processing event:", err);
     return NextResponse.json({ error: "Processing error" }, { status: 500 });
   }
 
@@ -78,19 +90,19 @@ export async function POST(request: NextRequest) {
 }
 
 async function activateByEmail(supabase: ReturnType<typeof createClient>, email: string, planType: string) {
-  const { data: profile, error } = await supabase
+  const { data: profile } = await supabase
     .from("profiles")
     .select("user_id, subscription_active")
     .eq("email", email.toLowerCase())
     .maybeSingle();
 
-  if (error || !profile) {
+  if (!profile) {
     console.log(`No profile for ${email}`);
     return;
   }
 
   if (profile.subscription_active === false) {
-    console.log(`Subscription manually canceled for ${email}, skipping`);
+    console.log(`Manually canceled for ${email}, skipping`);
     return;
   }
 
@@ -103,13 +115,13 @@ async function activateByEmail(supabase: ReturnType<typeof createClient>, email:
 }
 
 async function deactivateByEmail(supabase: ReturnType<typeof createClient>, email: string) {
-  const { data: profile, error } = await supabase
+  const { data: profile } = await supabase
     .from("profiles")
     .select("user_id")
     .eq("email", email.toLowerCase())
     .maybeSingle();
 
-  if (error || !profile) return;
+  if (!profile) return;
 
   await supabase
     .from("profiles")
