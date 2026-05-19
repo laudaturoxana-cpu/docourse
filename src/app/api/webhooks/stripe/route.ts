@@ -109,7 +109,7 @@ async function activateByEmail(supabase: any, email: string, planType: string) {
 
   await supabase
     .from("profiles")
-    .update({ subscription_active: true, plan_type: planType, stripe_status: "active" })
+    .update({ subscription_active: true, plan_type: planType })
     .eq("user_id", profile.user_id);
 
   console.log(`Activated ${email}, plan=${planType}`);
@@ -127,7 +127,7 @@ async function deactivateByEmail(supabase: any, email: string) {
 
   await supabase
     .from("profiles")
-    .update({ subscription_active: false, stripe_status: "canceled" })
+    .update({ subscription_active: false })
     .eq("user_id", profile.user_id);
 
   console.log(`Deactivated ${email}`);
