@@ -89,7 +89,8 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ received: true });
 }
 
-async function activateByEmail(supabase: ReturnType<typeof createClient>, email: string, planType: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function activateByEmail(supabase: any, email: string, planType: string) {
   const { data: profile } = await supabase
     .from("profiles")
     .select("user_id, subscription_active")
@@ -114,7 +115,8 @@ async function activateByEmail(supabase: ReturnType<typeof createClient>, email:
   console.log(`Activated ${email}, plan=${planType}`);
 }
 
-async function deactivateByEmail(supabase: ReturnType<typeof createClient>, email: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function deactivateByEmail(supabase: any, email: string) {
   const { data: profile } = await supabase
     .from("profiles")
     .select("user_id")
