@@ -106,8 +106,8 @@ const nextConfig: NextConfig = {
 };
 
 export default withSentryConfig(nextConfig, {
-  org: "docourse",
-  project: "docourse-next",
+  org: "roxana-laudatu",
+  project: "docourse-nextjs",
   silent: true,
   widenClientFileUpload: true,
   disableLogger: true,
