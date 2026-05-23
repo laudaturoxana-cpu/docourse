@@ -6,47 +6,64 @@
 
 Lucrezi exclusiv pe **`docourse-next/`** — platforma Next.js de la `https://docourse.ro`.
 
-**Nu atinge niciodată:**
-- `simple-course-link/` — proiect separat cu Edge Functions Deno/Supabase
-- Fișiere `.env.local`, chei API, credențiale Stripe sau Supabase
-- Tabelele din Supabase fără să verifici schema reală cu `information_schema.columns`
+**Nu atinge niciodată fără instrucțiune explicită:**
+- `simple-course-link/` — proiect separat cu Edge Functions Deno/Supabase, reguli diferite
+- Orice fișier `.env.local` sau fișier cu credențiale
+- Tabelele din Supabase fără să verifici schema reală cu `information_schema.columns` înainte
 
-## Înainte de orice push
-
-Rulează obligatoriu în ordine:
+## Înainte de orice push — în această ordine
 
 ```bash
-npx tsc --noEmit          # zero erori TypeScript
-npm run build             # build complet fără erori webpack
+# 1. Zero erori TypeScript
+npx tsc --noEmit
+
+# 2. Build complet fără erori webpack sau de tip
+npm run build
+
+# 3. Zero vulnerabilități HIGH sau CRITICAL
+npm audit --audit-level=high
+
+# 4. SEMNAL DE ALARMĂ — verifici că nu ai commitat secrete
+git status
+# Dacă apare orice fișier .env, .env.local, .env.production — STOP, nu faci push
 ```
 
-Dacă oricare din comenzi eșuează, **nu push**. Rezolvă eroarea mai întâi.
+Dacă oricare din primele trei eșuează — **nu push**. Rezolvi eroarea mai întâi.
 
-## Stack tehnic exact
+## Stack tehnic identificat în proiect
 
-| Strat | Tehnologie |
-|-------|-----------|
-| Framework | Next.js 15 (App Router) |
-| Limbaj | TypeScript 5, strict mode |
-| UI | Tailwind CSS + Radix UI + shadcn/ui |
-| Rich text | TipTap 3 |
-| Data fetching | TanStack Query 5 |
-| Sanitizare HTML | DOMPurify (instalat, folosește-l) |
-| Bază de date | Supabase (PostgreSQL) |
-| Auth | Supabase Auth (`@supabase/ssr`) |
-| Storage | Supabase Storage |
-| Plăți | Stripe (subscripții, webhooks, checkout) |
-| Deploy | Vercel (auto-deploy din `main`) |
-| Edge Functions | Deno (în `simple-course-link/supabase/functions/`) |
+| Strat | Tehnologie | Versiune |
+|-------|-----------|---------|
+| Framework | Next.js App Router | 15.5.15 |
+| Limbaj | TypeScript | 5, `strict: true` |
+| UI components | Radix UI + shadcn/ui | latest |
+| Styling | Tailwind CSS | 3.4 |
+| Rich text editor | TipTap | 3.22 |
+| Formulare | React Hook Form + Zod | latest |
+| Data fetching | TanStack Query | 5 |
+| Sanitizare HTML | DOMPurify | 3.4 |
+| Charts | Recharts | 2.15 |
+| Bază de date | Supabase (PostgreSQL) | `@supabase/supabase-js` 2.105 |
+| Auth | Supabase Auth | `@supabase/ssr` 0.10 |
+| Storage | Supabase Storage | — |
+| Plăți | Stripe webhooks (native crypto) | fără SDK instalat |
+| Deploy | Vercel (auto-deploy din `main`) | — |
+| Versionare | GitHub | — |
 
-## Reguli Supabase
+**Stripe SDK nu este instalat.** Verificarea webhook-urilor folosește `crypto` nativ din Node.js.
 
-**Schema profiles — coloane existente:**
-`id, full_name, bio, email, created_at, updated_at, user_id, beta_tester, lifetime_access, subscription_active, activity, avatar_url, stripe_customer_id, stripe_subscription_id, role, plan_type`
+## Reguli specifice Supabase
+
+**Schema tabelului `profiles` — coloane existente:**
+```
+id, full_name, bio, email, created_at, updated_at, user_id,
+beta_tester, lifetime_access, subscription_active, activity,
+avatar_url, stripe_customer_id, stripe_subscription_id, role, plan_type
+```
 
 **Nu există coloana `stripe_status`** — nu o include în niciun `update` sau `select`.
 
-Când cauți un user după email, verifică că `profiles.email` nu e null. Dacă poate fi null, join cu `auth.users`:
+`profiles.email` poate fi `null` pentru useri mai vechi. Când ai nevoie de email garantat, join cu `auth.users`:
 ```sql
 SELECT p.*, au.email
 FROM profiles p
@@ -54,51 +71,82 @@ JOIN auth.users au ON p.user_id = au.id
 WHERE au.email = $1;
 ```
 
-Nu apela niciodată `supabase.auth.admin.listUsers()` — face timeout. Interoghează direct `profiles`.
+Nu apela niciodată `supabase.auth.admin.listUsers()` — face timeout pe volume mari. Interoghează direct tabelul `profiles` filtrat pe `email` sau `user_id`.
 
-Clientul Supabase cu service role (pentru operații admin) se creează cu `SUPABASE_SERVICE_ROLE_KEY`, nu cu `NEXT_PUBLIC_SUPABASE_ANON_KEY`. Service role key este format JWT (`eyJ...`).
+Clientul admin (service role) se creează cu `SUPABASE_SERVICE_ROLE_KEY`. Aceasta este o cheie JWT format `eyJ...` — **nu** este aceeași cu `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 
-## Reguli Stripe
+## Reguli specifice Stripe
 
-Webhook-ul de producție este la `/api/webhooks/stripe` (ruta: `src/app/api/webhooks/stripe/route.ts`).
+Webhook-ul de producție: `src/app/api/webhooks/stripe/route.ts` → `https://docourse.ro/api/webhooks/stripe`
 
-Verificarea semnăturii folosește **native Node.js `crypto`**, nu Stripe SDK:
-- Body-ul se citește cu `request.text()` — niciodată `request.json()` înainte de verificare
-- Signing secret vine din `process.env.STRIPE_WEBHOOK_SECRET`
-- Variabilele de mediu Stripe stau în Vercel, nu în cod
+**Verificarea semnăturii folosește `crypto` nativ Node.js** — nu importa pachetul `stripe` pentru asta.
 
-Evenimentele procesate de webhook:
-- `checkout.session.completed` → activează user dacă `session.mode === "subscription"`
+Regula obligatorie pentru orice API route care verifică webhook-uri Stripe:
+```typescript
+export const runtime = "nodejs"; // necesar pentru crypto nativ și request.text()
+```
+
+Body-ul se citește cu `request.text()` **înainte** de `JSON.parse()`. Ordinea contează — semnătura se calculează pe body-ul raw.
+
+Evenimentele procesate:
+- `checkout.session.completed` → activează user dacă `session.mode === "subscription"` și nu are `metadata.membership_plan_id`
 - `invoice.payment_succeeded` / `invoice.paid` → activează user
 - `invoice.payment_failed` → dezactivează user
 
-Activarea/dezactivarea se face prin update pe `profiles` cu coloanele `subscription_active` și `plan_type` — **nimic altceva**.
+Activarea/dezactivarea scrie **exclusiv** pe coloanele `subscription_active` și `plan_type` din `profiles`. Nicio altă coloană.
 
-## Reguli Next.js / App Router
+## Reguli specifice Next.js / App Router
 
-- `export const runtime = "nodejs"` în orice API route care folosește `crypto` nativ sau citește body raw.
-- Server Components sunt default. `"use client"` doar când e strict necesar.
-- URL-ul de producție este `https://docourse.ro` (fără `www.`). Nu hardcoda `www.docourse.ro` — provoacă redirect 301 care sparge webhook-urile Stripe.
-- Security headers sunt în `next.config.ts`. Dacă adaugi o resursă externă nouă, actualizează CSP în același PR.
+URL-ul de producție este **`https://docourse.ro`** (fără `www.`). Nu hardcoda `www.docourse.ro` nicăieri — provoacă redirect 301 care sparge webhook-urile Stripe (semnătura nu mai e validă după redirect).
 
-## Reguli TypeScript
+Security headers configurate în `next.config.ts` — aplicate pe toate rutele. Dacă adaugi o resursă externă nouă (API, font, CDN, iframe), actualizezi `Content-Security-Policy` în același PR.
 
-- `strict: true` activ — nu îl dezactiva.
-- `ReturnType<typeof createClient>` din Supabase generează incompatibilități de generics. Când pasezi clientul ca parametru, tipează-l cu `any` și adaugă comentariul `// Supabase generic mismatch`.
-- Rulează `npx tsc --noEmit` local înainte de push — build-ul pe Vercel eșuează pe erori de tip.
+`export const runtime = "nodejs"` necesar în orice route care:
+- Folosește `crypto` din Node.js
+- Citește body-ul ca text raw (`request.text()`)
+- Folosește module Node.js indisponibile în Edge runtime
 
-## Reguli Vercel / deploy
+## Reguli specifice TypeScript
 
-- Variabilele de mediu se setează în Vercel Dashboard → Settings → Environment Variables.
-- Variabile necesare în producție: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `STRIPE_WEBHOOK_SECRET`.
-- Orice variabilă nouă adăugată în cod trebuie adăugată și în Vercel înainte de push — altfel build-ul trece dar runtime-ul eșuează.
-- Deploy-ul se face automat la push pe `main`. Verifică în Vercel că build-ul a trecut înainte să anunți că fix-ul e live.
+`strict: true` activ. `skipLibCheck: true` activ (pentru compatibilitate cu tipuri Supabase).
+
+ESLint marchează `any` ca **warning** (nu error) — în code review tratezi warning-urile ca erori. Nu lăsa `any` fără comentariu explicit care explică de ce e necesar.
+
+`ReturnType<typeof createClient>` din `@supabase/supabase-js` generează incompatibilități de generics la pasarea clientului ca parametru de funcție. Soluție acceptată: tipează parametrul ca `any` cu comentariul `// Supabase generic mismatch — ReturnType incompatible across versions`.
+
+## Validare
+
+`zod` este instalat. Folosește-l pentru:
+- Validarea body-ului în API routes
+- Tiparea formularelor cu `react-hook-form` + `@hookform/resolvers/zod`
+- Inferarea tipurilor TypeScript din scheme: `z.infer<typeof MySchema>`
+
+Nu creezi tipuri manual pentru date care vin din input extern — definești schema Zod și inferezi tipul.
+
+## HTML dinamic și rich text
+
+TipTap generează HTML. Înainte de `dangerouslySetInnerHTML` cu output TipTap, treci conținutul prin `DOMPurify.sanitize()`. `dompurify` este instalat.
+
+## Environment variables
+
+**Locale (development):** `.env.local` — gitignore activ prin `.env*` în `.gitignore`.
+
+**Producție:** Vercel Dashboard → Settings → Environment Variables.
+
+Variabile necesare în producție:
+- `NEXT_PUBLIC_SUPABASE_URL` — URL public Supabase (sigur în browser)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — cheie anonimă Supabase (sigură în browser)
+- `SUPABASE_SERVICE_ROLE_KEY` — cheie admin Supabase (server-side only, format `eyJ...`)
+- `STRIPE_WEBHOOK_SECRET` — signing secret webhook Stripe (server-side only, format `whsec_...`)
+
+**Nu există `.env.example` în repo** — dacă adaugi o variabilă nouă, creezi `.env.example` cu placeholder și îl commiți.
 
 ## Comportamente non-negociabile
 
-1. **Nu scrie în baza de date coloane care nu există.** Verifică schema cu SQL înainte de orice update nou.
-2. **Nu face push dacă `tsc --noEmit` sau `npm run build` eșuează.**
-3. **Nu hardcoda URL-uri cu `www.`** — platforma redirectează www → non-www și asta sparge webhook-urile.
-4. **Nu importa pachetul `stripe`** în Next.js pentru verificarea webhook-urilor — folosește `crypto` nativ.
-5. **Nu loga body-ul complet al requesturilor Stripe** în producție.
-6. **Nu activa sau dezactiva subscripții pe baza datelor din request** — verifică întotdeauna din Supabase.
+1. **Nu scrie în baza de date coloane care nu există.** Verifică schema cu `information_schema.columns` înainte de orice update care implică coloane noi sau necunoscute.
+2. **Nu face push fără `tsc --noEmit` și `npm run build` cu succes.**
+3. **Nu hardcoda URL cu `www.`** — platforma redirectează www → non-www și asta invalidează semnăturile Stripe.
+4. **Nu importa pachetul `stripe`** în Next.js pentru verificarea webhook-urilor — nu e instalat, folosești `crypto` nativ.
+5. **Nu loga body-ul complet al requesturilor Stripe** — conțin date de plată.
+6. **Nu activa sau dezactiva subscripții pe baza datelor din request** — sursa de adevăr este Supabase, actualizată exclusiv de webhook după verificarea semnăturii.
+7. **Nu apela `supabase.auth.admin.listUsers()`** — face timeout. Folosești `profiles` table direct.
