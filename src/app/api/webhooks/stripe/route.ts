@@ -16,6 +16,23 @@ function verifyStripeSignature(body: string, signature: string, secret: string):
   return crypto.timingSafeEqual(Buffer.from(parts.v1), Buffer.from(expected));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function isAlreadyProcessed(supabase: any, eventId: string): Promise<boolean> {
+  const { data } = await supabase
+    .from("processed_stripe_events")
+    .select("id")
+    .eq("event_id", eventId)
+    .maybeSingle();
+  return !!data;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function markAsProcessed(supabase: any, eventId: string, eventType: string): Promise<void> {
+  await supabase
+    .from("processed_stripe_events")
+    .insert({ event_id: eventId, event_type: eventType });
+}
+
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -45,9 +62,15 @@ export async function POST(request: NextRequest) {
   }
 
   const event = JSON.parse(body);
-  console.log("Stripe event:", event.type);
+  console.log("Stripe event:", event.type, event.id);
 
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+  // Idempotency: skip duplicate events
+  if (await isAlreadyProcessed(supabase, event.id)) {
+    console.log(`Event ${event.id} already processed, skipping`);
+    return NextResponse.json({ received: true, skipped: true });
+  }
 
   try {
     switch (event.type) {
@@ -81,6 +104,8 @@ export async function POST(request: NextRequest) {
         break;
       }
     }
+
+    await markAsProcessed(supabase, event.id, event.type);
   } catch (err) {
     console.error("Error processing event:", err);
     return NextResponse.json({ error: "Processing error" }, { status: 500 });
