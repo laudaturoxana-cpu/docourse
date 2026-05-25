@@ -77,13 +77,17 @@ const CommunityEventsTab = ({ membershipPlanId, isCreator, currentUserId: _curre
         _is_online: form.is_online,
         _link_url: form.link_url.trim() || null,
       });
-      if (error) throw error;
+      if (error) {
+        console.error("create_community_event error:", error);
+        throw error;
+      }
       toast.success("Eveniment creat!");
       setDialogOpen(false);
       setForm({ title: "", description: "", event_date: "", event_time: "", location: "", is_online: true, link_url: "" });
       loadEvents();
-    } catch {
-      toast.error("Eroare la crearea evenimentului");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : (err as { message?: string })?.message;
+      toast.error(msg ? `Eroare: ${msg}` : "Eroare la crearea evenimentului");
     } finally {
       setSaving(false);
     }
