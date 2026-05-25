@@ -5,13 +5,18 @@ import { useParams, useRouter } from "next/navigation";
 import {
   Users, MessageSquare, BookOpen, Pin, Send, SmilePlus, Lock,
   Trash2, ArrowLeft, LayoutDashboard, GraduationCap, ChevronDown,
-  ChevronUp, ImageIcon, X, Bell, BellOff,
+  ChevronUp, ImageIcon, X, Bell, BellOff, Trophy, Calendar, MessageCircle,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase/browser";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import dynamic from "next/dynamic";
+
+const CommunityLeaderboard = dynamic(() => import("@/components/community/CommunityLeaderboard"), { ssr: false });
+const CommunityEventsTab = dynamic(() => import("@/components/community/CommunityEventsTab"), { ssr: false });
+const DirectMessageDialog = dynamic(() => import("@/components/community/DirectMessageDialog"), { ssr: false });
 
 const EMOJIS = ["👍", "❤️", "🔥", "🎉", "😂", "👏", "💪", "✅"];
 
@@ -38,7 +43,7 @@ interface CourseSetting {
 }
 interface Member { user_id: string; name: string; avatar: string | null; }
 
-type Tab = "feed" | "cursuri";
+type Tab = "feed" | "cursuri" | "leaderboard" | "events" | "members";
 
 // ── Skeleton ─────────────────────────────────────────────────────────────────
 function PostSkeleton() {
@@ -103,6 +108,9 @@ export default function CreatorCommunityPage() {
 
   // Track freshly added IDs for entrance animation
   const [freshIds, setFreshIds] = useState<Set<string>>(new Set());
+
+  // DM state
+  const [dmTarget, setDmTarget] = useState<{ user_id: string; full_name: string } | null>(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (slug) loadCommunity(); }, [slug, user]);
@@ -604,25 +612,33 @@ export default function CreatorCommunityPage() {
 
       {/* ── Tabs ──────────────────────────────────────────────────────── */}
       <div className="bg-white border-b border-gray-200 sticky top-[49px] z-20 shadow-sm">
-        <div className="max-w-5xl mx-auto flex items-center">
-          {(["feed", "cursuri"] as Tab[]).map((t) => (
-            <button key={t} onClick={() => setTab(t)}
-              className={`px-6 py-3.5 text-sm font-semibold transition-colors border-b-2 ${
-                tab === t ? "border-amber-500 text-[#0a192f]" : "border-transparent text-gray-500 hover:text-[#0a192f]"
+        <div className="max-w-5xl mx-auto flex items-center overflow-x-auto scrollbar-none">
+          {([
+            { key: "feed", label: "Feed", icon: <MessageSquare className="w-3.5 h-3.5" /> },
+            { key: "events", label: "Evenimente", icon: <Calendar className="w-3.5 h-3.5" /> },
+            { key: "leaderboard", label: "Top", icon: <Trophy className="w-3.5 h-3.5" /> },
+            { key: "members", label: "Membri", icon: <Users className="w-3.5 h-3.5" /> },
+            { key: "cursuri", label: "Cursuri", icon: <BookOpen className="w-3.5 h-3.5" />, badge: courses.length > 0 ? courses.length : undefined },
+          ] as { key: Tab; label: string; icon: React.ReactNode; badge?: number }[]).map(({ key, label, icon, badge }) => (
+            <button key={key} onClick={() => setTab(key)}
+              className={`flex items-center gap-1.5 shrink-0 px-4 py-3.5 text-sm font-semibold transition-colors border-b-2 ${
+                tab === key ? "border-amber-500 text-[#0a192f]" : "border-transparent text-gray-500 hover:text-[#0a192f]"
               }`}>
-              {t === "feed" ? "Feed" : "Cursuri"}
-              {t === "cursuri" && courses.length > 0 && (
-                <span className="ml-1.5 bg-gray-100 text-gray-500 text-xs px-1.5 py-0.5 rounded-full">{courses.length}</span>
+              {icon}
+              <span className="hidden sm:inline">{label}</span>
+              {badge !== undefined && (
+                <span className="ml-1 bg-gray-100 text-gray-500 text-xs px-1.5 py-0.5 rounded-full">{badge}</span>
               )}
             </button>
           ))}
-          {/* Notification toggle — only for members/creators who are logged in */}
+
+          {/* Notification toggle — icon on mobile, full button on desktop */}
           {user && canSeeContent && pushSupported && (
             <button
               onClick={handleToggleNotifications}
               disabled={pushLoading}
               title={isSubscribed ? "Dezactivează notificările" : "Activează notificările"}
-              className={`ml-auto mr-4 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all ${
+              className={`ml-auto mr-2 shrink-0 flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
                 isSubscribed
                   ? "bg-amber-50 border-amber-300 text-amber-700 hover:bg-amber-100"
                   : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100 hover:text-[#0a192f]"
@@ -630,8 +646,8 @@ export default function CreatorCommunityPage() {
               {pushLoading
                 ? <span className="animate-spin w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full" />
                 : isSubscribed
-                  ? <><BellOff className="w-3.5 h-3.5" /> Notificări active</>
-                  : <><Bell className="w-3.5 h-3.5" /> Notifică-mă</>
+                  ? <><BellOff className="w-3.5 h-3.5" /><span className="hidden md:inline ml-1">Notificări active</span></>
+                  : <><Bell className="w-3.5 h-3.5" /><span className="hidden md:inline ml-1">Notifică-mă</span></>
               }
             </button>
           )}
@@ -857,7 +873,7 @@ export default function CreatorCommunityPage() {
               )}
             </div>
 
-            {/* Right: sidebar (desktop only) */}
+            {/* Right: sidebar (desktop only — members/courses visible via tabs on mobile) */}
             <aside className="hidden lg:block">
               <div className="sticky top-[106px] space-y-4">
 
@@ -931,6 +947,95 @@ export default function CreatorCommunityPage() {
           </div>
         )}
 
+        {/* ── LEADERBOARD TAB ──────────────────────────────────────── */}
+        {tab === "leaderboard" && community && (
+          <CommunityLeaderboard
+            membershipPlanId={community.id}
+            currentUserId={user?.id}
+          />
+        )}
+
+        {/* ── EVENTS TAB ───────────────────────────────────────────── */}
+        {tab === "events" && community && (
+          <CommunityEventsTab
+            membershipPlanId={community.id}
+            isCreator={!!isCreator}
+            currentUserId={user?.id}
+          />
+        )}
+
+        {/* ── MEMBERS TAB (mobile + all screens) ───────────────────── */}
+        {tab === "members" && (
+          <div className="space-y-4">
+            {/* Community info */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <Avatar src={community.creator_avatar} name={community.creator_name} size="md" />
+                <div>
+                  <p className="text-xs text-gray-400 leading-none mb-0.5">Creator</p>
+                  <p className="text-sm font-bold text-[#0a192f]">{community.creator_name}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Users className="w-4 h-4 text-amber-500" />
+                <span><strong className="text-[#0a192f]">{community.member_count}</strong> membri</span>
+              </div>
+            </div>
+
+            {/* Member list */}
+            {members.length > 0 && (
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Membri</h3>
+                <div className="space-y-3">
+                  {members.map((m) => (
+                    <div key={m.user_id} className="flex items-center gap-3">
+                      <Avatar src={m.avatar} name={m.name} size="sm" />
+                      <span className="flex-1 text-sm text-[#0a192f] font-medium truncate">{m.name}</span>
+                      {user && m.user_id !== user.id && (
+                        <button
+                          onClick={() => setDmTarget({ user_id: m.user_id, full_name: m.name })}
+                          title="Trimite mesaj"
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {community.member_count > members.length && (
+                  <p className="text-xs text-gray-400 mt-3">+{community.member_count - members.length} alți membri</p>
+                )}
+              </div>
+            )}
+
+            {/* Courses */}
+            {courses.length > 0 && (
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Cursuri</h3>
+                <div className="space-y-2">
+                  {courses.map((c) => (
+                    <button key={c.course_id} onClick={() => handleCourseAccess(c)}
+                      className="w-full flex items-center gap-2.5 p-2 rounded-xl hover:bg-gray-50 transition-colors text-left group">
+                      {c.image_url
+                        // eslint-disable-next-line @next/next/no-img-element
+                        ? <img src={c.image_url} alt={c.title} className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                        : <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#0a192f] to-[#1a3a6f] flex items-center justify-center shrink-0"><BookOpen className="w-5 h-5 text-white/50" /></div>
+                      }
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-[#0a192f] truncate group-hover:text-amber-600 transition-colors">{c.title}</p>
+                        <span className={`text-[10px] font-bold ${c.access_type === "free" ? "text-emerald-600" : "text-amber-600"}`}>
+                          {c.access_type === "free" ? "✓ Gratuit" : "Cu plată"}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* ── CURSURI TAB ───────────────────────────────────────────── */}
         {tab === "cursuri" && (
           <div>
@@ -999,6 +1104,17 @@ export default function CreatorCommunityPage() {
       <footer className="text-center py-5 text-xs text-gray-400 border-t border-gray-200 mt-8">
         Comunitate pe <a href="https://www.docourse.ro" className="hover:underline text-[#0a192f]">DoCourse</a>
       </footer>
+
+      {/* DM Dialog */}
+      {dmTarget && user && community && (
+        <DirectMessageDialog
+          open={!!dmTarget}
+          onClose={() => setDmTarget(null)}
+          membershipPlanId={community.id}
+          currentUserId={user.id}
+          recipient={dmTarget}
+        />
+      )}
     </div>
   );
 }
