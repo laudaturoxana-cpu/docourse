@@ -5,6 +5,7 @@ import WebMCPProvider from "@/components/WebMCPProvider";
 import { CookieConsent } from "@/components/CookieConsent";
 
 export const metadata: Metadata = {
+  manifest: "/manifest.json",
   title: {
     default: "DoCourse — Platformă cursuri online în România",
     template: "%s — DoCourse",
@@ -52,7 +53,6 @@ export default function RootLayout({
     <html lang="ro" suppressHydrationWarning>
       <head>
         <meta name="msvalidate.01" content="65BAE6956AC6F2846C305A73112D054F" />
-        <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
