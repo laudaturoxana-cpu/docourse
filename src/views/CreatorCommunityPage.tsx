@@ -458,6 +458,14 @@ export default function CreatorCommunityPage() {
     usePushNotifications(community?.id ?? "", user?.id);
 
   const handleToggleNotifications = async () => {
+    if (!pushSupported) {
+      toast({
+        title: "Browser nesuportat",
+        description: "Folosește Chrome/Edge sau adaugă site-ul la ecranul principal pe iPhone pentru notificări push.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (isSubscribed) {
       await unsubscribe();
       toast({ title: "Notificări dezactivate" });
@@ -632,12 +640,18 @@ export default function CreatorCommunityPage() {
             </button>
           ))}
 
-          {/* Notification toggle — icon on mobile, full button on desktop */}
-          {user && canSeeContent && pushSupported && (
+          {/* Notification toggle — always visible for members, graceful fallback on unsupported browsers */}
+          {user && canSeeContent && (
             <button
               onClick={handleToggleNotifications}
               disabled={pushLoading}
-              title={isSubscribed ? "Dezactivează notificările" : "Activează notificările"}
+              title={
+                !pushSupported
+                  ? "Notificările push nu sunt suportate în acest browser"
+                  : isSubscribed
+                    ? "Dezactivează notificările"
+                    : "Activează notificările"
+              }
               className={`ml-auto mr-2 shrink-0 flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
                 isSubscribed
                   ? "bg-amber-50 border-amber-300 text-amber-700 hover:bg-amber-100"
