@@ -15,10 +15,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Crown, Users, UserPlus, Search, Loader2 } from "lucide-react";
+import { Crown, Users, UserPlus, Search, Loader2, MessageSquare } from "lucide-react";
 import { supabase } from "@/lib/supabase/browser";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import DirectMessageDialog from "./DirectMessageDialog";
 
 interface Member {
   id: string;
@@ -35,6 +36,11 @@ interface CommunityMembersProps {
   creatorId: string;
 }
 
+interface DMTarget {
+  user_id: string;
+  full_name: string;
+}
+
 const CommunityMembers = ({ membershipPlanId, creatorId }: CommunityMembersProps) => {
   const { user } = useAuth();
   const [members, setMembers] = useState<Member[]>([]);
@@ -43,6 +49,7 @@ const CommunityMembers = ({ membershipPlanId, creatorId }: CommunityMembersProps
   const [searchEmail, setSearchEmail] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [foundUser, setFoundUser] = useState<{ id: string; full_name: string; email: string } | null>(null);
+  const [dmTarget, setDmTarget] = useState<DMTarget | null>(null);
 
   const isCreator = user?.id === creatorId;
 
@@ -328,46 +335,70 @@ const CommunityMembers = ({ membershipPlanId, creatorId }: CommunityMembersProps
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {members.map((member) => (
-          <Card key={member.id} className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Avatar className="w-12 h-12">
-                    <AvatarFallback className="bg-gold/20 text-gold font-semibold">
-                      {member.full_name?.charAt(0).toUpperCase() || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  {member.isActive && (
-                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" title="Activ recent" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-navy truncate">
-                      {member.full_name || "User"}
-                    </p>
-                    {member.isCreator && (
-                      <Badge variant="secondary" className="bg-gold/20 text-gold shrink-0">
-                        <Crown className="w-3 h-3 mr-1" />
-                        Creator
-                      </Badge>
+        {members.map((member) => {
+          const canDM = !!user && member.user_id !== user.id;
+          return (
+            <Card key={member.id} className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback className="bg-gold/20 text-gold font-semibold">
+                        {member.full_name?.charAt(0).toUpperCase() || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    {member.isActive && (
+                      <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background" title="Activ recent" />
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {member.isCreator
-                      ? "Admin"
-                      : member.isActive
-                      ? "Activ recent"
-                      : `Membru din ${new Date(member.joined_at ?? 0).toLocaleDateString('ro-RO', { month: 'short', year: 'numeric' })}`
-                    }
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-navy truncate">
+                        {member.full_name || "User"}
+                      </p>
+                      {member.isCreator && (
+                        <Badge variant="secondary" className="bg-gold/20 text-gold shrink-0">
+                          <Crown className="w-3 h-3 mr-1" />
+                          Creator
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {member.isCreator
+                        ? "Admin"
+                        : member.isActive
+                        ? "Activ recent"
+                        : `Membru din ${new Date(member.joined_at ?? 0).toLocaleDateString("ro-RO", { month: "short", year: "numeric" })}`
+                      }
+                    </p>
+                  </div>
+                  {canDM && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0 text-muted-foreground hover:text-gold"
+                      title="Trimite mesaj"
+                      onClick={() => setDmTarget({ user_id: member.user_id!, full_name: member.full_name || "User" })}
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                    </Button>
+                  )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
+
+      {dmTarget && user && (
+        <DirectMessageDialog
+          open={!!dmTarget}
+          onClose={() => setDmTarget(null)}
+          membershipPlanId={membershipPlanId}
+          currentUserId={user.id}
+          recipient={dmTarget}
+        />
+      )}
 
       {members.length === 0 && (
         <Card>

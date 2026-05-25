@@ -13,6 +13,8 @@ import {
   UserPlus,
   Settings,
   BookOpen,
+  Trophy,
+  Calendar,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import DashboardSidebar from "@/components/DashboardSidebar";
@@ -27,6 +29,9 @@ import CreatePostForm from "@/components/community/CreatePostForm";
 import PostCard from "@/components/community/PostCard";
 import CommunityMembers from "@/components/community/CommunityMembers";
 import CommentsDialog from "@/components/community/CommentsDialog";
+import CommunityLeaderboard from "@/components/community/CommunityLeaderboard";
+import CommunityEventsTab from "@/components/community/CommunityEventsTab";
+import NotificationBell from "@/components/community/NotificationBell";
 
 const Community = () => {
   const _params = useParams<{ membershipId: string }>();
@@ -244,14 +249,25 @@ const Community = () => {
               )}
             </div>
               
-              {isCreator && (
-                <Link href={`/dashboard/community/${membershipId}`}>
-                  <Button variant="outline" size="sm">
-                    <Settings className="w-4 h-4 mr-2" />
-                    Admin
-                  </Button>
-                </Link>
-              )}
+              <div className="flex items-center gap-2">
+                {user && membershipId && (
+                  <NotificationBell
+                    membershipPlanId={membershipId}
+                    onOpenPost={(postId) => {
+                      const post = posts?.find((p) => p.id === postId);
+                      if (post) openPostComments(post);
+                    }}
+                  />
+                )}
+                {isCreator && (
+                  <Link href={`/dashboard/community/${membershipId}`}>
+                    <Button variant="outline" size="sm">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Admin
+                    </Button>
+                  </Link>
+                )}
+              </div>
             </div>
           </header>
 
@@ -297,18 +313,26 @@ const Community = () => {
           <div className="flex-1 px-3 lg:px-8 py-4 lg:py-6 overflow-auto pb-mobile-nav">
             <div className="max-w-3xl mx-auto">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="mb-4 lg:mb-6 bg-background border border-border w-full sm:w-auto">
-                  <TabsTrigger value="feed" className="flex items-center gap-1.5 lg:gap-2 flex-1 sm:flex-none text-sm">
+                <TabsList className="mb-4 lg:mb-6 bg-background border border-border w-full sm:w-auto flex-wrap h-auto gap-1">
+                  <TabsTrigger value="feed" className="flex items-center gap-1.5 text-sm">
                     <MessageSquare className="w-4 h-4" />
                     Feed
                   </TabsTrigger>
-                  <TabsTrigger value="course" className="flex items-center gap-1.5 lg:gap-2 flex-1 sm:flex-none text-sm">
-                    <BookOpen className="w-4 h-4" />
-                    Curs
+                  <TabsTrigger value="events" className="flex items-center gap-1.5 text-sm">
+                    <Calendar className="w-4 h-4" />
+                    Evenimente
                   </TabsTrigger>
-                  <TabsTrigger value="members" className="flex items-center gap-1.5 lg:gap-2 flex-1 sm:flex-none text-sm">
+                  <TabsTrigger value="leaderboard" className="flex items-center gap-1.5 text-sm">
+                    <Trophy className="w-4 h-4" />
+                    Top
+                  </TabsTrigger>
+                  <TabsTrigger value="members" className="flex items-center gap-1.5 text-sm">
                     <Users className="w-4 h-4" />
                     Membri
+                  </TabsTrigger>
+                  <TabsTrigger value="course" className="flex items-center gap-1.5 text-sm">
+                    <BookOpen className="w-4 h-4" />
+                    Curs
                   </TabsTrigger>
                 </TabsList>
 
@@ -466,6 +490,21 @@ const Community = () => {
                   <CommunityMembers
                     membershipPlanId={membershipId!}
                     creatorId={membershipPlan.creator_id || ""}
+                  />
+                </TabsContent>
+
+                <TabsContent value="leaderboard">
+                  <CommunityLeaderboard
+                    membershipPlanId={membershipId!}
+                    currentUserId={user?.id}
+                  />
+                </TabsContent>
+
+                <TabsContent value="events">
+                  <CommunityEventsTab
+                    membershipPlanId={membershipId!}
+                    isCreator={isCreator}
+                    currentUserId={user?.id}
                   />
                 </TabsContent>
               </Tabs>
