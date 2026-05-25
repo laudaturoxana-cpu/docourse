@@ -2,7 +2,7 @@
   "name": "DoCourse — Cursuri Online România",
   "short_name": "DoCourse",
   "description": "Platformă română pentru creatori de cursuri online",
-  "start_url": "/",
+  "start_url": "/community/ai-business-accelerate",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
