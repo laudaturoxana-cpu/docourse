@@ -460,9 +460,8 @@ export default function CreatorCommunityPage() {
   const handleToggleNotifications = async () => {
     if (!pushSupported) {
       toast({
-        title: "Browser nesuportat",
-        description: "Folosește Chrome/Edge sau adaugă site-ul la ecranul principal pe iPhone pentru notificări push.",
-        variant: "destructive",
+        title: "Activează notificările",
+        description: "Pe iPhone: apasă Share → Adaugă la ecranul principal, apoi revino aici. Pe Android folosește Chrome.",
       });
       return;
     }
