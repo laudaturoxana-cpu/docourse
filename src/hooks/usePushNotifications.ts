@@ -52,7 +52,9 @@ export function usePushNotifications(communityId: string, userId: string | undef
       const existingSub = await reg.pushManager.getSubscription();
       if (existingSub) await existingSub.unsubscribe();
 
-      const keyBytes = urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!);
+      const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+      console.log("[subscribe] VAPID key used:", vapidKey?.slice(0, 20), "...", vapidKey?.slice(-10), "length:", vapidKey?.length);
+      const keyBytes = urlBase64ToUint8Array(vapidKey!);
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: keyBytes.buffer as ArrayBuffer,
