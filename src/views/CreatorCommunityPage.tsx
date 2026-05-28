@@ -396,11 +396,6 @@ export default function CreatorCommunityPage() {
           url: `/community/${slug}`,
           exclude_user_id: user.id,
         },
-      }).then(({ data, error }) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const results = (data as any)?.results as { status: number; ok: boolean }[] | undefined;
-        const statuses = results?.map((r) => r.status).join(", ") ?? "no results";
-        toast({ title: `Push: sent=${data?.sent ?? "?"}`, description: error ? String(error) : `statuses: ${statuses}` });
       });
     }
     setPosting(false);
