@@ -396,6 +396,8 @@ export default function CreatorCommunityPage() {
           url: `/community/${slug}`,
           exclude_user_id: user.id,
         },
+      }).then(({ data, error }) => {
+        console.log("[push] result:", data, "error:", error);
       });
     }
     setPosting(false);
