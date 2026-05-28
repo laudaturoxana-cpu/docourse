@@ -1,4 +1,5 @@
 self.addEventListener('push', function (event) {
+  console.log('[sw] push received, data:', event.data?.text());
   const data = event.data?.json() ?? {};
   const title = data.title || 'DoCourse';
   const options = {
