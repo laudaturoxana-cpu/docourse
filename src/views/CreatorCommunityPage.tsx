@@ -397,7 +397,7 @@ export default function CreatorCommunityPage() {
           exclude_user_id: user.id,
         },
       }).then(({ data, error }) => {
-        console.log("[push] result:", data, "error:", error);
+        toast({ title: `Push: sent=${data?.sent ?? "?"}`, description: error ? String(error) : "ok" });
       });
     }
     setPosting(false);
