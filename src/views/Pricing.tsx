@@ -10,23 +10,27 @@ import { toast } from "sonner";
 
 const STARTER_FEATURES = [
   "Cursuri nelimitate",
+  "Comunitate inclusă",
+  "Membrii comunității → adăugați automat în lista ta de contacte",
   "Lecții nelimitate",
   "Fișiere nelimitate — video, audio, PDF, orice",
   "Acces public sau privat",
   "Acces programat pe date",
   "Parcurgere secvențială",
   "Dashboard pentru cursanți",
-  "Comunitate inclusă",
   "URL-uri personalizabile",
   "Suport în română",
-  "Fără comisioane la vânzări",
+  "0% comision din vânzările tale",
 ];
 
 const PRO_FEATURES = [
   "Tot ce include Starter",
+  "Email marketing — liste nelimitate de abonați",
+  "Campanii email direct din platformă",
   "Sales page generat cu AI (Gemini)",
   "Buton de plată Stripe pe sales page",
-  "Sau link Calendly / WhatsApp",
+  "Funnel complet: pagină captură + pagină mulțumire",
+  "Lead magnet gratuit conectat la lista ta",
   "Statistici vânzări avansate",
   "Suport prioritar",
 ];
@@ -182,7 +186,7 @@ export default function Pricing() {
               </div>
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-navy mb-1">Pro</h2>
-                <p className="text-muted-foreground text-sm">Sales page cu AI și unelte de vânzare incluse.</p>
+                <p className="text-muted-foreground text-sm">Email marketing + AI + funnel — tot ecosistemul tău.</p>
               </div>
               <div className="mb-8">
                 <div className="flex items-baseline gap-2">
