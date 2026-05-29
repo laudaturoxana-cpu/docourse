@@ -474,6 +474,10 @@ const Dashboard = () => {
                     <ul className="space-y-2">
                       <li className="flex items-start gap-2 text-xs text-muted-foreground">
                         <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" />
+                        <span><strong className="text-foreground">Notificări în comunitate</strong> — primești notificare când cineva comentează la postarea ta, răspunde la comentariul tău sau îți apreciază postarea</span>
+                      </li>
+                      <li className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" />
                         <span><strong className="text-foreground">Comunitate inclusă la Starter</strong> — când cineva se înscrie în comunitatea ta, este adăugat automat în lista ta de email</span>
                       </li>
                       <li className="flex items-start gap-2 text-xs text-muted-foreground">
