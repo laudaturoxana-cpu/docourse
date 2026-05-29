@@ -67,6 +67,7 @@ interface Profile {
   beta_tester: boolean;
   role: 'creator' | 'student';
   plan_type: 'starter' | 'pro' | null;
+  stripe_customer_id: string | null;
 }
 
 interface AuthContextType {

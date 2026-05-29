@@ -36,7 +36,7 @@ const PRO_FEATURES = [
 ];
 
 export default function Pricing() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { planType, hasActiveSubscription } = useSubscriptionCheck();
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">("monthly");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
@@ -58,9 +58,10 @@ export default function Pricing() {
         body: {
           planType: selectedPlan,
           billingPeriod,
-          userId: user?.id || null,
+          // Trimitem userId doar dacă userul a mai plătit (are stripe_customer_id)
+          // Fără stripe_customer_id = prima plată → primește trial de 7 zile
+          userId: profile?.stripe_customer_id ? user?.id : null,
           userEmail: user?.email || null,
-          // successUrl left empty — function decides based on userId
           cancelUrl: `${window.location.origin}/pricing`,
         },
       });

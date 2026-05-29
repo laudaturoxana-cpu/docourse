@@ -53,7 +53,7 @@ const PlanSelectionDialog = ({ open, onOpenChange }: PlanSelectionDialogProps) =
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("starter");
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   const prices = {
     starter: { monthly: 9, annual: 90 },
@@ -69,9 +69,10 @@ const PlanSelectionDialog = ({ open, onOpenChange }: PlanSelectionDialogProps) =
         body: {
           planType: selectedPlan,
           billingPeriod,
-          userId: user?.id || null,
+          // Trimitem userId doar dacă userul a mai plătit (are stripe_customer_id)
+          // Fără stripe_customer_id = prima plată → primește trial de 7 zile
+          userId: profile?.stripe_customer_id ? user?.id : null,
           userEmail: user?.email || null,
-          // successUrl left empty — function decides based on userId
           cancelUrl: `${window.location.origin}/pricing`,
         },
       });
