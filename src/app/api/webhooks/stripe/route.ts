@@ -91,7 +91,12 @@ export async function POST(request: NextRequest) {
         if (!invoice.subscription) break;
         const email = invoice.customer_email;
         if (!email) break;
-        const planType = invoice.lines?.data?.[0]?.price?.metadata?.plan_type || "starter";
+        // subscription_details.metadata e setat la creare și persiste pe toată durata
+        // price.metadata e gol dacă nu a fost setat explicit în Stripe dashboard
+        const planType =
+          invoice.subscription_details?.metadata?.plan_type ||
+          invoice.lines?.data?.[0]?.price?.metadata?.plan_type ||
+          "starter";
         await activateByEmail(supabase, email, planType);
         break;
       }
@@ -118,17 +123,12 @@ export async function POST(request: NextRequest) {
 async function activateByEmail(supabase: any, email: string, planType: string) {
   const { data: profile } = await supabase
     .from("profiles")
-    .select("user_id, subscription_active")
+    .select("user_id")
     .eq("email", email.toLowerCase())
     .maybeSingle();
 
   if (!profile) {
     console.log(`No profile for ${email}`);
-    return;
-  }
-
-  if (profile.subscription_active === false) {
-    console.log(`Manually canceled for ${email}, skipping`);
     return;
   }
 
