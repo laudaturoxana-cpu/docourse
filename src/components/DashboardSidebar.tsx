@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, PlusCircle, Users, Zap, Settings, LogOut, X, GraduationCap } from "lucide-react";
+import { LayoutDashboard, BookOpen, PlusCircle, Users, Zap, Settings, LogOut, X, GraduationCap, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Logo from "@/components/Logo";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,12 +19,12 @@ export default function DashboardSidebar({ isOpen, onClose }: Props) {
   const isPro = (!!hasActive && profile?.plan_type === "pro") || !!profile?.lifetime_access || !!isAdmin;
 
   const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-    { icon: BookOpen, label: "Cursurile mele", href: "/dashboard/courses" },
-    { icon: PlusCircle, label: "Creează curs", href: "/dashboard/courses/new" },
-    { icon: Users, label: "Comunitate", href: "/dashboard/community" },
-    ...(isPro ? [{ icon: Zap, label: "Email Marketing", href: "/dashboard/email" }] : []),
-{ icon: Settings, label: "Setări profil", href: "/dashboard/settings" },
+    { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard", pro: false },
+    { icon: BookOpen, label: "Cursurile mele", href: "/dashboard/courses", pro: false },
+    { icon: PlusCircle, label: "Creează curs", href: "/dashboard/courses/new", pro: false },
+    { icon: Users, label: "Comunitate", href: "/dashboard/community", pro: false },
+    { icon: Zap, label: "Email Marketing", href: "/dashboard/email", pro: true },
+    { icon: Settings, label: "Setări profil", href: "/dashboard/settings", pro: false },
   ];
 
   const isActive = (href: string) =>
@@ -32,23 +32,34 @@ export default function DashboardSidebar({ isOpen, onClose }: Props) {
 
   const NavItems = ({ onClick }: { onClick?: () => void }) => (
     <ul className="space-y-1">
-      {menuItems.map((item) => (
-        <li key={item.label}>
-          <Link
-            href={item.href}
-            onClick={onClick}
-            className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
-              isActive(item.href)
-                ? "bg-gold/10 text-gold font-medium"
-                : "text-charcoal hover:bg-beige hover:text-navy"
-            )}
-          >
-            <item.icon className="w-5 h-5" />
-            {item.label}
-          </Link>
-        </li>
-      ))}
+      {menuItems.map((item) => {
+        const locked = item.pro && !isPro;
+        return (
+          <li key={item.label}>
+            <Link
+              href={item.href}
+              onClick={onClick}
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+                locked
+                  ? "text-muted-foreground/50 hover:bg-beige/50 hover:text-muted-foreground"
+                  : isActive(item.href)
+                  ? "bg-gold/10 text-gold font-medium"
+                  : "text-charcoal hover:bg-beige hover:text-navy"
+              )}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="flex-1">{item.label}</span>
+              {locked && (
+                <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-gold/10 text-gold/70 border border-gold/20">
+                  <Lock className="w-2.5 h-2.5" />
+                  Pro
+                </span>
+              )}
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 
