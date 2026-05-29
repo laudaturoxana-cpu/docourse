@@ -108,6 +108,31 @@ export async function POST(request: NextRequest) {
         if (email) await deactivateByEmail(supabase, email);
         break;
       }
+
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object;
+        const email = subscription.customer_email || subscription.metadata?.customer_email;
+        if (email) await deactivateByEmail(supabase, email);
+        else {
+          // Look up email by stripe_customer_id
+          const customerId = subscription.customer;
+          if (customerId) await deactivateByCustomerId(supabase, customerId);
+        }
+        break;
+      }
+
+      case "customer.subscription.updated": {
+        const subscription = event.data.object;
+        const status = subscription.status;
+        const customerId = subscription.customer;
+        if (["canceled", "unpaid", "past_due"].includes(status)) {
+          await deactivateByCustomerId(supabase, customerId);
+        } else if (status === "active") {
+          const planType = subscription.metadata?.plan_type || "starter";
+          await activateByCustomerId(supabase, customerId, planType);
+        }
+        break;
+      }
     }
 
     await markAsProcessed(supabase, event.id, event.type);
@@ -156,4 +181,46 @@ async function deactivateByEmail(supabase: any, email: string) {
     .eq("user_id", profile.user_id);
 
   console.log(`Deactivated ${email}`);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function deactivateByCustomerId(supabase: any, customerId: string) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("user_id, email")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  if (!profile) {
+    console.log(`No profile for customer ${customerId}`);
+    return;
+  }
+
+  await supabase
+    .from("profiles")
+    .update({ subscription_active: false })
+    .eq("user_id", profile.user_id);
+
+  console.log(`Deactivated customer ${customerId} (${profile.email})`);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function activateByCustomerId(supabase: any, customerId: string, planType: string) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("user_id, email")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  if (!profile) {
+    console.log(`No profile for customer ${customerId}`);
+    return;
+  }
+
+  await supabase
+    .from("profiles")
+    .update({ subscription_active: true, plan_type: planType })
+    .eq("user_id", profile.user_id);
+
+  console.log(`Activated customer ${customerId} (${profile.email}), plan=${planType}`);
 }

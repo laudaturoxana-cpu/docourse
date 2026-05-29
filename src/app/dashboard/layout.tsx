@@ -10,7 +10,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const { data: profile } = await supabase
     .from("profiles")
     .select("subscription_active, lifetime_access, beta_tester, role")
-    .eq("id", user.id)
+    .eq("user_id", user.id)
     .single();
 
   // Allow access only if profile exists and subscription is active
