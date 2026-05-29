@@ -13,6 +13,7 @@ import {
   ChevronRight,
   LayoutDashboard,
   Play,
+  Rocket,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -483,6 +484,25 @@ const StudentDashboard = () => {
 
             {/* Right: Account settings */}
             <div className="space-y-6">
+
+              {/* Become creator CTA */}
+              {!isCreator && (
+                <div className="bg-navy rounded-2xl p-5 text-white space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Rocket className="w-5 h-5 text-gold" />
+                    <h3 className="font-semibold text-sm">Vrei să creezi cursuri?</h3>
+                  </div>
+                  <p className="text-xs text-white/70 leading-relaxed">
+                    Creează-ți propriul curs online și vinde-l direct cursanților tăi.
+                  </p>
+                  <Link
+                    href="/pricing"
+                    className="block w-full text-center bg-gold hover:bg-gold/90 text-navy font-semibold text-sm py-2 rounded-lg transition-colors"
+                  >
+                    Devino creator →
+                  </Link>
+                </div>
+              )}
               <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-5">
                   <Key className="w-5 h-5 text-gold" />
