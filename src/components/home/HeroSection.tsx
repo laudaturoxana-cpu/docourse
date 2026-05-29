@@ -73,22 +73,22 @@ const HeroSection = () => {
           {/* Animated badge */}
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gold/10 border border-gold/25 text-gold text-sm font-medium mb-8 animate-fade-up badge-pulse">
             <Sparkles className="w-4 h-4" />
-            🇷🇴 Platformă românească pentru creatori
+            🇷🇴 Platformă românească — 0% comision din vânzările tale
           </div>
 
           {/* Main headline */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-navy leading-tight mb-6 md:mb-8 animate-fade-up px-2">
-            Livrează cursuri online{" "}
-            <span className="text-gold">profesionist</span>.{" "}
+            Cursuri. Comunitate.{" "}
+            <span className="text-gold">Email marketing.</span>
             <span className="block mt-2 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-charcoal/70">
-              Simplu, clar, fără stres tehnic.
+              Dintr-un singur loc, de la 9€/lună.
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-base sm:text-lg md:text-xl text-charcoal/80 mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-up delay-100 px-2">
-            Cursuri, comunitate, email marketing, funnel cu pagină de captură și sales page generat cu AI —{" "}
-            <span className="font-semibold text-navy">totul într-un singur loc, de la 9€/lună.</span>
+            Construiește-ți afacerea din cunoaștere: vinde cursuri, aduni comunitatea în jurul lor și trimiți emailuri direct cursanților tăi —{" "}
+            <span className="font-semibold text-navy">fără comision, fără alte platforme.</span>
           </p>
 
           {/* CTAs */}
@@ -102,9 +102,9 @@ const HeroSection = () => {
             <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-sm sm:max-w-xl mx-auto">
               {[
                 { label: "Cursuri", sub: "Nelimitate", path: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" },
-                { label: "Email lists", sub: "Marketing", path: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
-                { label: "Funnel", sub: "Captură + AI", path: "M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" },
-                { label: "Acces", sub: "Public / privat", path: "M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" },
+                { label: "Comunitate", sub: "Inclusă", path: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
+                { label: "Email marketing", sub: "Plan Pro", path: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+                { label: "Comision vânzări", sub: "0%", path: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
               ].map((item) => (
                 <div key={item.label} className="flex flex-col items-center text-center gap-2 group">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">

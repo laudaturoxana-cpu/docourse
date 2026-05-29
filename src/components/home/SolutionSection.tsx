@@ -2,20 +2,27 @@ import { Play, File, Volume2 } from "lucide-react";
 
 const features = [
   {
-    emoji: "🎬",
-    title: "Video, audio, PDF, Word, imagini",
-    description: "Orice tip de fișier, totul într-un singur loc. Fișierele audio se ascultă direct în platformă. PDF-urile se văd în browser, instant.",
+    emoji: "💬",
+    title: "Comunitate inclusă în orice plan",
+    description: "Curs și comunitate în același loc. Membrii se adaugă automat la lista ta de email când se înscriu. Fără Facebook Groups, fără WhatsApp extern.",
     wide: true,
   },
   {
-    emoji: "📂",
-    title: "Module și lecții clare",
-    description: "Organizare profesională a conținutului, structurată logic, ușor de parcurs de cursanți.",
+    emoji: "📧",
+    title: "Email marketing",
+    description: "Trimiți emailuri direct cursanților tăi, construiești liste și automatizezi comunicarea. Membrii comunității se adaugă automat.",
+    pro: true,
   },
   {
-    emoji: "🔓",
-    title: "Două moduri de acces",
-    description: "Link simplu fără cont sau curs privat cu login — tu alegi ce se potrivește.",
+    emoji: "🎯",
+    title: "Funnel complet cu AI",
+    description: "Sales page generat cu AI, pagină de captură pentru lead magnet și buton de plată Stripe — totul conectat.",
+    pro: true,
+  },
+  {
+    emoji: "🎬",
+    title: "Video, audio, PDF, Word, imagini",
+    description: "Orice tip de fișier, totul într-un singur loc. Fișierele audio se ascultă direct în platformă. PDF-urile se văd în browser, instant.",
   },
   {
     emoji: "📅",
@@ -28,29 +35,19 @@ const features = [
     description: "Activezi deblocarea progresivă. Cursanții avansează pas cu pas, în ritmul pe care îl setezi tu.",
   },
   {
-    emoji: "💬",
-    title: "Comunitate inclusă",
-    description: "Curs și comunitate în același loc. Fără Facebook Groups, fără WhatsApp extern.",
+    emoji: "💰",
+    title: "0% comision din vânzările tale",
+    description: "Niciun comision din ce vinzi. Plătești doar abonamentul lunar. Tot ce câștigi rămâne la tine.",
   },
   {
-    emoji: "📧",
-    title: "Email marketing inclus",
-    description: "Creezi liste de abonați, trimiți emailuri și îți construiești audiența direct din platformă. Fără Mailchimp, fără costuri extra.",
-  },
-  {
-    emoji: "🎯",
-    title: "Funnel complet cu AI",
-    description: "Pagină de captură + pagină de mulțumire legate de lista ta de email. Perfect pentru lead magnet gratuit — ghid, webinar, mini-curs.",
-  },
-  {
-    emoji: "🔗",
-    title: "URL-uri curate și personalizabile",
-    description: "Cursul tău are o adresă simplă, clară, ușor de distribuit. O personalizezi tu.",
+    emoji: "🔓",
+    title: "Acces public sau privat",
+    description: "Link simplu fără cont sau curs privat cu login — tu alegi ce se potrivește fiecărui curs.",
   },
   {
     emoji: "🇷🇴",
-    title: "Creat în România",
-    description: "Pentru creatori români. Fără plugin-uri. Fără WordPress. Fără surprize.",
+    title: "Creat în România, pentru creatori români",
+    description: "Suport în română, prețuri în EUR fără surprize, fără plugin-uri, fără WordPress.",
     wide: true,
   },
 ];
@@ -90,13 +87,16 @@ const SolutionSection = () => {
           {/* Section header */}
           <div className="text-center mb-12 md:mb-16">
             <span className="inline-block px-4 py-1.5 rounded-full bg-gold/10 text-gold text-sm font-medium mb-4">
-              Soluția
+              Tot ce ai nevoie
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-6 px-2">
-              Tot cursul tău într-o platformă{" "}
-              <span className="text-gold">simplă</span>. Clară.{" "}
-              <span className="text-gold">Profesională</span>.
+              Nu doar cursuri —{" "}
+              <span className="text-gold">o afacere completă</span>{" "}
+              din cunoașterea ta.
             </h2>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Comunitate inclusă din prima zi. Email marketing în planul Pro. 0% comision indiferent de plan.
+            </p>
           </div>
 
           {/* Bento features grid */}
@@ -104,13 +104,18 @@ const SolutionSection = () => {
             {features.map((feature, idx) => (
               <div
                 key={feature.title}
-                className={`feature-card group relative p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-gold/40 hover:shadow-medium transition-all duration-300 hover:-translate-y-1${feature.wide ? " sm:col-span-2 lg:col-span-2" : ""}`}
+                className={`feature-card group relative p-5 md:p-6 rounded-2xl bg-card border hover:shadow-medium transition-all duration-300 hover:-translate-y-1${feature.wide ? " sm:col-span-2 lg:col-span-2" : ""}${feature.pro ? " border-gold/30 bg-gold/[0.02]" : " border-border hover:border-gold/40"}`}
                 style={{ animationDelay: `${idx * 60}ms` }}
               >
                 {/* Gold top line on hover */}
                 <div className="absolute top-0 left-6 right-6 h-0.5 bg-gradient-to-r from-gold/0 via-gold to-gold/0 opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
 
-                <div className="text-3xl mb-3 leading-none">{feature.emoji}</div>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="text-3xl leading-none">{feature.emoji}</div>
+                  {feature.pro && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gold/15 text-gold border border-gold/30">Pro</span>
+                  )}
+                </div>
                 <h3 className="font-semibold text-navy text-base md:text-lg mb-2">{feature.title}</h3>
                 <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{feature.description}</p>
               </div>

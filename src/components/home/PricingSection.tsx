@@ -8,27 +8,27 @@ import { useInView } from "@/hooks/useInView";
 
 const starterFeatures = [
   "Cursuri nelimitate",
+  "Comunitate inclusă",
+  "Membrii comunității → adăugați automat în lista ta",
   "Lecții nelimitate",
   "Fișiere nelimitate — video, audio, PDF, orice",
   "Acces public sau privat",
   "Acces programat pe date",
   "Parcurgere secvențială",
   "Dashboard pentru cursanți",
-  "Comunitate inclusă",
   "URL-uri personalizabile",
   "Suport în română",
-  "Fără comisioane la vânzări",
+  "0% comision din vânzările tale",
 ];
 
 const proFeatures = [
   "Tot ce include Starter",
+  "Email marketing — liste nelimitate de abonați",
+  "Campanii email direct din platformă",
   "Sales page generat cu AI (Gemini)",
   "Buton de plată Stripe pe sales page",
-  "Sau link Calendly / WhatsApp",
-  "Email marketing — liste nelimitate de abonați",
   "Funnel complet: pagină captură + pagină mulțumire",
   "Lead magnet gratuit conectat la lista ta",
-  "Pagini de captură cu formular de înscriere",
   "Statistici vânzări avansate",
   "Suport prioritar",
 ];
@@ -138,7 +138,7 @@ const PricingSection = () => {
             )}>
               <div className="bg-navy p-6 text-center">
                 <h3 className="text-xl font-bold text-primary-foreground mb-1">Starter</h3>
-                <p className="text-beige/70 text-sm">Tot ce ai nevoie pentru a lansa cursuri</p>
+                <p className="text-beige/70 text-sm">Cursuri nelimitate + comunitate, fără comisioane</p>
               </div>
               <div className="p-6 flex flex-col flex-1">
                 <div className="text-center mb-6">
@@ -210,7 +210,7 @@ const PricingSection = () => {
                 {/* Header */}
                 <div className="relative z-10 px-8 pt-8 pb-6 text-center border-b border-gold/20">
                   <h3 className="text-2xl font-black text-white mb-1">Pro</h3>
-                  <p className="text-beige/50 text-sm">Sales page AI + email marketing + funnel complet</p>
+                  <p className="text-beige/50 text-sm">Email marketing + AI + funnel — tot ecosistemul tău</p>
                 </div>
 
                 {/* Price */}

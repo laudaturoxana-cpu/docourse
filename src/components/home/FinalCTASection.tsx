@@ -22,13 +22,13 @@ const FinalCTASection = () => {
           </div>
 
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-6 leading-tight">
-            Ești gata să-ți lansezi cursul{" "}
-            <span className="text-gold">profesional</span>?
+            Construiește-ți afacerea din{" "}
+            <span className="text-gold">cunoașterea ta</span>.
           </h2>
 
           <p className="text-xl text-charcoal/80 mb-10 leading-relaxed">
-            Alătură-te creatorilor români care și-au transformat conținutul 
-            într-o experiență premium pentru cursanți.
+            Cursuri profesionale, o comunitate angajată și email marketing pentru a rămâne conectat cu audiența ta —
+            totul fără comisioane din vânzările tale.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -61,7 +61,7 @@ const FinalCTASection = () => {
               <svg className="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              Suport inclus
+              0% comision
             </div>
           </div>
         </div>
