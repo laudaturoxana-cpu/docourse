@@ -22,6 +22,7 @@ import {
   Image as ImageIcon,
   Sparkles,
   Zap,
+  Lock,
   Link as LinkIcon,
   Magnet,
 } from "lucide-react";
@@ -1554,25 +1555,32 @@ const EditCourse = () => {
               </Link>
 
               {/* Lead Magnet Funnel (Pro) */}
-              {isPro && (
-                <Link href={`/dashboard/courses/${id}/funnel`}
-                  className="flex items-center justify-between w-full bg-gold/5 rounded-2xl border border-gold/40 p-4 hover:border-gold hover:bg-gold/10 transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <Magnet className="w-5 h-5 text-gold" />
-                    <div>
-                      <p className="font-semibold text-navy text-sm flex items-center gap-2">
-                        Funnel Lead Magnet
-                        {course?.is_lead_magnet && (
-                          <span className="text-[10px] font-bold bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Activ</span>
-                        )}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Pagină de captură + mulțumire generate cu AI</p>
-                    </div>
+              <Link href={`/dashboard/courses/${id}/funnel`}
+                className={`flex items-center justify-between w-full rounded-2xl border p-4 transition-all group ${
+                  isPro
+                    ? "bg-gold/5 border-gold/40 hover:border-gold hover:bg-gold/10"
+                    : "bg-background border-border opacity-60 hover:opacity-80"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Magnet className={`w-5 h-5 ${isPro ? "text-gold" : "text-muted-foreground"}`} />
+                  <div>
+                    <p className="font-semibold text-navy text-sm flex items-center gap-2">
+                      Funnel Lead Magnet
+                      {isPro && course?.is_lead_magnet && (
+                        <span className="text-[10px] font-bold bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Activ</span>
+                      )}
+                      {!isPro && (
+                        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold bg-gold text-navy px-1.5 py-0.5 rounded-full">
+                          <Lock className="w-2.5 h-2.5" /> Pro
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Pagină de captură + mulțumire generate cu AI</p>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />
-                </Link>
-              )}
+                </div>
+                <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />
+              </Link>
 
               <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-6">
