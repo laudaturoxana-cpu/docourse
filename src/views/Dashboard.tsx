@@ -447,17 +447,23 @@ const Dashboard = () => {
             {/* Upgrade banner — shown only for non-Pro users */}
             {hasActiveSubscription && profile?.plan_type !== "pro" && !profile?.lifetime_access && (
               <Link href="/pricing" className="block mb-6">
-                <div className="bg-gold/10 border border-gold/40 rounded-2xl p-4 flex items-center justify-between hover:bg-gold/15 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-gold/20 flex items-center justify-center">
-                      <Zap className="w-5 h-5 text-gold" />
+                <div className="bg-gradient-to-r from-gold/10 to-gold/5 border border-gold/40 rounded-2xl p-4 hover:bg-gold/15 transition-colors">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-gold/20 flex items-center justify-center shrink-0 mt-0.5">
+                        <Zap className="w-5 h-5 text-gold" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm text-foreground mb-1">Deblochează Email Marketing + Sales Page AI</p>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="text-[11px] text-muted-foreground bg-background border border-border rounded-full px-2 py-0.5">📧 Email marketing</span>
+                          <span className="text-[11px] text-muted-foreground bg-background border border-border rounded-full px-2 py-0.5">✨ Sales page cu AI</span>
+                          <span className="text-[11px] text-muted-foreground bg-background border border-border rounded-full px-2 py-0.5">🎯 Funnel lead magnet</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold text-sm text-foreground">Ești gata să câștigi bani din cursul tău?</p>
-                      <p className="text-xs text-muted-foreground">Creează o pagină de vânzări în 30 de secunde cu AI și primești plăți direct — Plan Pro, 29€/lună</p>
-                    </div>
+                    <span className="text-xs font-bold text-gold whitespace-nowrap shrink-0 mt-1">Pro 29€/lună →</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-gold flex-shrink-0" />
                 </div>
               </Link>
             )}
