@@ -16,6 +16,8 @@ import {
   AlertTriangle,
   Zap,
   Shield,
+  Sparkles,
+  X,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 const DashboardChart = dynamic(() => import("@/components/DashboardChart"), {
@@ -149,6 +151,13 @@ const Dashboard = () => {
   const router = useRouter();
   const { user, profile, isLoading: authLoading, isAdmin } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showNewsBanner, setShowNewsBanner] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem("banner_may2026_dismissed")) {
+      setShowNewsBanner(true);
+    }
+  }, []);
 
   const [stats, setStats] = useState({
     courses: 0,
@@ -443,6 +452,43 @@ const Dashboard = () => {
                 </Link>
               )}
             </div>
+
+            {/* What's new banner — dismissible, shown once */}
+            {showNewsBanner && (
+              <div className="bg-gradient-to-r from-navy/[0.04] to-sky/[0.04] border border-navy/20 rounded-2xl p-4 mb-6 relative">
+                <button
+                  onClick={() => {
+                    setShowNewsBanner(false);
+                    localStorage.setItem("banner_may2026_dismissed", "1");
+                  }}
+                  className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <div className="flex items-start gap-3 pr-6">
+                  <div className="w-8 h-8 rounded-lg bg-navy/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <Sparkles className="w-4 h-4 text-navy" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm text-navy mb-2">Noutăți în platformă</p>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" />
+                        <span><strong className="text-foreground">Comunitate inclusă la Starter</strong> — când cineva se înscrie în comunitatea ta, este adăugat automat în lista ta de email</span>
+                      </li>
+                      <li className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" />
+                        <span><strong className="text-foreground">Email Marketing și Funnel Lead Magnet</strong> sunt acum vizibile în meniu și în editorul de curs — disponibile în planul Pro</span>
+                      </li>
+                      <li className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" />
+                        <span><strong className="text-foreground">0% comision</strong> din vânzările tale, indiferent de planul ales</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Upgrade banner — shown only for non-Pro users */}
             {hasActiveSubscription && profile?.plan_type !== "pro" && !profile?.lifetime_access && (
