@@ -290,7 +290,7 @@ const CreateCourseWizard = () => {
       
 
       <div className="min-h-screen bg-beige/30">
-        <header className="bg-background border-b border-border px-4 lg:px-8 py-4">
+        <header className="bg-white border-b border-border/60 shadow-sm px-4 lg:px-8 py-4">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/dashboard"
@@ -317,7 +317,7 @@ const CreateCourseWizard = () => {
             <WizardStepper steps={WIZARD_STEPS} currentStep={currentStep} />
           )}
 
-          <div className="bg-background rounded-2xl border border-border p-6 lg:p-8">
+          <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-6 lg:p-8">
             {currentStep === 1 && (
               <>
                 <h2 className="text-xl font-bold text-navy mb-2">

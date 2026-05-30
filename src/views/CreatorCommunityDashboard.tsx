@@ -188,7 +188,7 @@ export default function CreatorCommunityDashboard() {
     <>
 
       <div className="min-h-screen bg-beige/20">
-        <header className="bg-background border-b border-border px-4 py-3 flex items-center gap-4 sticky top-0 z-10">
+        <header className="bg-white border-b border-border/60 shadow-sm px-4 py-3 flex items-center gap-4 sticky top-0 z-10">
           <Link href="/dashboard" className="text-muted-foreground hover:text-navy transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
@@ -273,7 +273,7 @@ export default function CreatorCommunityDashboard() {
             </div>
 
             {/* ── Settings ── */}
-            <div className="bg-white rounded-2xl border border-border p-6 space-y-5">
+            <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-6 space-y-5">
               <h2 className="font-semibold text-navy">Setări comunitate</h2>
 
               <div>
@@ -305,7 +305,7 @@ export default function CreatorCommunityDashboard() {
             </div>
 
             {/* ── Courses ── */}
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-6">
               <h2 className="font-semibold text-navy mb-1">Cursuri în comunitate</h2>
               <p className="text-sm text-muted-foreground mb-5">Bifează cursurile pe care vrei să le afișezi. Alege dacă accesul e gratuit sau cu plată.</p>
 

@@ -166,7 +166,7 @@ const Login = () => {
               <Logo size="lg" />
             </Link>
 
-            <div className="bg-background rounded-2xl p-8 shadow-soft border border-border">
+            <div className="bg-white rounded-2xl p-8 shadow-md border border-border/60">
               <h1 className="text-2xl font-bold text-navy mb-2">Bine ai revenit!</h1>
               <p className="text-muted-foreground mb-8">
                 Autentifică-te pentru a accesa dashboard-ul

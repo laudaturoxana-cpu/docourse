@@ -55,7 +55,7 @@ export function SubscriptionRequired() {
   if (isPastDue) {
     return (
       <div className="min-h-screen bg-beige/30 flex items-center justify-center p-4">
-        <div className="bg-background rounded-2xl border border-destructive/30 p-8 max-w-md text-center">
+        <div className="bg-white rounded-2xl border border-destructive/30 shadow-md p-8 max-w-md text-center">
           <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-6">
             <CreditCard className="w-8 h-8 text-destructive" />
           </div>
@@ -93,7 +93,7 @@ export function SubscriptionRequired() {
   return (
     <>
       <div className="min-h-screen bg-beige/30 flex items-center justify-center p-4">
-        <div className="bg-background rounded-2xl border border-border p-8 max-w-md text-center">
+        <div className="bg-white rounded-2xl border border-border/60 shadow-md p-8 max-w-md text-center">
           <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-8 h-8 text-destructive" />
           </div>
