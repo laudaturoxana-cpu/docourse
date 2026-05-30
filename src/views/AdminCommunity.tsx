@@ -284,7 +284,7 @@ const AdminCommunity = () => {
 
       
       
-      <div className="min-h-screen flex flex-col bg-background">
+      <div className="min-h-screen flex flex-col bg-beige/20">
         <main className="flex-1 container mx-auto px-4 pt-8 pb-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex gap-2 mb-6 -ml-2">
@@ -346,7 +346,7 @@ const AdminCommunity = () => {
             )}
 
             {/* Create Post Card */}
-            <Card className="mb-8">
+            <Card className="mb-8 shadow-sm border-border/60 bg-white">
               <CardHeader>
                 <CardTitle>Crează un post nou</CardTitle>
                 <CardDescription>Postează ca administrator al comunității</CardDescription>
@@ -419,7 +419,7 @@ const AdminCommunity = () => {
                 </div>
               ) : posts && posts.length > 0 ? (
                 posts.map((post) => (
-                  <Card key={post.id}>
+                  <Card key={post.id} className="shadow-sm border-border/60 bg-white hover:shadow-md transition-shadow">
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
@@ -482,7 +482,7 @@ const AdminCommunity = () => {
                   </Card>
                 ))
               ) : (
-                <Card>
+                <Card className="shadow-sm border-border/60 bg-white">
                   <CardContent className="text-center py-12">
                     <p className="text-muted-foreground">
                       Comunitatea este goală. Crează primul post!
