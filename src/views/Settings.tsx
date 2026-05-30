@@ -250,7 +250,7 @@ const Settings = () => {
 
       
 
-      <div className="min-h-screen flex flex-col bg-background">
+      <div className="min-h-screen flex flex-col bg-beige/20">
         <main className="flex-1 container mx-auto px-4 pt-8 pb-8">
           <div className="max-w-2xl mx-auto">
             <Link href="/dashboard">
@@ -260,7 +260,7 @@ const Settings = () => {
               </Button>
             </Link>
 
-            <div className="bg-card rounded-2xl border border-border p-6 lg:p-8">
+            <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-6 lg:p-8">
               <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
                 Setări Profil
               </h1>
@@ -280,7 +280,7 @@ const Settings = () => {
                         className="w-20 h-20 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-20 h-20 rounded-full bg-gold/20 flex items-center justify-center text-gold font-semibold text-2xl">
+                      <div className="w-20 h-20 rounded-full bg-gold/20 border-2 border-gold/30 flex items-center justify-center text-gold font-semibold text-2xl">
                         {profile?.full_name?.charAt(0) || "C"}
                       </div>
                     )}
@@ -432,7 +432,7 @@ const Settings = () => {
                       <CreditCard className="w-4 h-4 text-gold" />
                       Abonament
                     </Label>
-                    <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                    <div className="bg-beige/30 border border-border/60 rounded-xl p-4 space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -540,7 +540,7 @@ const Settings = () => {
                 {/* Beta Tester Notice */}
                 {(profile?.beta_tester || profile?.lifetime_access) && (
                   <div className="space-y-2 pt-4 border-t border-border">
-                    <div className="bg-gold/10 border border-gold/30 rounded-lg p-4">
+                    <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
                       <p className="font-medium text-foreground flex items-center gap-2">
                         <CreditCard className="w-4 h-4 text-gold" />
                         Acces Gratuit Permanent
