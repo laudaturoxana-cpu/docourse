@@ -314,7 +314,7 @@ const StudentDashboard = () => {
 
       <div className="min-h-screen bg-beige/20">
         {/* Header */}
-        <header className="bg-background border-b border-border sticky top-0 z-40">
+        <header className="bg-white border-b border-border/60 shadow-sm sticky top-0 z-40">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between h-16">
               <Link href="/">
@@ -328,7 +328,7 @@ const StudentDashboard = () => {
                   variant="ghost"
                   size="sm"
                   onClick={handleSignOut}
-                  className="text-muted-foreground"
+                  className="text-muted-foreground hover:text-destructive"
                 >
                   <LogOut className="w-4 h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Ieși din cont</span>
@@ -366,7 +366,7 @@ const StudentDashboard = () => {
             {/* Left: Courses + Communities */}
             <div className="lg:col-span-2 space-y-6">
               {/* Courses */}
-              <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-5">
                   <BookOpen className="w-5 h-5 text-gold" />
                   <h2 className="text-lg font-semibold text-navy">Cursurile mele</h2>
@@ -392,10 +392,10 @@ const StudentDashboard = () => {
                       return (
                         <Link key={course.course_id}
                           href={`/course/${course.course_slug}`}
-                          className="flex items-center gap-4 p-4 rounded-xl border border-border hover:border-gold/40 hover:bg-beige/20 transition-all group"
+                          className="flex items-center gap-4 p-4 rounded-xl border border-border/60 hover:border-gold/40 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 group"
                         >
                           {/* Thumbnail */}
-                          <div className="w-14 h-14 rounded-lg bg-beige flex-shrink-0 overflow-hidden">
+                          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-beige to-beige/60 flex-shrink-0 overflow-hidden shadow-sm">
                             {course.course_image ? (
                               // eslint-disable-next-line @next/next/no-img-element
                               <img
@@ -441,7 +441,7 @@ const StudentDashboard = () => {
               </div>
 
               {/* Communities */}
-              <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-5">
                   <Users className="w-5 h-5 text-gold" />
                   <h2 className="text-lg font-semibold text-navy">Comunitățile mele</h2>
@@ -464,10 +464,10 @@ const StudentDashboard = () => {
                     {communities.map((community) => (
                       <Link key={community.id}
                         href={`/community/${community.slug}`}
-                        className="flex items-center justify-between p-4 rounded-xl border border-border hover:border-gold/40 hover:bg-beige/20 transition-all group"
+                        className="flex items-center justify-between p-4 rounded-xl border border-border/60 hover:border-gold/40 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold/15 to-gold/5 flex items-center justify-center">
                             <Users className="w-4 h-4 text-gold" />
                           </div>
                           <span className="font-medium text-navy group-hover:text-gold transition-colors">
@@ -503,7 +503,7 @@ const StudentDashboard = () => {
                   </Link>
                 </div>
               )}
-              <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-5">
                   <Key className="w-5 h-5 text-gold" />
                   <h2 className="text-lg font-semibold text-navy">Contul meu</h2>
