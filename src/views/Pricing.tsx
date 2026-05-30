@@ -58,9 +58,7 @@ export default function Pricing() {
         body: {
           planType: selectedPlan,
           billingPeriod,
-          // Trimitem userId doar dacă userul a mai plătit (are stripe_customer_id)
-          // Fără stripe_customer_id = prima plată → primește trial de 7 zile
-          userId: profile?.stripe_customer_id ? user?.id : null,
+          userId: user?.id || null,
           userEmail: user?.email || null,
           cancelUrl: `${window.location.origin}/pricing`,
         },
