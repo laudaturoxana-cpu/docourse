@@ -1100,7 +1100,7 @@ const EditCourse = () => {
         <CardContent className="space-y-4">
           {communityPlanId ? (
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-lg border border-border bg-beige/20">
+              <div className="flex items-center justify-between p-3 rounded-xl border border-border/60 bg-white shadow-sm">
                 <div>
                   <p className="font-medium text-sm">{communityName || `Comunitatea ${courseTitle}`}</p>
                   <p className="text-xs text-muted-foreground">Comunitate pentru curs</p>
@@ -1211,7 +1211,7 @@ const EditCourse = () => {
     };
 
     return (
-      <div className="bg-background rounded-2xl border border-border p-5 space-y-4 min-w-0">
+      <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-5 space-y-4 min-w-0">
         <div className="flex items-center gap-2">
           <LinkIcon className="w-4 h-4 text-gold" />
           <h3 className="font-semibold text-navy text-sm">Plată & pagină publică</h3>
@@ -1467,7 +1467,7 @@ const EditCourse = () => {
       
 
       <div className="min-h-screen bg-beige/30">
-        <header className="bg-background border-b border-border px-4 lg:px-8 py-4">
+        <header className="bg-white border-b border-border/60 shadow-sm px-4 lg:px-8 py-4">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/dashboard/courses"
@@ -1511,7 +1511,7 @@ const EditCourse = () => {
             <div className="lg:col-span-1 space-y-6 min-w-0 overflow-hidden">
               {/* Buton Cursanți */}
               <Link href={`/dashboard/courses/${id}/students`}
-                className="flex items-center justify-between w-full bg-background rounded-2xl border border-border p-4 hover:border-gold/40 hover:bg-beige/20 transition-all group"
+                className="flex items-center justify-between w-full bg-white rounded-2xl border border-border/60 shadow-sm p-4 hover:border-gold/40 hover:shadow-md hover:-translate-y-0.5 transition-all group"
               >
                 <div className="flex items-center gap-3">
                   <Users className="w-5 h-5 text-gold" />
@@ -1582,7 +1582,7 @@ const EditCourse = () => {
                 <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-gold transition-colors" />
               </Link>
 
-              <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6">
                 <div className="flex items-center gap-2 mb-6">
                   <Settings className="w-5 h-5 text-gold" />
                   <h2 className="text-lg font-semibold text-navy">Setări curs</h2>
@@ -1717,7 +1717,7 @@ const EditCourse = () => {
 
             {/* Modules and lessons */}
             <div className="lg:col-span-2">
-              <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-semibold text-navy">Module și lecții</h2>
                   <Button
@@ -1731,7 +1731,7 @@ const EditCourse = () => {
                 </div>
 
                 {showNewModule && (
-                  <div className="mb-6 p-4 bg-beige/50 rounded-xl">
+                  <div className="mb-6 p-4 bg-beige/40 border border-border/60 rounded-xl">
                     <div className="flex gap-3">
                       <Input
                         placeholder="Titlul modulului"
@@ -1766,9 +1766,9 @@ const EditCourse = () => {
                 ) : (
                   <div className="space-y-4">
                     {modules.map((mod) => (
-                      <div key={mod.id} className="border border-border rounded-xl overflow-hidden">
+                      <div key={mod.id} className="border border-border/60 rounded-xl overflow-hidden shadow-sm">
                         <div
-                          className="flex items-center gap-3 p-4 bg-beige/30 cursor-pointer"
+                          className="flex items-center gap-3 p-4 bg-beige/40 cursor-pointer hover:bg-beige/60 transition-colors"
                           onClick={() => toggleModule(mod.id)}
                         >
                           <GripVertical className="w-4 h-4 text-muted-foreground" />
