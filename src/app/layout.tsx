@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Poppins } from "next/font/google";
 import { Providers } from "./providers";
 import WebMCPProvider from "@/components/WebMCPProvider";
 import { CookieConsent } from "@/components/CookieConsent";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   manifest: "/manifest.json",
@@ -60,7 +68,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="antialiased">
+      <body className={`antialiased ${poppins.variable}`}>
         <Providers>{children}</Providers>
         <WebMCPProvider />
         <CookieConsent />
