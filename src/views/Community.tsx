@@ -221,34 +221,25 @@ const Community = () => {
         {/* Main content */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Header */}
-          <header className="bg-background border-b border-border px-4 lg:px-8 py-4 shrink-0">
+          <header className="bg-white border-b border-border/60 shadow-sm px-4 lg:px-8 py-3 shrink-0">
             <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {user ? (
-                <>
+              <div className="flex items-center gap-2">
+                {user && (
                   <button
-                    className="lg:hidden p-2"
+                    className="lg:hidden p-2 hover:bg-beige rounded-lg transition-colors"
                     onClick={() => setSidebarOpen(true)}
                   >
-                    <Menu className="w-6 h-6" />
+                    <Menu className="w-5 h-5" />
                   </button>
-                  <Link href="/my-communities">
-                    <Button variant="ghost" size="sm">
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Înapoi
-                    </Button>
-                  </Link>
-                </>
-              ) : (
-                <Link href="/">
-                  <Button variant="ghost" size="sm">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
+                )}
+                <Link href={user ? "/my-communities" : "/"}>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-navy">
+                    <ArrowLeft className="w-4 h-4 mr-1.5" />
                     Înapoi
                   </Button>
                 </Link>
-              )}
-            </div>
-              
+              </div>
+
               <div className="flex items-center gap-2">
                 {user && membershipId && (
                   <NotificationBell
@@ -261,8 +252,8 @@ const Community = () => {
                 )}
                 {isCreator && (
                   <Link href={`/dashboard/community/${membershipId}`}>
-                    <Button variant="outline" size="sm">
-                      <Settings className="w-4 h-4 mr-2" />
+                    <Button variant="outline" size="sm" className="h-8">
+                      <Settings className="w-3.5 h-3.5 mr-1.5" />
                       Admin
                     </Button>
                   </Link>
@@ -272,48 +263,59 @@ const Community = () => {
           </header>
 
           {/* Community Header */}
-          <div className="bg-gradient-to-r from-navy to-navy/90 px-4 lg:px-8 py-5 lg:py-8 text-white shrink-0">
-            <div className="max-w-3xl mx-auto">
-            <div className="flex items-center gap-3 lg:gap-4">
-              <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-xl lg:rounded-2xl bg-gold/20 flex items-center justify-center shrink-0">
-                <Users className="w-6 h-6 lg:w-8 lg:h-8 text-gold" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-lg lg:text-3xl font-bold truncate">{communityGroup?.name || membershipPlan.title}</h1>
-                <p className="text-white/70 text-sm lg:text-base">
-                  Comunitate • {posts?.length || 0} postări
-                </p>
+          <div className="relative bg-gradient-to-br from-navy via-navy to-navy/95 px-4 lg:px-8 py-6 lg:py-10 text-white shrink-0 overflow-hidden">
+            {/* Subtle dot grid pattern */}
+            <div className="absolute inset-0 opacity-[0.07]"
+              style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "24px 24px" }}
+            />
+            {/* Gold glow top right */}
+            <div className="absolute -top-10 -right-10 w-48 h-48 bg-gold/20 rounded-full blur-3xl pointer-events-none" />
+            {/* Bottom accent line */}
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-gold/0 via-gold/60 to-gold/0" />
+
+            <div className="max-w-3xl mx-auto relative">
+              <div className="flex items-center gap-4 lg:gap-5">
+                <div className="w-14 h-14 lg:w-18 lg:h-18 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center shrink-0 shadow-lg">
+                  <Users className="w-7 h-7 lg:w-8 lg:h-8 text-gold" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-xl lg:text-3xl font-bold truncate leading-tight">
+                    {communityGroup?.name || membershipPlan.title}
+                  </h1>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-white/60 text-xs lg:text-sm flex items-center gap-1">
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      {posts?.length || 0} postări
+                    </span>
+                  </div>
+                </div>
+                {linkedCourse && (
+                  <a href={`/course/${linkedCourse.slug}/${linkedCourse.access_token}`} className="hidden md:inline-flex">
+                    <Button size="sm" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-sm">
+                      <BookOpen className="w-4 h-4 mr-2" />
+                      Curs
+                    </Button>
+                  </a>
+                )}
               </div>
               {linkedCourse && (
-                <a
-                  href={`/course/${linkedCourse.slug}/${linkedCourse.access_token}`}
-                  className="hidden md:inline-flex"
-                >
-                  <Button variant="outline" size="sm" className="border-white/40 text-white hover:bg-white/10">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Curs
-                  </Button>
-                </a>
+                <div className="mt-3 md:hidden">
+                  <a href={`/course/${linkedCourse.slug}/${linkedCourse.access_token}`}>
+                    <Button size="sm" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-sm w-full">
+                      <BookOpen className="w-4 h-4 mr-2" />
+                      Curs
+                    </Button>
+                  </a>
+                </div>
               )}
             </div>
-            {linkedCourse && (
-              <div className="mt-3 md:hidden">
-                <a href={`/course/${linkedCourse.slug}/${linkedCourse.access_token}`}>
-                  <Button variant="outline" size="sm" className="border-white/40 text-white hover:bg-white/10 w-full">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Curs
-                  </Button>
-                </a>
-              </div>
-            )}
           </div>
-        </div>
 
           {/* Tabs */}
           <div className="flex-1 px-3 lg:px-8 py-4 lg:py-6 overflow-auto pb-mobile-nav">
             <div className="max-w-3xl mx-auto">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="mb-4 lg:mb-6 bg-background border border-border w-full sm:w-auto flex-wrap h-auto gap-1">
+                <TabsList className="mb-4 lg:mb-6 bg-white border border-border/60 shadow-sm w-full sm:w-auto flex-wrap h-auto gap-1 p-1 rounded-xl">
                   <TabsTrigger value="feed" className="flex items-center gap-1.5 text-sm">
                     <MessageSquare className="w-4 h-4" />
                     Feed
@@ -403,7 +405,7 @@ const Community = () => {
                       placeholder="Caută în postări..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9 bg-background"
+                      className="pl-9 bg-white shadow-sm border-border/60"
                     />
                   </div>
 
@@ -460,7 +462,7 @@ const Community = () => {
 
                 <TabsContent value="course">
                   {linkedCourse ? (
-                    <div className="bg-background rounded-xl border border-border p-6">
+                    <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-6">
                       <h3 className="text-lg font-semibold text-navy mb-2">{linkedCourse.title}</h3>
                       <p className="text-sm text-muted-foreground mb-4">
                         Accesează cursul direct din comunitate și continuă lecțiile.

@@ -39,8 +39,8 @@ const PostCard = ({
 
   return (
     <Card className={cn(
-      "hover:shadow-lg transition-all duration-200",
-      post.is_pinned && "border-gold border-2 bg-gold/5"
+      "bg-white border-border/60 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200",
+      post.is_pinned && "border-gold/60 border-2 bg-gold/[0.03]"
     )}>
       <CardContent className="p-4 lg:p-6">
         {/* Header */}
@@ -134,7 +134,7 @@ const PostCard = ({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1 mt-3 pt-3 border-t border-border">
+        <div className="flex items-center gap-1 mt-3 pt-3 border-t border-border/50">
           <Button
             variant="ghost"
             size="sm"
