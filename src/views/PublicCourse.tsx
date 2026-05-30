@@ -726,7 +726,7 @@ const PublicCourse = () => {
 
         
         <div className="min-h-screen bg-beige/30 flex items-center justify-center p-4">
-          <div className="bg-background rounded-2xl border border-border p-8 max-w-md text-center">
+          <div className="bg-white rounded-2xl border border-border/60 shadow-md p-8 max-w-md text-center">
             <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-6">
               <AlertCircle className="w-8 h-8 text-destructive" />
             </div>
@@ -755,7 +755,7 @@ const PublicCourse = () => {
 
         
         <div className="min-h-screen bg-beige/30 flex items-center justify-center p-4">
-          <div className="bg-background rounded-2xl border border-border p-8 max-w-lg text-center">
+          <div className="bg-white rounded-2xl border border-border/60 shadow-md p-8 max-w-lg text-center">
             <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-6">
               <Lock className="w-8 h-8 text-gold" />
             </div>
@@ -789,7 +789,7 @@ const PublicCourse = () => {
 
         
         <div className="min-h-screen bg-beige/30 flex items-center justify-center p-4">
-          <div className="bg-background rounded-2xl border border-border p-8 max-w-lg text-center">
+          <div className="bg-white rounded-2xl border border-border/60 shadow-md p-8 max-w-lg text-center">
             <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-6">
               <Lock className="w-8 h-8 text-gold" />
             </div>
@@ -849,7 +849,7 @@ const PublicCourse = () => {
       
 
       {/* ── Mobile fixed header ─────────────────────────────── */}
-      <div className="lg:hidden fixed top-0 inset-x-0 z-40 h-14 bg-background border-b border-border flex items-center gap-3 px-4">
+      <div className="lg:hidden fixed top-0 inset-x-0 z-40 h-14 bg-white border-b border-border/60 shadow-sm flex items-center gap-3 px-4">
         <button
           onClick={() => setMobileSidebarOpen(true)}
           className="p-1.5 rounded-lg hover:bg-beige/50 flex-shrink-0"
@@ -891,7 +891,7 @@ const PublicCourse = () => {
 
         {/* Sidebar - Course navigation */}
         <aside className={cn(
-          "bg-background border-r border-border flex flex-col flex-shrink-0",
+          "bg-white border-r border-border/60 shadow-sm flex flex-col flex-shrink-0",
           "fixed inset-y-0 left-0 z-50 w-[85vw] max-w-xs transition-transform duration-300 ease-in-out overflow-hidden",
           mobileSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full",
           "lg:relative lg:inset-auto lg:z-auto lg:translate-x-0 lg:shadow-none lg:w-80 xl:w-96"
@@ -951,7 +951,7 @@ const PublicCourse = () => {
             
             {/* Course Progress Bar - shown for all users */}
             {canTrackProgress && allLessons.length > 0 && (
-              <div className="bg-beige/50 rounded-xl p-3 mt-4">
+              <div className="bg-gradient-to-br from-gold/8 to-gold/4 border border-gold/20 rounded-xl p-3 mt-4">
                 <div className="flex items-center justify-between text-sm mb-2">
                   <span className="text-muted-foreground">Progres curs</span>
                   <span className="font-semibold text-navy">{courseProgress.percentage}%</span>
@@ -980,10 +980,10 @@ const PublicCourse = () => {
                     className={cn(
                       "w-full flex items-center justify-between p-3 rounded-xl transition-colors",
                       moduleScheduled
-                        ? "bg-muted/30 cursor-default opacity-70"
+                        ? "bg-muted/20 cursor-default opacity-60"
                         : moduleUnlocked
-                        ? "bg-beige/50 hover:bg-beige"
-                        : "bg-muted/40 cursor-default opacity-60"
+                        ? "bg-beige/60 hover:bg-beige border border-border/40"
+                        : "bg-muted/30 cursor-default opacity-50"
                     )}
                   >
                     <span className="font-medium text-navy text-left text-sm flex items-center gap-2">
@@ -1245,7 +1245,7 @@ const PublicCourse = () => {
               ) : null}
 
               {activeLesson.content && (
-                <div className="bg-background rounded-2xl border border-border p-6 sm:p-8 mb-6">
+                <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-6 sm:p-8 mb-6">
                   {/<[a-z][\s\S]*>/i.test(activeLesson.content) ? (
                     // Conținut HTML (rich text) — randare sigură cu DOMPurify
                     <div
@@ -1392,7 +1392,7 @@ const PublicCourse = () => {
               )}
 
               {!activeLesson.video_url && activeLesson.videos.length === 0 && !activeLesson.content && activeLesson.files.length === 0 && (
-                <div className="bg-background rounded-2xl border border-border p-6 sm:p-8 mb-6">
+                <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-6 sm:p-8 mb-6">
                   <p className="text-muted-foreground text-center">
                     Conținutul acestei lecții nu este disponibil încă.
                   </p>
