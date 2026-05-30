@@ -183,7 +183,7 @@ const MyCourses = () => {
 
         {/* Main content */}
         <div className="flex-1 flex flex-col">
-          <header className="bg-background border-b border-border px-4 lg:px-8 py-4 flex items-center justify-between">
+          <header className="bg-white border-b border-border/60 shadow-sm px-4 lg:px-8 py-4 flex items-center justify-between">
             <button
               className="lg:hidden p-2 text-charcoal"
               onClick={() => setSidebarOpen(true)}
@@ -215,23 +215,23 @@ const MyCourses = () => {
               {/* Quick Stats */}
               {courses.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-                  <div className="bg-background rounded-lg border border-border p-3">
+                  <div className="bg-white rounded-xl border border-border/60 shadow-sm p-3">
                     <p className="text-xs text-muted-foreground mb-1">Total</p>
                     <p className="text-2xl font-bold text-navy">{courses.length}</p>
                   </div>
-                  <div className="bg-background rounded-lg border border-border p-3">
+                  <div className="bg-white rounded-xl border border-border/60 shadow-sm p-3">
                     <p className="text-xs text-muted-foreground mb-1">Publicate</p>
                     <p className="text-2xl font-bold text-gold">
                       {courses.filter(c => c.is_published).length}
                     </p>
                   </div>
-                  <div className="bg-background rounded-lg border border-border p-3">
+                  <div className="bg-white rounded-xl border border-border/60 shadow-sm p-3">
                     <p className="text-xs text-muted-foreground mb-1">Draft-uri</p>
                     <p className="text-2xl font-bold text-muted-foreground">
                       {courses.filter(c => !c.is_published).length}
                     </p>
                   </div>
-                  <div className="bg-background rounded-lg border border-border p-3">
+                  <div className="bg-white rounded-xl border border-border/60 shadow-sm p-3">
                     <p className="text-xs text-muted-foreground mb-1">Filtrate</p>
                     <p className="text-2xl font-bold text-sky">
                       {filteredCourses.length}
@@ -290,7 +290,7 @@ const MyCourses = () => {
                 <div className="animate-spin w-8 h-8 border-4 border-gold border-t-transparent rounded-full" />
               </div>
             ) : courses.length === 0 ? (
-              <div className="bg-background rounded-2xl border border-border p-8 lg:p-12 text-center">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-8 lg:p-12 text-center">
                 <div className="w-20 h-20 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-6">
                   <BookOpen className="w-10 h-10 text-gold" />
                 </div>
@@ -303,21 +303,21 @@ const MyCourses = () => {
 
                 <div className="max-w-lg mx-auto mb-8 text-left">
                   <div className="space-y-4">
-                    <div className="flex items-start gap-4 p-4 rounded-lg bg-beige/50">
+                    <div className="flex items-start gap-4 p-4 rounded-xl bg-beige/40 border border-border/40">
                       <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white font-bold shrink-0">1</div>
                       <div>
                         <h3 className="font-semibold text-navy mb-1">Adaugă detalii de bază</h3>
                         <p className="text-sm text-muted-foreground">Titlu, descriere și imagine (opțional)</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-4 p-4 rounded-lg bg-beige/50">
+                    <div className="flex items-start gap-4 p-4 rounded-xl bg-beige/40 border border-border/40">
                       <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white font-bold shrink-0">2</div>
                       <div>
                         <h3 className="font-semibold text-navy mb-1">Organizează în module</h3>
                         <p className="text-sm text-muted-foreground">Grupează lecțiile pe teme (ex: Modulul 1, 2, 3)</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-4 p-4 rounded-lg bg-beige/50">
+                    <div className="flex items-start gap-4 p-4 rounded-xl bg-beige/40 border border-border/40">
                       <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white font-bold shrink-0">3</div>
                       <div>
                         <h3 className="font-semibold text-navy mb-1">Adaugă lecții</h3>
@@ -335,7 +335,7 @@ const MyCourses = () => {
                 </Link>
               </div>
             ) : filteredCourses.length === 0 ? (
-              <div className="bg-background rounded-2xl border border-border p-8 lg:p-12 text-center">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-8 lg:p-12 text-center">
                 <div className="w-20 h-20 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-6">
                   <Search className="w-10 h-10 text-gold" />
                 </div>
@@ -360,9 +360,9 @@ const MyCourses = () => {
                 {filteredCourses.map((course) => (
                   <div
                     key={course.id}
-                    className="bg-background rounded-2xl border border-border overflow-hidden hover:shadow-medium transition-shadow"
+                    className="bg-white rounded-2xl border border-border/60 shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                   >
-                    <div className="aspect-video bg-beige relative">
+                    <div className="aspect-video bg-gradient-to-br from-beige to-beige/60 relative">
                       {course.image_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
