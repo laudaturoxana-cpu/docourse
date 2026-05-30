@@ -32,17 +32,8 @@ const problems = [
 const ProblemSection = () => {
   return (
     <section className="py-20 md:py-32 bg-beige/30">
-      <style>{`
-        @keyframes problemPulse {
-          0%, 100% { opacity: 0; }
-          50% { opacity: 1; }
-        }
-        .problem-card:hover .problem-line { animation: problemPulse 1.5s ease-in-out; }
-      `}</style>
-
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
-          {/* Section header */}
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-1.5 rounded-full bg-destructive/10 text-destructive text-sm font-medium mb-4">
               Problema
@@ -53,20 +44,17 @@ const ProblemSection = () => {
             </h2>
           </div>
 
-          {/* Problems grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
             {problems.map((problem) => (
               <div
                 key={problem.title}
-                className={`problem-card group relative p-6 rounded-2xl bg-background border border-border hover:border-destructive/40 transition-all duration-300 overflow-hidden hover:-translate-y-0.5 hover:shadow-md${problem.wide ? " md:col-span-2" : ""}`}
+                className={`group relative p-6 rounded-2xl bg-white border border-border/60 shadow-sm hover:border-destructive/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden${problem.wide ? " md:col-span-2" : ""}`}
               >
-                {/* Animated top line on hover */}
-                <div className="problem-line absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-destructive/0 via-destructive/60 to-destructive/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                {/* Background gradient on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-destructive/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-destructive/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-destructive/0 via-destructive/40 to-destructive/0 opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 <div className="relative flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center flex-shrink-0 group-hover:bg-destructive/20 transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center flex-shrink-0 group-hover:bg-destructive/15 transition-colors">
                     <problem.icon className="w-6 h-6 text-destructive" />
                   </div>
                   <div>
@@ -78,7 +66,6 @@ const ProblemSection = () => {
             ))}
           </div>
 
-          {/* Solution comparison callout */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <div className="flex items-center gap-3 px-5 py-3.5 rounded-xl bg-destructive/8 border border-destructive/15 text-sm text-destructive/70 line-through">
               Kajabi / Teachable — 39–150€/lună
