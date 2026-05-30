@@ -600,7 +600,7 @@ const EditLesson = () => {
       
 
       <div className="min-h-screen bg-beige/30">
-        <header className="bg-background border-b border-border px-4 lg:px-8 py-4">
+        <header className="bg-white border-b border-border/60 shadow-sm px-4 lg:px-8 py-4">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
@@ -658,7 +658,7 @@ const EditLesson = () => {
               </div>
             )}
             {/* Title + available_from */}
-            <div className="bg-background rounded-2xl border border-border p-4 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6 space-y-4">
               <div>
                 <Label htmlFor="title" className="text-lg font-semibold text-navy mb-4 block">
                   Titlu lecție
@@ -701,7 +701,7 @@ const EditLesson = () => {
             </div>
 
             {/* Video-uri (multiple) */}
-            <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+            <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6">
               <div className="flex items-center justify-between gap-3 mb-4">
                 <div className="flex items-center gap-2 min-w-0">
                   <Film className="w-5 h-5 text-gold flex-shrink-0" />
@@ -725,7 +725,7 @@ const EditLesson = () => {
                     const vimeoInfo = provider === 'vimeo' ? extractVimeoInfo(video.video_url) : null;
                     const hasError = video.video_url.trim() && !provider;
                     return (
-                      <div key={video.id} className="border border-border rounded-xl p-4 space-y-3">
+                      <div key={video.id} className="border border-border/60 rounded-xl p-4 space-y-3 bg-beige/20">
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium text-navy">Video {index + 1}</span>
                           <Button
@@ -800,7 +800,7 @@ const EditLesson = () => {
             </div>
 
             {/* Content */}
-            <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+            <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6">
               <Label className="text-lg font-semibold text-navy mb-4 block">
                 Descriere / Text lecție
               </Label>
@@ -885,7 +885,7 @@ const EditLesson = () => {
             </div>
 
             {/* Documents Section */}
-            <div className="bg-background rounded-2xl border border-border p-4 sm:p-6">
+            <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <FileText className="w-5 h-5 text-gold" />

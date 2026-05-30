@@ -179,7 +179,7 @@ export default function EmailMarketing() {
     <div className="min-h-screen bg-beige/30">
 
 
-      <header className="bg-background border-b border-border sticky top-0 z-10">
+      <header className="bg-white border-b border-border/60 shadow-sm sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center gap-4">
           <Link href="/"><Logo className="h-8 w-auto" /></Link>
           <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-navy transition-colors">Dashboard</Link>
@@ -202,7 +202,7 @@ export default function EmailMarketing() {
           </div>
 
           {showNewList && (
-            <form onSubmit={handleCreateList} className="bg-background border border-border rounded-xl p-4 mb-4 flex gap-3 items-end">
+            <form onSubmit={handleCreateList} className="bg-white border border-border/60 shadow-sm rounded-xl p-4 mb-4 flex gap-3 items-end">
               <div className="flex-1 space-y-1">
                 <Label>Nume listă</Label>
                 <Input
@@ -225,14 +225,14 @@ export default function EmailMarketing() {
           {loadingLists ? (
             <div className="flex justify-center py-8"><div className="animate-spin w-6 h-6 border-2 border-gold border-t-transparent rounded-full" /></div>
           ) : lists.length === 0 ? (
-            <div className="bg-background border border-dashed border-border rounded-xl p-10 text-center text-muted-foreground">
+            <div className="bg-white border border-dashed border-border/60 rounded-xl p-10 text-center text-muted-foreground">
               <Mail className="w-8 h-8 mx-auto mb-3 opacity-40" />
               <p>Nu ai nicio listă. Creează prima ta listă de contacte.</p>
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
               {lists.map((list) => (
-                <div key={list.id} className="bg-background border border-border rounded-xl p-4 flex items-center gap-4 hover:border-gold/40 transition-colors">
+                <div key={list.id} className="bg-white border border-border/60 shadow-sm rounded-xl p-4 flex items-center gap-4 hover:border-gold/40 hover:shadow-md transition-all duration-200">
                   <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
                     <Users className="w-5 h-5 text-gold" />
                   </div>
@@ -287,14 +287,14 @@ export default function EmailMarketing() {
           {loadingCampaigns ? (
             <div className="flex justify-center py-8"><div className="animate-spin w-6 h-6 border-2 border-gold border-t-transparent rounded-full" /></div>
           ) : campaigns.length === 0 ? (
-            <div className="bg-background border border-dashed border-border rounded-xl p-10 text-center text-muted-foreground">
+            <div className="bg-white border border-dashed border-border/60 rounded-xl p-10 text-center text-muted-foreground">
               <Send className="w-8 h-8 mx-auto mb-3 opacity-40" />
               <p>Nicio campanie trimisă încă.</p>
             </div>
           ) : (
-            <div className="bg-background border border-border rounded-xl overflow-hidden">
+            <div className="bg-white border border-border/60 shadow-sm rounded-xl overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-beige/40 border-b border-border">
+                <thead className="bg-beige/50 border-b border-border/60">
                   <tr>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground">Subiect</th>
                     <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Listă</th>
