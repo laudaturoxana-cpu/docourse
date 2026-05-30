@@ -415,13 +415,13 @@ const Dashboard = () => {
 
         {/* Main content */}
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="bg-background border-b border-border px-4 lg:px-8 py-4 flex items-center justify-between shrink-0">
-            <button className="lg:hidden p-2 text-charcoal" onClick={() => setSidebarOpen(true)}>
+          <header className="bg-white border-b border-border/60 px-4 lg:px-8 py-4 flex items-center justify-between shrink-0 shadow-sm">
+            <button className="lg:hidden p-2 text-charcoal hover:bg-beige rounded-lg transition-colors" onClick={() => setSidebarOpen(true)}>
               <Menu className="w-6 h-6" />
             </button>
             <div className="hidden lg:block" />
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold font-semibold">
+              <div className="w-10 h-10 rounded-full bg-gold/20 border-2 border-gold/30 flex items-center justify-center text-gold font-semibold">
                 {profile?.full_name?.charAt(0) || "C"}
               </div>
             </div>
@@ -535,7 +535,7 @@ const Dashboard = () => {
 
             {/* Enrollment chart */}
             {stats.courses > 0 && (
-              <div className="bg-background rounded-2xl border border-border p-4 lg:p-6 mb-6">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 lg:p-6 mb-6">
                 <div className="flex items-center gap-2 mb-4">
                   <TrendingUp className="w-5 h-5 text-gold" />
                   <h2 className="font-semibold text-navy">Înrolări — ultimele 8 săptămâni</h2>
@@ -550,7 +550,7 @@ const Dashboard = () => {
 
             {/* Per-course table */}
             {stats.courses > 0 && (
-              <div className="bg-background rounded-2xl border border-border p-4 lg:p-6 mb-6">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 lg:p-6 mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <BookOpen className="w-5 h-5 text-gold" />
@@ -619,7 +619,7 @@ const Dashboard = () => {
 
             {/* Drop-off: lecții cu rata de finalizare scăzută */}
             {stats.courses > 0 && (dropoffLessons.length > 0 || loadingAnalytics) && (
-              <div className="bg-background rounded-2xl border border-border p-4 lg:p-6 mb-6">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-4 lg:p-6 mb-6">
                 <div className="flex items-center gap-2 mb-4">
                   <AlertTriangle className="w-5 h-5 text-amber-500" />
                   <h2 className="font-semibold text-navy">Lecții cu cel mai mare drop-off</h2>
@@ -637,7 +637,7 @@ const Dashboard = () => {
                 ) : (
                   <div className="space-y-3">
                     {dropoffLessons.map((item) => (
-                      <div key={item.lessonId} className="flex items-center gap-3 p-3 rounded-xl bg-beige/30 hover:bg-beige/50 transition-colors">
+                      <div key={item.lessonId} className="flex items-center gap-3 p-3 rounded-xl bg-beige/20 border border-border/40 hover:border-border/60 hover:bg-beige/40 transition-all duration-200">
                         <div className={cn(
                           "w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shrink-0",
                           item.completionRate < 30 ? "bg-red-100 text-red-600" :
@@ -668,8 +668,8 @@ const Dashboard = () => {
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-background rounded-2xl border border-border p-5 sm:p-6 text-center hover:shadow-lg transition-shadow">
-                <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-3">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-5 sm:p-6 text-center hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/15 to-gold/5 flex items-center justify-center mx-auto mb-3">
                   <BookOpen className="w-7 h-7 text-gold" />
                 </div>
                 <h2 className="text-lg font-bold text-navy mb-1">
@@ -684,8 +684,8 @@ const Dashboard = () => {
                 </Link>
               </div>
 
-              <div className="bg-background rounded-2xl border border-border p-5 sm:p-6 text-center hover:shadow-lg transition-shadow">
-                <div className="w-14 h-14 rounded-2xl bg-sky/10 flex items-center justify-center mx-auto mb-3">
+              <div className="bg-white rounded-2xl border border-border/60 shadow-sm p-5 sm:p-6 text-center hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky/15 to-sky/5 flex items-center justify-center mx-auto mb-3">
                   <Users className="w-7 h-7 text-sky" />
                 </div>
                 <h2 className="text-lg font-bold text-navy mb-1">Comunitate pentru curs</h2>
