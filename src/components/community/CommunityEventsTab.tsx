@@ -13,7 +13,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Calendar, MapPin, Video, Link as LinkIcon, Plus, Trash2 } from "lucide-react";
+import { Calendar, MapPin, Video, Link as LinkIcon, Plus, Trash2, CalendarPlus } from "lucide-react";
 import { supabase } from "@/lib/supabase/browser";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,6 +36,41 @@ interface CommunityEventsTabProps {
   isCreator: boolean;
   currentUserId?: string;
 }
+
+const toIcalDate = (date: Date) =>
+  date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+const buildGoogleCalendarUrl = (event: CommunityEvent) => {
+  const start = toIcalDate(new Date(event.event_date));
+  const end = toIcalDate(new Date(new Date(event.event_date).getTime() + 60 * 60 * 1000));
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: event.title,
+    dates: `${start}/${end}`,
+    ...(event.description ? { details: event.description } : {}),
+    ...(event.link_url ? { location: event.link_url } : event.location ? { location: event.location } : {}),
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
+
+const buildIcsDownload = (event: CommunityEvent) => {
+  const start = toIcalDate(new Date(event.event_date));
+  const end = toIcalDate(new Date(new Date(event.event_date).getTime() + 60 * 60 * 1000));
+  const location = event.link_url || event.location || "";
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "BEGIN:VEVENT",
+    `DTSTART:${start}`,
+    `DTEND:${end}`,
+    `SUMMARY:${event.title}`,
+    event.description ? `DESCRIPTION:${event.description.replace(/\n/g, "\\n")}` : "",
+    location ? `LOCATION:${location}` : "",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].filter(Boolean).join("\r\n");
+  return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+};
 
 const CommunityEventsTab = ({ membershipPlanId, isCreator, currentUserId: _currentUserId }: CommunityEventsTabProps) => {
   const [events, setEvents] = useState<CommunityEvent[]>([]);
@@ -234,16 +269,37 @@ const CommunityEventsTab = ({ membershipPlanId, isCreator, currentUserId: _curre
                         </div>
                       </div>
                     </div>
-                    {isCreator && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-                        onClick={() => handleDelete(event.id)}
+                    <div className="flex items-center gap-1 shrink-0">
+                      {/* Google Calendar */}
+                      <a
+                        href={buildGoogleCalendarUrl(event)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Adaugă în Google Calendar"
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-gold hover:bg-gold/10 transition-colors"
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    )}
+                        <CalendarPlus className="w-4 h-4" />
+                      </a>
+                      {/* Apple / Outlook .ics */}
+                      <a
+                        href={buildIcsDownload(event)}
+                        download={`${event.title.replace(/\s+/g, "-")}.ics`}
+                        title="Adaugă în Apple Calendar / Outlook"
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-sky hover:bg-sky/10 transition-colors text-[10px] font-bold"
+                      >
+                        .ics
+                      </a>
+                      {isCreator && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                          onClick={() => handleDelete(event.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
