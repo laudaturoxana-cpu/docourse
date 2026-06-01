@@ -499,6 +499,7 @@ const Community = () => {
                   <CommunityLeaderboard
                     membershipPlanId={membershipId!}
                     currentUserId={user?.id}
+                    isCreator={isCreator}
                   />
                 </TabsContent>
 
