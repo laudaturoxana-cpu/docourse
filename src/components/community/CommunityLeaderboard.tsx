@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Trophy, Gift, Pencil, Check, X } from "lucide-react";
+import { Trophy, Gift, Pencil, Check, X, Send, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase/browser";
 import { toast } from "sonner";
 
@@ -27,6 +27,11 @@ interface MyStats {
   rank: number;
 }
 
+interface RewardConfig {
+  reward_text: string | null;
+  booking_url: string | null;
+}
+
 const LEVEL_COLORS: Record<number, string> = {
   1: "bg-gray-100 text-gray-600",
   2: "bg-sky/20 text-sky-700",
@@ -47,33 +52,43 @@ interface CommunityLeaderboardProps {
   membershipPlanId: string;
   currentUserId?: string;
   isCreator?: boolean;
+  communityName?: string;
 }
 
-const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator }: CommunityLeaderboardProps) => {
+const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator, communityName = "comunitate" }: CommunityLeaderboardProps) => {
   const [tab, setTab] = useState<"monthly" | "alltime">("monthly");
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [myStats, setMyStats] = useState<MyStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [reward, setReward] = useState<string | null>(null);
+  const [rewardConfig, setRewardConfig] = useState<RewardConfig>({ reward_text: null, booking_url: null });
+
+  // Editing reward text
   const [editingReward, setEditingReward] = useState(false);
   const [rewardDraft, setRewardDraft] = useState("");
   const [savingReward, setSavingReward] = useState(false);
+
+  // Notify winners dialog
+  const [notifyOpen, setNotifyOpen] = useState(false);
+  const [bookingDraft, setBookingDraft] = useState("");
+  const [sending, setSending] = useState(false);
 
   const currentMonth = new Date().toLocaleDateString("ro-RO", { month: "long", year: "numeric" });
 
   const load = async (mode: "monthly" | "alltime") => {
     setLoading(true);
     const rpcName = mode === "monthly" ? "get_monthly_leaderboard" : "get_community_leaderboard";
-    const [{ data: board }, { data: me }, { data: rewardData }] = await Promise.all([
+    const [{ data: board }, { data: me }, { data: config }] = await Promise.all([
       db.rpc(rpcName, { _plan_id: membershipPlanId, _limit: 20 }),
       currentUserId
         ? db.rpc("get_my_community_points", { _plan_id: membershipPlanId })
         : Promise.resolve({ data: null }),
-      db.rpc("get_community_monthly_reward", { _plan_id: membershipPlanId }),
+      db.rpc("get_community_reward_config", { _plan_id: membershipPlanId }),
     ]);
     setEntries((board as LeaderboardEntry[]) ?? []);
     if (me && (me as MyStats[])[0]) setMyStats((me as MyStats[])[0]);
-    setReward(rewardData as string | null);
+    if (config && (config as RewardConfig[])[0]) {
+      setRewardConfig((config as RewardConfig[])[0]);
+    }
     setLoading(false);
   };
 
@@ -88,13 +103,40 @@ const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator }: Co
         _reward_text: rewardDraft.trim(),
       });
       if (error) throw error;
-      setReward(rewardDraft.trim());
+      setRewardConfig((prev) => ({ ...prev, reward_text: rewardDraft.trim() }));
       setEditingReward(false);
       toast.success("Premiul lunii salvat!");
     } catch {
       toast.error("Eroare la salvare");
     } finally {
       setSavingReward(false);
+    }
+  };
+
+  const handleNotifyWinners = async () => {
+    if (!bookingDraft.trim()) { toast.error("Introdu linkul de rezervare"); return; }
+    if (!rewardConfig.reward_text) { toast.error("Setează mai întâi premiul lunii"); return; }
+    setSending(true);
+    try {
+      const res = await fetch("/api/community/notify-winners", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          communityId: membershipPlanId,
+          bookingUrl: bookingDraft.trim(),
+          communityName,
+          rewardText: rewardConfig.reward_text,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { toast.error(data.error || "Eroare la trimitere"); return; }
+      toast.success(`Email trimis la ${data.sent?.length ?? 0} câștigători!`);
+      setRewardConfig((prev) => ({ ...prev, booking_url: bookingDraft.trim() }));
+      setNotifyOpen(false);
+    } catch {
+      toast.error("Eroare la trimitere");
+    } finally {
+      setSending(false);
     }
   };
 
@@ -141,9 +183,9 @@ const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator }: Co
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    {reward ? (
+                    {rewardConfig.reward_text ? (
                       <p className="text-sm font-medium text-navy flex-1">
-                        🎁 Top 3 câștigă: <span className="text-gold">{reward}</span>
+                        🎁 Top 3 câștigă: <span className="text-gold">{rewardConfig.reward_text}</span>
                       </p>
                     ) : (
                       <p className="text-sm text-muted-foreground flex-1 italic">
@@ -155,9 +197,43 @@ const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator }: Co
                         size="icon"
                         variant="ghost"
                         className="h-7 w-7 text-muted-foreground hover:text-gold shrink-0"
-                        onClick={() => { setRewardDraft(reward ?? ""); setEditingReward(true); }}
+                        onClick={() => { setRewardDraft(rewardConfig.reward_text ?? ""); setEditingReward(true); }}
                       >
                         <Pencil className="w-3.5 h-3.5" />
+                      </Button>
+                    )}
+                  </div>
+                )}
+
+                {/* Notify winners button */}
+                {isCreator && entries.length > 0 && !editingReward && (
+                  <div className="mt-3">
+                    {notifyOpen ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          autoFocus
+                          value={bookingDraft}
+                          onChange={(e) => setBookingDraft(e.target.value)}
+                          placeholder="https://calendly.com/roxana/30min"
+                          className="flex-1 text-sm border border-gold/40 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-gold/30"
+                          onKeyDown={(e) => { if (e.key === "Enter") handleNotifyWinners(); if (e.key === "Escape") setNotifyOpen(false); }}
+                        />
+                        <Button size="sm" className="bg-gold hover:bg-gold/90 text-navy shrink-0" onClick={handleNotifyWinners} disabled={sending}>
+                          {sending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><Send className="w-3.5 h-3.5 mr-1" />Trimite</>}
+                        </Button>
+                        <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0" onClick={() => setNotifyOpen(false)}>
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-gold/40 text-gold hover:bg-gold/10 text-xs h-7"
+                        onClick={() => { setBookingDraft(rewardConfig.booking_url ?? ""); setNotifyOpen(true); }}
+                      >
+                        <Send className="w-3 h-3 mr-1.5" />
+                        Notifică top 3 prin email
                       </Button>
                     )}
                   </div>
@@ -184,7 +260,7 @@ const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator }: Co
         </button>
       </div>
 
-      {/* My stats */}
+      {/* My stats (all time only) */}
       {myStats && tab === "alltime" && (
         <Card className="border-gold/30 bg-gold/5">
           <CardContent className="p-4">
@@ -205,7 +281,7 @@ const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator }: Co
         </Card>
       )}
 
-      {/* Leaderboard */}
+      {/* Leaderboard list */}
       {entries.length === 0 ? (
         <div className="text-center py-12">
           <Trophy className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
@@ -239,7 +315,7 @@ const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator }: Co
                       <p className="font-semibold text-navy truncate">
                         {entry.full_name || "User"}
                         {isMe && <span className="text-gold text-xs ml-2">(tu)</span>}
-                        {isTop3 && tab === "monthly" && <span className="ml-2 text-xs font-bold text-gold">★ Top {rank}</span>}
+                        {isTop3 && <span className="ml-2 text-xs font-bold text-gold">★ Top {rank}</span>}
                       </p>
                       <Badge className={`text-xs mt-0.5 ${LEVEL_COLORS[entry.level]}`}>
                         {entry.level_name}
