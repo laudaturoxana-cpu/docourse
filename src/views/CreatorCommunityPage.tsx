@@ -965,6 +965,7 @@ export default function CreatorCommunityPage() {
           <CommunityLeaderboard
             membershipPlanId={community.id}
             currentUserId={user?.id}
+            isCreator={!!isCreator}
           />
         )}
 
