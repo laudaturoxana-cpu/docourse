@@ -118,9 +118,13 @@ const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator, comm
     if (!rewardConfig.reward_text) { toast.error("Setează mai întâi premiul lunii"); return; }
     setSending(true);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch("/api/community/notify-winners", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.access_token ?? ""}`,
+        },
         body: JSON.stringify({
           communityId: membershipPlanId,
           bookingUrl: bookingDraft.trim(),
