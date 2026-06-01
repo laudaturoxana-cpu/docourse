@@ -149,11 +149,11 @@ export async function POST(req: NextRequest) {
 
     // Save booking_url for next time (fire and forget)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (admin.rpc as any)("set_community_monthly_reward", {
+    Promise.resolve((admin.rpc as any)("set_community_monthly_reward", {
       _plan_id: communityId,
       _reward_text: rewardText,
       _booking_url: bookingUrl,
-    }).catch(() => null);
+    })).catch(() => null);
 
     // Send emails
     const sent: string[] = [];
