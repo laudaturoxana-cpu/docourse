@@ -128,13 +128,18 @@ const CommunityLeaderboard = ({ membershipPlanId, currentUserId, isCreator, comm
           rewardText: rewardConfig.reward_text,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) { toast.error(data.error || "Eroare la trimitere"); return; }
+      let data: { error?: string; sent?: string[]; failed?: string[] } = {};
+      try { data = await res.json(); } catch { /* non-JSON response */ }
+      if (!res.ok) {
+        toast.error(data.error || `Eroare server (${res.status})`);
+        return;
+      }
       toast.success(`Email trimis la ${data.sent?.length ?? 0} câștigători!`);
+      if (data.failed?.length) toast.warning(`Nu s-a putut trimite la: ${data.failed.join(", ")}`);
       setRewardConfig((prev) => ({ ...prev, booking_url: bookingDraft.trim() }));
       setNotifyOpen(false);
-    } catch {
-      toast.error("Eroare la trimitere");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Eroare la trimitere");
     } finally {
       setSending(false);
     }
