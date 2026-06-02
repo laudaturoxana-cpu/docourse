@@ -125,9 +125,13 @@ export async function POST(request: NextRequest) {
         const subscription = event.data.object;
         const status = subscription.status;
         const customerId = subscription.customer;
-        if (["canceled", "unpaid", "past_due"].includes(status)) {
+        // Trial canceled → cancel_at_period_end:true while still trialing
+        // means Stripe won't charge but the user has canceled — deactivate immediately
+        if (subscription.cancel_at_period_end && status === "trialing") {
           await deactivateByCustomerId(supabase, customerId);
-        } else if (status === "active") {
+        } else if (["canceled", "unpaid", "past_due"].includes(status)) {
+          await deactivateByCustomerId(supabase, customerId);
+        } else if (status === "active" && !subscription.cancel_at_period_end) {
           const planType = subscription.metadata?.plan_type || "starter";
           await activateByCustomerId(supabase, customerId, planType);
         }
