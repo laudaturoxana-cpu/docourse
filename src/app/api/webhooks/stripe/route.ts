@@ -79,9 +79,15 @@ export async function POST(request: NextRequest) {
         if (session.mode !== "subscription") break;
         if (session.metadata?.membership_plan_id) break;
         const email = session.customer_email || session.customer_details?.email;
-        if (!email) break;
         const planType = session.metadata?.plan_type || "starter";
-        await activateByEmail(supabase, email, planType);
+        const stripeCustomerId = typeof session.customer === "string" ? session.customer : null;
+        const userId = session.client_reference_id || null;
+        // Preferăm lookup după userId (client_reference_id) — mai sigur decât email
+        if (userId) {
+          await activateByUserId(supabase, userId, planType, stripeCustomerId);
+        } else if (email) {
+          await activateByEmail(supabase, email, planType, stripeCustomerId);
+        }
         break;
       }
 
@@ -149,7 +155,15 @@ export async function POST(request: NextRequest) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function activateByEmail(supabase: any, email: string, planType: string) {
+async function activateByUserId(supabase: any, userId: string, planType: string, stripeCustomerId: string | null) {
+  const update: Record<string, unknown> = { subscription_active: true, plan_type: planType };
+  if (stripeCustomerId) update.stripe_customer_id = stripeCustomerId;
+  await supabase.from("profiles").update(update).eq("user_id", userId);
+  console.log(`Activated userId=${userId}, plan=${planType}`);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function activateByEmail(supabase: any, email: string, planType: string, stripeCustomerId: string | null = null) {
   const { data: profile } = await supabase
     .from("profiles")
     .select("user_id")
@@ -161,11 +175,9 @@ async function activateByEmail(supabase: any, email: string, planType: string) {
     return;
   }
 
-  await supabase
-    .from("profiles")
-    .update({ subscription_active: true, plan_type: planType })
-    .eq("user_id", profile.user_id);
-
+  const update: Record<string, unknown> = { subscription_active: true, plan_type: planType };
+  if (stripeCustomerId) update.stripe_customer_id = stripeCustomerId;
+  await supabase.from("profiles").update(update).eq("user_id", profile.user_id);
   console.log(`Activated ${email}, plan=${planType}`);
 }
 
