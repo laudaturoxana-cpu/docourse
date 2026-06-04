@@ -97,13 +97,12 @@ export async function POST(request: NextRequest) {
         if (!invoice.subscription) break;
         const email = invoice.customer_email;
         if (!email) break;
-        // subscription_details.metadata e setat la creare și persiste pe toată durata
-        // price.metadata e gol dacă nu a fost setat explicit în Stripe dashboard
         const planType =
           invoice.subscription_details?.metadata?.plan_type ||
           invoice.lines?.data?.[0]?.price?.metadata?.plan_type ||
           "starter";
-        await activateByEmail(supabase, email, planType);
+        const invoiceCustomerId = typeof invoice.customer === "string" ? invoice.customer : null;
+        await activateByEmail(supabase, email, planType, invoiceCustomerId);
         break;
       }
 
