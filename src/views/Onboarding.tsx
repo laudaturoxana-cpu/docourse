@@ -72,11 +72,9 @@ const Onboarding = () => {
 
     setIsLoading(true);
 
-    // Pass subscription_active: true if coming from Stripe checkout (has session_id)
     const { error } = await signUp(formData.email, formData.password, {
       full_name: formData.fullName,
       activity: formData.activity,
-      subscription_active: !!sessionId, // true if session_id exists
       role: 'creator'
     });
 
@@ -87,12 +85,15 @@ const Onboarding = () => {
       if (error.message.includes("already registered") || error.message.includes("User already registered")) {
         const { error: signInError } = await signIn(formData.email, formData.password);
         if (!signInError) {
-          // Dacă vine din Stripe, activăm abonamentul
           if (sessionId) {
-            await supabase
-              .from("profiles")
-              .update({ subscription_active: true, role: "creator" })
-              .eq("user_id", (await supabase.auth.getUser()).data.user?.id || "");
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+              await fetch("/api/activate-session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ sessionId, userId: user.id }),
+              });
+            }
           }
           toast({ title: "Bine ai revenit!", description: "Te-am autentificat automat." });
           router.push(sessionId ? "/dashboard" : "/pricing");
@@ -119,13 +120,24 @@ const Onboarding = () => {
       return;
     }
 
+    // Dacă vine din Stripe, activăm planul corect cu plan_type din sesiune
+    if (sessionId) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await fetch("/api/activate-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId, userId: user.id }),
+        });
+      }
+    }
+
     setIsLoading(false);
 
     toast({
       title: "Cont creat cu succes!",
       description: "Bine ai venit în DoCourse!",
     });
-    // If came from Stripe (has session_id), go to dashboard; otherwise go pay
     router.push(sessionId ? "/dashboard" : "/pricing");
   };
 
