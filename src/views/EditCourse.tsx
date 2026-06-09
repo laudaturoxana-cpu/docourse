@@ -880,213 +880,22 @@ const EditCourse = () => {
     );
   };
 
-  // Component to show or create community for this course
-  const CommunityInfoCard = ({
-    courseId,
-    courseTitle,
-    profileId
-  }: {
-    courseId: string;
-    courseTitle: string;
-    profileId: string;
-  }) => {
-    const [communityPlanId, setCommunityPlanId] = useState<string | null>(null);
-    const [communityId, setCommunityId] = useState<string | null>(null);
-    const [communityName, setCommunityName] = useState<string | null>(null);
+  // Card care trimite la comunitatea principală a creatorului
+  const CommunityInfoCard = () => {
+    const [communitySlug, setCommunitySlug] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isCreating, setIsCreating] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    const generateSlug = (title: string) =>
-      title
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
 
     useEffect(() => {
-      const fetchData = async () => {
-        const { data: plans } = await supabase
-          .from("membership_plans")
-          .select("id, title, includes_courses")
-          .eq("creator_id", profileId);
-
-        const plan = plans?.find(p => (p.includes_courses as string[] | null)?.includes(courseId!));
-        if (plan) {
-          setCommunityPlanId(plan.id);
-          const { data: community } = await supabase
-            .from("community_groups")
-            .select("id, name")
-            .eq("membership_plan_id", plan.id)
-            .maybeSingle();
-          if (community) {
-            setCommunityId(community.id);
-            setCommunityName(community.name || null);
-          }
-        }
-        setIsLoading(false);
-      };
-
-      fetchData();
-    }, [courseId, profileId]);
-
-    const createCommunity = async () => {
-      setIsCreating(true);
-      try {
-        const communityMembershipSlug = generateSlug(`${courseTitle} comunitate`);
-        const { data: communityMembership, error: cmError } = await supabase
-          .from("membership_plans")
-          .insert({
-            creator_id: profileId,
-            title: `${courseTitle} - Comunitate`,
-            slug: `${communityMembershipSlug}-${Date.now().toString(36).slice(-4)}`,
-            price_info: null,
-            includes_courses: [courseId],
-            status: "inactive"
-          })
-          .select()
-          .single();
-
-        if (cmError) throw cmError;
-
-        const { data: existingCommunity } = await supabase
-          .from("community_groups")
-          .select("id, name")
-          .eq("membership_plan_id", communityMembership.id)
-          .maybeSingle();
-
-        if (existingCommunity) {
-          setCommunityPlanId(communityMembership.id);
-          setCommunityId(existingCommunity.id);
-          setCommunityName(existingCommunity.name);
-        } else {
-          const communityPayload = {
-            membership_plan_id: communityMembership.id,
-            name: `Comunitatea ${courseTitle}`,
-            description: `Comunitate pentru ${courseTitle}`,
-            type: "membership"
-          };
-
-          const { data: community, error: communityError } = await supabase
-            .from("community_groups")
-            .insert(communityPayload)
-            .select()
-            .single();
-
-          if (communityError) throw communityError;
-
-          setCommunityPlanId(communityMembership.id);
-          setCommunityId(community.id);
-          setCommunityName(community.name);
-        }
-        toast({
-          title: "Comunitate creată",
-          description: "Comunitatea a fost creată cu succes.",
+      supabase
+        .from("creator_communities")
+        .select("slug")
+        .eq("creator_id", user?.id ?? "")
+        .maybeSingle()
+        .then(({ data }) => {
+          setCommunitySlug(data?.slug ?? null);
+          setIsLoading(false);
         });
-      } catch {
-        toast({
-          title: "Eroare",
-          description: "Nu s-a putut crea comunitatea.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsCreating(false);
-      }
-    };
-
-    const deleteCommunity = async () => {
-      if (!communityPlanId) return;
-      setIsDeleting(true);
-      try {
-        const { data: posts } = await supabase
-          .from("community_posts")
-          .select("id")
-          .eq("membership_plan_id", communityPlanId);
-
-        if (posts && posts.length > 0) {
-          const postIds = posts.map(post => post.id);
-          const { error: commentsError } = await supabase
-            .from("community_comments")
-            .delete()
-            .in("post_id", postIds);
-          if (commentsError) throw commentsError;
-
-          const { error: likesError } = await (supabase as unknown as { from: (table: string) => { delete: () => { in: (col: string, vals: string[]) => Promise<{ error: { message: string } | null }> } } })
-            .from("post_likes")
-            .delete()
-            .in("post_id", postIds);
-          if (likesError) throw likesError;
-
-          const { error: postsError } = await supabase
-            .from("community_posts")
-            .delete()
-            .eq("membership_plan_id", communityPlanId);
-          if (postsError) throw postsError;
-        }
-
-        if (communityId) {
-          const { error: communityError } = await supabase
-            .from("community_groups")
-            .delete()
-            .eq("id", communityId);
-          if (communityError) throw communityError;
-        } else {
-          const { error: communityError } = await supabase
-            .from("community_groups")
-            .delete()
-            .eq("membership_plan_id", communityPlanId);
-          if (communityError) throw communityError;
-        }
-
-        const { error: subscriptionsError } = await supabase
-          .from("membership_subscriptions")
-          .delete()
-          .eq("membership_plan_id", communityPlanId);
-        if (subscriptionsError) throw subscriptionsError;
-
-        const { error: planError } = await supabase
-          .from("membership_plans")
-          .delete()
-          .eq("id", communityPlanId);
-        if (planError) throw planError;
-
-        setCommunityPlanId(null);
-        setCommunityId(null);
-        setCommunityName(null);
-        toast({
-          title: "Comunitate ștearsă",
-          description: "Comunitatea a fost ștearsă cu succes.",
-        });
-      } catch (error) {
-        console.error("Delete community error:", error);
-        toast({
-          title: "Eroare",
-          description: `Nu s-a putut șterge comunitatea. ${error instanceof Error ? error.message : ""}`,
-          variant: "destructive",
-        });
-      } finally {
-        setIsDeleting(false);
-      }
-    };
-
-    if (isLoading) {
-      return (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Users className="w-5 h-5 text-gold" />
-              Comunitate
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-4">
-              <div className="animate-spin w-6 h-6 border-4 border-gold border-t-transparent rounded-full mx-auto" />
-            </div>
-          </CardContent>
-        </Card>
-      );
-    }
+    }, []);
 
     return (
       <Card>
@@ -1095,80 +904,25 @@ const EditCourse = () => {
             <Users className="w-5 h-5 text-gold" />
             Comunitate
           </CardTitle>
-          <CardDescription>Comunitate dedicată cursului tău</CardDescription>
+          <CardDescription>Comunitatea ta unde se adună toți membrii</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {communityPlanId ? (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-xl border border-border/60 bg-white shadow-sm">
-                <div>
-                  <p className="font-medium text-sm">{communityName || `Comunitatea ${courseTitle}`}</p>
-                  <p className="text-xs text-muted-foreground">Comunitate pentru curs</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="sm" className="h-8 px-3 text-xs" asChild>
-                    <Link href={`/community/${communityPlanId}`}>
-                      Intră în comunitate
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-muted-foreground hover:text-gold"
-                    title="Admin comunitate"
-                    asChild
-                  >
-                    <Link href={`/dashboard/community/${communityPlanId}`}>
-                      <ExternalLink className="w-4 h-4" />
-                    </Link>
-                  </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                        title="Șterge comunitate"
-                        disabled={isDeleting}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Ștergi comunitatea?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Această acțiune nu poate fi anulată. Se vor șterge postările, comentariile și accesul la comunitate.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Anulează</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={deleteCommunity}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          {isDeleting ? "Se șterge..." : "Șterge"}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </div>
+        <CardContent>
+          {isLoading ? (
+            <div className="flex justify-center py-4">
+              <div className="animate-spin w-5 h-5 border-4 border-gold border-t-transparent rounded-full" />
             </div>
+          ) : communitySlug ? (
+            <Button variant="outline" size="sm" className="w-full" asChild>
+              <Link href={`/community/${communitySlug}`}>
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Mergi la comunitate
+              </Link>
+            </Button>
           ) : (
-            <div className="space-y-3">
-              <div className="text-center py-6 text-muted-foreground text-sm">
-                <p className="mb-2">Acest curs nu are încă o comunitate.</p>
-                <p className="text-xs">Poți crea una pentru discuții și suport.</p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full"
-                onClick={createCommunity}
-                disabled={isCreating}
-              >
-                {isCreating ? "Se creează..." : "Creează comunitate"}
+            <div className="text-center space-y-3">
+              <p className="text-sm text-muted-foreground">Nu ai creat încă o comunitate.</p>
+              <Button variant="outline" size="sm" className="w-full" asChild>
+                <Link href="/dashboard">Creează din Dashboard</Link>
               </Button>
             </div>
           )}
@@ -1707,7 +1461,7 @@ const EditCourse = () => {
                 </div>
               </div>
 
-              <CommunityInfoCard courseId={course.id} courseTitle={course.title} profileId={profile?.id || ""} />
+              <CommunityInfoCard />
 
               <StudentLinkCard
                 course={course}
