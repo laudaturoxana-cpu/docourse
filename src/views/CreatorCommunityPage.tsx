@@ -43,7 +43,7 @@ interface CourseSetting {
 }
 interface Member { user_id: string; name: string; avatar: string | null; }
 
-type Tab = "feed" | "cursuri" | "leaderboard" | "events" | "members";
+type Tab = "feed" | "cursuri" | "leaderboard" | "events" | "members" | "mesaje";
 
 // ── Skeleton ─────────────────────────────────────────────────────────────────
 function PostSkeleton() {
@@ -112,6 +112,8 @@ export default function CreatorCommunityPage() {
 
   // DM state
   const [dmTarget, setDmTarget] = useState<{ user_id: string; full_name: string } | null>(null);
+  const [dmConversations, setDmConversations] = useState<{ other_user_id: string; other_user_name: string; last_message: string | null; last_message_at: string | null; unread_count: number }[]>([]);
+  const [totalUnreadDMs, setTotalUnreadDMs] = useState(0);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (slug) loadCommunity(); }, [slug, user]);
@@ -173,7 +175,7 @@ export default function CreatorCommunityPage() {
     const comm = rows[0] as Community;
     setCommunity(comm);
     if (comm.is_member || (user && user.id === comm.creator_id)) {
-      await Promise.all([loadPosts(comm.id), loadMembers(comm.id)]);
+      await Promise.all([loadPosts(comm.id), loadMembers(comm.id), loadDMConversations(comm.id)]);
     }
     await loadCourses(comm.id);
     setLoading(false);
@@ -242,6 +244,15 @@ export default function CreatorCommunityPage() {
       name: pm[m.user_id]?.full_name || "Utilizator",
       avatar: pm[m.user_id]?.avatar_url || null,
     })));
+  };
+
+  const loadDMConversations = async (communityId: string) => {
+    if (!user) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase.rpc as any)("get_my_dm_conversations", { _plan_id: communityId });
+    const convs = (data ?? []) as { other_user_id: string; other_user_name: string; last_message: string | null; last_message_at: string | null; unread_count: number }[];
+    setDmConversations(convs);
+    setTotalUnreadDMs(convs.reduce((s, c) => s + (c.unread_count ?? 0), 0));
   };
 
   const loadCourses = async (communityId: string) => {
@@ -631,6 +642,7 @@ export default function CreatorCommunityPage() {
             { key: "leaderboard", label: "Top", icon: <Trophy className="w-3.5 h-3.5" /> },
             { key: "members", label: "Membri", icon: <Users className="w-3.5 h-3.5" /> },
             { key: "cursuri", label: "Cursuri", icon: <BookOpen className="w-3.5 h-3.5" />, badge: courses.length > 0 ? courses.length : undefined },
+            ...(user ? [{ key: "mesaje" as Tab, label: "Mesaje", icon: <MessageCircle className="w-3.5 h-3.5" />, badge: totalUnreadDMs > 0 ? totalUnreadDMs : undefined }] : []),
           ] as { key: Tab; label: string; icon: React.ReactNode; badge?: number }[]).map(({ key, label, icon, badge }) => (
             <button key={key} onClick={() => setTab(key)}
               className={`flex items-center gap-1.5 shrink-0 px-4 py-3.5 text-sm font-semibold transition-colors border-b-2 ${
@@ -1133,6 +1145,44 @@ export default function CreatorCommunityPage() {
             )}
           </div>
         )}
+        {/* ── MESAJE TAB ──────────────────────────────────────────── */}
+        {tab === "mesaje" && user && community && (
+          <div className="max-w-lg mx-auto space-y-2">
+            {totalUnreadDMs > 0 && (
+              <p className="text-xs text-gold font-semibold px-1">{totalUnreadDMs} mesaje necitite</p>
+            )}
+            {dmConversations.length === 0 ? (
+              <div className="text-center py-16">
+                <MessageCircle className="w-10 h-10 mx-auto mb-3 text-gray-300" />
+                <p className="text-gray-500 text-sm">Nicio conversație încă.</p>
+                <p className="text-xs text-gray-400 mt-1">Apasă pe "Mesaj" lângă un membru pentru a începe.</p>
+              </div>
+            ) : (
+              dmConversations.map((conv) => (
+                <button
+                  key={conv.other_user_id}
+                  onClick={() => setDmTarget({ user_id: conv.other_user_id, full_name: conv.other_user_name })}
+                  className="w-full flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-200 hover:border-amber-300 hover:shadow-sm transition-all text-left"
+                >
+                  <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold shrink-0">
+                    {conv.other_user_name?.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <p className="font-semibold text-sm text-navy truncate">{conv.other_user_name}</p>
+                      {conv.unread_count > 0 && (
+                        <span className="bg-gold text-navy text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-2 shrink-0">
+                          {conv.unread_count}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-400 truncate">{conv.last_message ?? "Niciun mesaj"}</p>
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+        )}
       </div>
 
       <footer className="text-center py-5 text-xs text-gray-400 border-t border-gray-200 mt-8">
@@ -1143,7 +1193,7 @@ export default function CreatorCommunityPage() {
       {dmTarget && user && community && (
         <DirectMessageDialog
           open={!!dmTarget}
-          onClose={() => setDmTarget(null)}
+          onClose={() => { setDmTarget(null); if (community) loadDMConversations(community.id); }}
           membershipPlanId={community.id}
           currentUserId={user.id}
           recipient={dmTarget}
