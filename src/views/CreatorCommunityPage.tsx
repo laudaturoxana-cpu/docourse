@@ -94,6 +94,7 @@ export default function CreatorCommunityPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [posting, setPosting] = useState(false);
   const [joining, setJoining] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -363,6 +364,10 @@ export default function CreatorCommunityPage() {
     else {
       setCommunity((c) => c ? { ...c, is_member: true, member_count: c.member_count + 1 } : c);
       await Promise.all([loadPosts(community.id), loadMembers(community.id)]);
+      // Notificare creator + welcome email pentru noul membru (fire and forget)
+      supabase.functions.invoke("notify-community-join", {
+        body: { communityId: community.id, newMemberUserId: user.id },
+      }).catch(() => null);
     }
     setJoining(false);
   };
@@ -727,16 +732,30 @@ export default function CreatorCommunityPage() {
                     </div>
                   </div>
 
-                  {posts.length === 0 && (
+                  {/* Search */}
+                  <div className="relative mb-2">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Caută în feed..."
+                      className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-amber-400/40"
+                    />
+                    <svg className="absolute left-3 top-2.5 w-4 h-4 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+
+                  {posts.filter(p => !searchQuery || p.content.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
                     <div className="text-center py-16">
                       <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
                         <MessageSquare className="w-6 h-6 text-gray-400" />
                       </div>
-                      <p className="text-gray-500 text-sm">Nicio postare încă. Fii primul!</p>
+                      <p className="text-gray-500 text-sm">{searchQuery ? "Nicio postare găsită." : "Nicio postare încă. Fii primul!"}</p>
                     </div>
                   )}
 
-                  {posts.map((post) => {
+                  {posts.filter(p => !searchQuery || p.content.toLowerCase().includes(searchQuery.toLowerCase())).map((post) => {
                     const isExpanded = expandedComments.has(post.id);
                     const postComments = comments[post.id] || [];
                     const isLoadingComments = commentsLoading.has(post.id);
