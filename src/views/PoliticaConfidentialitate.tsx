@@ -1,82 +1,141 @@
-"use client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <section className="space-y-3">
+    <h2 className="text-base font-semibold text-navy">{title}</h2>
+    <div className="text-sm text-muted-foreground leading-relaxed space-y-2">{children}</div>
+  </section>
+);
+
 const PoliticaConfidentialitate = () => {
   return (
-    <>
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto px-4 py-16">
-          <div className="max-w-3xl space-y-8">
-            <header className="space-y-3">
-              <h1 className="text-3xl lg:text-4xl font-bold text-navy">
-                Politica de confidențialitate (GDPR)
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Ultima actualizare: 05.01.2026
-              </p>
-            </header>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-4 py-16 max-w-3xl">
 
-            <section className="space-y-4 text-sm text-muted-foreground">
-              <p>
-                Această politică explică modul în care DoCourse colectează,
-                utilizează și protejează datele tale personale, în conformitate
-                cu Regulamentul (UE) 2016/679 (GDPR).
-              </p>
-              <p>
-                Operatorul datelor: [NUME COMPANIE], CUI [CUI], Reg. Com.
-                [NR REG COM], sediul în [ADRESA], email: contact@docourse.ro.
-              </p>
-            </section>
+        <div className="mb-10">
+          <h1 className="text-3xl lg:text-4xl font-bold text-navy mb-2">
+            Politica de Confidențialitate
+          </h1>
+          <p className="text-sm text-muted-foreground">Ultima actualizare: 10 iunie 2026</p>
+        </div>
 
-            <section className="space-y-4 text-sm text-muted-foreground">
-              <h2 className="text-lg font-semibold text-navy">1. Ce date colectăm</h2>
-              <p>
-                Putem colecta date precum nume, email, informații de plată,
-                date tehnice (IP, browser, device) și conținutul încărcat de
-                utilizatori.
-              </p>
-              <h2 className="text-lg font-semibold text-navy">2. Scopuri și temeiuri</h2>
-              <p>
-                Datele sunt utilizate pentru furnizarea serviciului, suport,
-                facturare, securitate și îmbunătățirea platformei. Temeiurile
-                includ executarea contractului, obligații legale și interes
-                legitim.
-              </p>
-              <h2 className="text-lg font-semibold text-navy">3. Perioada de stocare</h2>
-              <p>
-                Păstrăm datele atât timp cât este necesar pentru scopurile
-                menționate sau conform obligațiilor legale.
-              </p>
-              <h2 className="text-lg font-semibold text-navy">4. Drepturile tale</h2>
-              <p>
-                Ai dreptul de acces, rectificare, ștergere, restricționare,
-                portabilitate și opoziție. Pentru exercitare, scrie la
-                contact@docourse.ro.
-              </p>
-              <h2 className="text-lg font-semibold text-navy">5. Parteneri și transferuri</h2>
-              <p>
-                Putem folosi furnizori de servicii (ex: hosting, plăți) care
-                acționează ca persoane împuternicite. Transferurile se fac în
-                conformitate cu GDPR.
-              </p>
-              <h2 className="text-lg font-semibold text-navy">6. Securitate</h2>
-              <p>
-                Aplicăm măsuri tehnice și organizatorice pentru protecția
-                datelor, inclusiv criptare și control al accesului.
-              </p>
-              <h2 className="text-lg font-semibold text-navy">7. Plângeri</h2>
-              <p>
-                Dacă consideri că drepturile tale au fost încălcate, poți depune
-                plângere la ANSPDCP.
-              </p>
-            </section>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    </>
+        <div className="space-y-8">
+
+          <Section title="1. Operatorul de date cu caracter personal">
+            <p>
+              <strong className="text-foreground">DoChat Marketing Education S.R.L.</strong>, cu sediul în România,
+              CUI 43889803, înregistrată la Registrul Comerțului, email:{" "}
+              <a href="mailto:contact@docourse.ro" className="text-gold hover:underline">contact@docourse.ro</a>.
+            </p>
+            <p>
+              Prelucrăm datele tale cu caracter personal în conformitate cu Regulamentul (UE) 2016/679 (GDPR)
+              și legislația națională aplicabilă.
+            </p>
+          </Section>
+
+          <Section title="2. Ce date colectăm">
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong className="text-foreground">Date de cont:</strong> nume, adresă de email, parolă (criptată)</li>
+              <li><strong className="text-foreground">Date de profil:</strong> fotografie de profil, descriere, activitate profesională</li>
+              <li><strong className="text-foreground">Date de plată:</strong> procesate exclusiv prin Stripe — nu stocăm date bancare pe serverele noastre</li>
+              <li><strong className="text-foreground">Conținut generat:</strong> cursuri, lecții, postări în comunitate, comentarii, mesaje</li>
+              <li><strong className="text-foreground">Date tehnice:</strong> adresă IP, tip browser, dispozitiv, sistem de operare</li>
+              <li><strong className="text-foreground">Date de utilizare:</strong> paginile accesate, progresul în cursuri, interacțiunile din platformă</li>
+            </ul>
+          </Section>
+
+          <Section title="3. Scopurile și temeiul juridic al prelucrării">
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong className="text-foreground">Executarea contractului</strong> — furnizarea platformei, gestionarea contului, procesarea plăților</li>
+              <li><strong className="text-foreground">Interes legitim</strong> — securitate, prevenirea fraudelor, îmbunătățirea serviciilor</li>
+              <li><strong className="text-foreground">Obligație legală</strong> — facturare, arhivare conform legislației fiscale</li>
+              <li><strong className="text-foreground">Consimțământ</strong> — comunicări de marketing (poți retrage oricând)</li>
+            </ul>
+          </Section>
+
+          <Section title="4. Perioada de stocare">
+            <p>
+              Datele de cont sunt păstrate pe durata utilizării platformei și 3 ani după ștergerea contului,
+              conform obligațiilor legale. Datele financiare sunt păstrate 10 ani conform legislației fiscale române.
+              Datele tehnice (log-uri) sunt păstrate maxim 12 luni.
+            </p>
+          </Section>
+
+          <Section title="5. Destinatarii datelor">
+            <p>Putem transmite date către:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong className="text-foreground">Stripe Inc.</strong> — procesare plăți (SUA, cu garanții GDPR)</li>
+              <li><strong className="text-foreground">Supabase Inc.</strong> — infrastructură baze de date (UE/SUA, cu garanții GDPR)</li>
+              <li><strong className="text-foreground">Vercel Inc.</strong> — hosting aplicație web (SUA, cu garanții GDPR)</li>
+              <li><strong className="text-foreground">Resend Inc.</strong> — trimitere emailuri tranzacționale</li>
+              <li><strong className="text-foreground">Autorități publice</strong> — când suntem obligați legal</li>
+            </ul>
+            <p>Nu vindem datele tale niciunei terțe părți.</p>
+          </Section>
+
+          <Section title="6. Drepturile tale (GDPR)">
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong className="text-foreground">Dreptul de acces</strong> — poți solicita o copie a datelor tale</li>
+              <li><strong className="text-foreground">Dreptul la rectificare</strong> — poți corecta datele inexacte</li>
+              <li><strong className="text-foreground">Dreptul la ștergere</strong> — poți solicita ștergerea datelor ("dreptul de a fi uitat")</li>
+              <li><strong className="text-foreground">Dreptul la restricționare</strong> — poți limita prelucrarea în anumite condiții</li>
+              <li><strong className="text-foreground">Dreptul la portabilitate</strong> — poți primi datele în format structurat</li>
+              <li><strong className="text-foreground">Dreptul la opoziție</strong> — poți obiecta față de prelucrarea bazată pe interes legitim</li>
+              <li><strong className="text-foreground">Retragerea consimțământului</strong> — pentru prelucrările bazate pe consimțământ</li>
+            </ul>
+            <p>
+              Pentru exercitarea drepturilor, scrie la{" "}
+              <a href="mailto:contact@docourse.ro" className="text-gold hover:underline">contact@docourse.ro</a>.
+              Răspundem în maxim 30 de zile.
+            </p>
+          </Section>
+
+          <Section title="7. Securitatea datelor">
+            <p>
+              Aplicăm măsuri tehnice și organizatorice adecvate: criptare SSL/TLS, autentificare securizată,
+              control al accesului, monitorizare continuă și backup regulat. Datele sunt stocate pe servere
+              situate în Uniunea Europeană sau cu garanții GDPR echivalente.
+            </p>
+          </Section>
+
+          <Section title="8. Cookie-uri">
+            <p>
+              Utilizăm cookie-uri strict necesare pentru funcționarea platformei și, cu consimțământul tău,
+              cookie-uri analitice. Consultă{" "}
+              <a href="/politica-cookies" className="text-gold hover:underline">Politica de Cookie-uri</a>{" "}
+              pentru detalii.
+            </p>
+          </Section>
+
+          <Section title="9. Modificări ale politicii">
+            <p>
+              Putem actualiza această politică periodic. Te notificăm prin email sau banner în platformă
+              cu cel puțin 14 zile înainte de intrarea în vigoare a modificărilor semnificative.
+            </p>
+          </Section>
+
+          <Section title="10. Contact și plângeri">
+            <p>
+              Pentru orice întrebare privind protecția datelor:{" "}
+              <a href="mailto:contact@docourse.ro" className="text-gold hover:underline">contact@docourse.ro</a>
+            </p>
+            <p>
+              Dacă consideri că drepturile tale au fost încălcate, poți depune plângere la{" "}
+              <strong className="text-foreground">
+                Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)
+              </strong>:{" "}
+              <a href="https://www.dataprotection.ro" target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">
+                www.dataprotection.ro
+              </a>
+            </p>
+          </Section>
+
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 };
 
