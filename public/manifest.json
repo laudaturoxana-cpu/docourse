@@ -2,7 +2,7 @@
   "id": "ro.docourse.app",
   "name": "DoCourse — Cursuri Online România",
   "short_name": "DoCourse",
-  "description": "Platformă română pentru creatori de cursuri online",
+  "description": "Platformă românească pentru creatori de cursuri online",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
