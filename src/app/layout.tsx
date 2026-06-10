@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import { Providers } from "./providers";
 import WebMCPProvider from "@/components/WebMCPProvider";
 import { CookieConsent } from "@/components/CookieConsent";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -72,6 +73,7 @@ export default function RootLayout({
         <Providers>{children}</Providers>
         <WebMCPProvider />
         <CookieConsent />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
