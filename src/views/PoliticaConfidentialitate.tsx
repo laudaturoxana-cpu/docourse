@@ -25,8 +25,8 @@ const PoliticaConfidentialitate = () => {
 
           <Section title="1. Operatorul de date cu caracter personal">
             <p>
-              <strong className="text-foreground">DoChat Marketing Education S.R.L.</strong>, cu sediul în România,
-              CUI 43889803, înregistrată la Registrul Comerțului, email:{" "}
+              <strong className="text-foreground">DoChat Marketing Education S.R.L.</strong>, cu sediul social în
+              Tunari, județul Ilfov, România, CUI 43889803, Reg. Com. J23/1575/2021, email:{" "}
               <a href="mailto:contact@docourse.ro" className="text-gold hover:underline">contact@docourse.ro</a>.
             </p>
             <p>
