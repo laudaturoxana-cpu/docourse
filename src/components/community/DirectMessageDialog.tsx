@@ -58,6 +58,11 @@ const DirectMessageDialog = ({
     const msgs = ((data as Message[]) ?? []).reverse();
     setMessages(msgs);
     setLoading(false);
+    // Marchează mesajele primite ca citite
+    await db.rpc("mark_dms_read", {
+      _plan_id: membershipPlanId,
+      _sender_id: recipient.user_id,
+    });
   };
 
   useEffect(() => {
