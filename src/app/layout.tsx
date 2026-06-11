@@ -49,6 +49,7 @@ export const metadata: Metadata = {
     other: {
       "msvalidate.01": "65BAE6956AC6F2846C305A73112D054F",
       "facebook-domain-verification": "f9sg20pqrljfemhn6nxjkmv6t7u9uw",
+      "indexnow-verification": "65BAE6956AC6F2846C305A73112D054F",
     },
   },
 };
@@ -61,7 +62,6 @@ export default function RootLayout({
   return (
     <html lang="ro" suppressHydrationWarning>
       <head>
-        <meta name="msvalidate.01" content="65BAE6956AC6F2846C305A73112D054F" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />

@@ -138,19 +138,6 @@ export default function PublicCoursePage() {
       
 
 
-        <meta property="og:title" content={course.title} />
-        <meta property="og:description" content={course.description || ""} />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="DoCourse" />
-        {course.image_url && <>
-          <meta property="og:image" content={course.image_url} />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:image" content={course.image_url} />
-        </>}
-        <meta name="twitter:title" content={course.title} />
-        <meta name="twitter:description" content={course.description || ""} />
       
 
       <div className="min-h-screen bg-[#fafaf8] font-sans">
