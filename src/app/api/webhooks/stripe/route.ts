@@ -110,14 +110,20 @@ export async function POST(request: NextRequest) {
         const invoice = event.data.object;
         if (!invoice.subscription) break;
         const email = invoice.customer_email;
-        if (email) await deactivateByEmail(supabase, email);
+        if (email) {
+          await deactivateByEmail(supabase, email);
+          await sendPaymentFailedEmail(email);
+        }
         break;
       }
 
       case "customer.subscription.deleted": {
         const subscription = event.data.object;
         const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
-        if (customerId) await deactivateByCustomerId(supabase, customerId);
+        if (customerId) {
+          const deactivatedEmail = await deactivateByCustomerId(supabase, customerId);
+          if (deactivatedEmail) await sendSubscriptionCancelledEmail(deactivatedEmail);
+        }
         break;
       }
 
@@ -194,7 +200,7 @@ async function deactivateByEmail(supabase: any, email: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function deactivateByCustomerId(supabase: any, customerId: string) {
+async function deactivateByCustomerId(supabase: any, customerId: string): Promise<string | null> {
   let profile = null;
 
   // Caută după stripe_customer_id
@@ -234,7 +240,7 @@ async function deactivateByCustomerId(supabase: any, customerId: string) {
 
   if (!profile) {
     console.log(`No profile for customer ${customerId}`);
-    return;
+    return null;
   }
 
   await supabase
@@ -243,6 +249,7 @@ async function deactivateByCustomerId(supabase: any, customerId: string) {
     .eq("user_id", profile.user_id);
 
   console.log(`Deactivated customer ${customerId} (${profile.email})`);
+  return profile.email ?? null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -264,4 +271,72 @@ async function activateByCustomerId(supabase: any, customerId: string, planType:
     .eq("user_id", profile.user_id);
 
   console.log(`Activated customer ${customerId} (${profile.email}), plan=${planType}`);
+}
+
+async function sendPaymentFailedEmail(email: string) {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) return;
+
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendKey}` },
+    body: JSON.stringify({
+      from: "DoCourse <noreply@docourse.ro>",
+      to: email,
+      subject: "Plata nu a putut fi procesată — contul tău DoCourse a fost suspendat",
+      html: `
+        <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;color:#1a2332">
+          <img src="https://docourse.ro/logo.svg" alt="DoCourse" style="height:36px;margin-bottom:24px" />
+          <h2 style="margin:0 0 16px">Plata nu a putut fi procesată</h2>
+          <p>Bună,</p>
+          <p>Din păcate, ultima plată pentru abonamentul DoCourse nu a putut fi procesată și contul tău a fost suspendat temporar.</p>
+          <p style="background:#fef9ec;border-left:4px solid #d4a017;padding:12px 16px;border-radius:4px">
+            <strong>Toate cursurile, studenții și datele tale sunt în siguranță</strong> — nu se șterge nimic.
+            Contul se reactivează imediat după ce plata este rezolvată.
+          </p>
+          <p>Pentru a relua accesul, actualizează metoda de plată:</p>
+          <a href="https://docourse.ro/subscription-required"
+             style="display:inline-block;background:#d4a017;color:#0a192f;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;margin:8px 0 24px">
+            Reactivează abonamentul
+          </a>
+          <p style="color:#5a6a7a;font-size:13px">Dacă ai întrebări, răspunde la acest email sau scrie la <a href="mailto:contact@docourse.ro">contact@docourse.ro</a>.</p>
+          <p style="color:#5a6a7a;font-size:13px">Echipa DoCourse</p>
+        </div>
+      `,
+    }),
+  });
+}
+
+async function sendSubscriptionCancelledEmail(email: string) {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) return;
+
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${resendKey}` },
+    body: JSON.stringify({
+      from: "DoCourse <noreply@docourse.ro>",
+      to: email,
+      subject: "Abonamentul tău DoCourse a fost anulat",
+      html: `
+        <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;color:#1a2332">
+          <img src="https://docourse.ro/logo.svg" alt="DoCourse" style="height:36px;margin-bottom:24px" />
+          <h2 style="margin:0 0 16px">Abonamentul tău a fost anulat</h2>
+          <p>Bună,</p>
+          <p>Abonamentul tău DoCourse a fost anulat și accesul la platformă a fost suspendat.</p>
+          <p style="background:#fef9ec;border-left:4px solid #d4a017;padding:12px 16px;border-radius:4px">
+            <strong>Cursurile, studenții și toate datele tale sunt păstrate</strong> — nu se șterge nimic.
+            Poți reveni oricând și vei găsi totul exact cum l-ai lăsat.
+          </p>
+          <p>Dacă te-ai răzgândit sau anularea a fost o greșeală, te poți reabona oricând:</p>
+          <a href="https://docourse.ro/pricing"
+             style="display:inline-block;background:#d4a017;color:#0a192f;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;margin:8px 0 24px">
+            Reactivează contul
+          </a>
+          <p style="color:#5a6a7a;font-size:13px">Ai întrebări? Scrie la <a href="mailto:contact@docourse.ro">contact@docourse.ro</a> — suntem aici.</p>
+          <p style="color:#5a6a7a;font-size:13px">Echipa DoCourse</p>
+        </div>
+      `,
+    }),
+  });
 }
