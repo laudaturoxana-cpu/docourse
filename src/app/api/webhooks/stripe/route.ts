@@ -110,10 +110,21 @@ export async function POST(request: NextRequest) {
         const invoice = event.data.object;
         if (!invoice.subscription) break;
         const email = invoice.customer_email;
+        const customerId = typeof invoice.customer === "string" ? invoice.customer : null;
+        let deactivatedEmail: string | null = null;
         if (email) {
           await deactivateByEmail(supabase, email);
-          await sendPaymentFailedEmail(email);
+          deactivatedEmail = email;
+        } else if (customerId) {
+          deactivatedEmail = await deactivateByCustomerId(supabase, customerId);
         }
+        // Fallback: dacă deactivateByEmail nu a găsit userul după email (email null în profiles)
+        // încercăm și după stripe_customer_id
+        if (email && customerId) {
+          await deactivateByCustomerId(supabase, customerId);
+          deactivatedEmail = email;
+        }
+        if (deactivatedEmail) await sendPaymentFailedEmail(deactivatedEmail);
         break;
       }
 
