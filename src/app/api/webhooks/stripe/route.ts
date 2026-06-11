@@ -116,13 +116,8 @@ export async function POST(request: NextRequest) {
 
       case "customer.subscription.deleted": {
         const subscription = event.data.object;
-        const email = subscription.customer_email || subscription.metadata?.customer_email;
-        if (email) await deactivateByEmail(supabase, email);
-        else {
-          // Look up email by stripe_customer_id
-          const customerId = subscription.customer;
-          if (customerId) await deactivateByCustomerId(supabase, customerId);
-        }
+        const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+        if (customerId) await deactivateByCustomerId(supabase, customerId);
         break;
       }
 
@@ -200,11 +195,42 @@ async function deactivateByEmail(supabase: any, email: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function deactivateByCustomerId(supabase: any, customerId: string) {
-  const { data: profile } = await supabase
+  let profile = null;
+
+  // Caută după stripe_customer_id
+  const { data: byId } = await supabase
     .from("profiles")
     .select("user_id, email")
     .eq("stripe_customer_id", customerId)
     .maybeSingle();
+  profile = byId;
+
+  // Fallback: caută email-ul clientului direct din Stripe și deactivează după email
+  if (!profile) {
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+    if (stripeKey) {
+      const res = await fetch(`https://api.stripe.com/v1/customers/${customerId}`, {
+        headers: { Authorization: `Bearer ${stripeKey}` },
+      });
+      const customer = await res.json();
+      const email = customer.email;
+      if (email) {
+        const { data: byEmail } = await supabase
+          .from("profiles")
+          .select("user_id, email")
+          .eq("email", email.toLowerCase())
+          .maybeSingle();
+        profile = byEmail;
+        // Salvăm stripe_customer_id pentru data viitoare
+        if (profile) {
+          await supabase
+            .from("profiles")
+            .update({ stripe_customer_id: customerId })
+            .eq("user_id", profile.user_id);
+        }
+      }
+    }
+  }
 
   if (!profile) {
     console.log(`No profile for customer ${customerId}`);
