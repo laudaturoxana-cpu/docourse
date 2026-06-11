@@ -28,6 +28,7 @@ const Onboarding = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams?.get("session_id");
+  const planTypeFromUrl = searchParams?.get("plan_type") || "starter";
   const { user, signUp, signIn, isLoading: authLoading } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -124,7 +125,7 @@ const Onboarding = () => {
       await fetch("/api/activate-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId, userId: newUserId }),
+        body: JSON.stringify({ sessionId, userId: newUserId, planType: planTypeFromUrl }),
       });
     }
 

@@ -13,15 +13,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Server config missing" }, { status: 500 });
     }
 
-    const { sessionId, userId } = await req.json();
+    const { sessionId, userId, planType: planTypeFromBody } = await req.json();
     if (!sessionId || !userId) {
       return NextResponse.json({ error: "sessionId and userId required" }, { status: 400 });
     }
 
-    let planType = "starter";
+    // Folosim plan_type din request body (trimis din URL success Stripe) ca sursă primară
+    let planType = planTypeFromBody || "starter";
     let stripeCustomerId: string | null = null;
 
-    // Dacă avem cheia Stripe, verificăm sesiunea pentru plan_type exact
+    // Dacă avem cheia Stripe, verificăm sesiunea pentru a confirma și a lua stripe_customer_id
     if (stripeKey) {
       const stripeRes = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
         headers: { Authorization: `Bearer ${stripeKey}` },
