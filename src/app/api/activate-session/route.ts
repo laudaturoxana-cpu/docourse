@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const stripeKey = process.env.STRIPE_SECRET_KEY;
 
-    if (!supabaseUrl || !serviceKey || !stripeKey) {
+    if (!supabaseUrl || !serviceKey) {
       return NextResponse.json({ error: "Server config missing" }, { status: 500 });
     }
 
@@ -18,18 +18,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "sessionId and userId required" }, { status: 400 });
     }
 
-    // Retrieve Stripe session to get plan_type and customer_id
-    const stripeRes = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
-      headers: { Authorization: `Bearer ${stripeKey}` },
-    });
-    const session = await stripeRes.json();
+    let planType = "starter";
+    let stripeCustomerId: string | null = null;
 
-    if (session.error) {
-      return NextResponse.json({ error: "Stripe session not found" }, { status: 400 });
+    // Dacă avem cheia Stripe, verificăm sesiunea pentru plan_type exact
+    if (stripeKey) {
+      const stripeRes = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
+        headers: { Authorization: `Bearer ${stripeKey}` },
+      });
+      const session = await stripeRes.json();
+      if (!session.error) {
+        planType = session.metadata?.plan_type || "starter";
+        stripeCustomerId = typeof session.customer === "string" ? session.customer : null;
+      }
     }
-
-    const planType = session.metadata?.plan_type || "starter";
-    const stripeCustomerId = typeof session.customer === "string" ? session.customer : null;
 
     const admin = createClient(supabaseUrl, serviceKey);
     const update: Record<string, unknown> = {
