@@ -7,6 +7,9 @@ export function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // Nu arătăm bannerul în iOS app (detectăm PWAShell user agent setat de wrapper-ul Xcode)
+    const isIOSApp = /PWAShell/i.test(navigator.userAgent);
+    if (isIOSApp) return;
     const consent = localStorage.getItem("cookie_consent");
     if (!consent) setVisible(true);
   }, []);
