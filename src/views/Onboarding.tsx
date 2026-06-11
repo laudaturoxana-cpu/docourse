@@ -72,7 +72,7 @@ const Onboarding = () => {
 
     setIsLoading(true);
 
-    const { error } = await signUp(formData.email, formData.password, {
+    const { error, userId: newUserId } = await signUp(formData.email, formData.password, {
       full_name: formData.fullName,
       activity: formData.activity,
       role: 'creator'
@@ -81,17 +81,17 @@ const Onboarding = () => {
     if (error) {
       console.error("Signup error details:", error);
 
-      // Emailul există deja (din încercări anterioare) — îl logăm automat
+      // Emailul există deja — îl logăm automat
       if (error.message.includes("already registered") || error.message.includes("User already registered")) {
         const { error: signInError } = await signIn(formData.email, formData.password);
         if (!signInError) {
           if (sessionId) {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
+            const { data: { user: existingUser } } = await supabase.auth.getUser();
+            if (existingUser) {
               await fetch("/api/activate-session", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ sessionId, userId: user.id }),
+                body: JSON.stringify({ sessionId, userId: existingUser.id }),
               });
             }
           }
@@ -100,7 +100,6 @@ const Onboarding = () => {
           setIsLoading(false);
           return;
         }
-        // Parola greșită — îi cerem să meargă la login
         toast({
           title: "Email deja înregistrat",
           description: "Ai deja un cont cu acest email. Mergi la autentificare.",
@@ -120,16 +119,13 @@ const Onboarding = () => {
       return;
     }
 
-    // Dacă vine din Stripe, activăm planul corect cu plan_type din sesiune
-    if (sessionId) {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await fetch("/api/activate-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId, userId: user.id }),
-        });
-      }
+    // Activăm planul folosind userId-ul din signUp direct (nu getUser care poate fi null)
+    if (sessionId && newUserId) {
+      await fetch("/api/activate-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, userId: newUserId }),
+      });
     }
 
     setIsLoading(false);

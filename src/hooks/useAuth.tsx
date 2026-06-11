@@ -77,7 +77,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAdmin: boolean;
   sessionError: string | null;
-  signUp: (email: string, password: string, metadata?: { full_name?: string; activity?: string; subscription_active?: boolean; role?: 'creator' | 'student' }) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, metadata?: { full_name?: string; activity?: string; subscription_active?: boolean; role?: 'creator' | 'student' }) => Promise<{ error: Error | null; userId: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -312,7 +312,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
 
-    return { error: error as Error | null };
+    return { error: error as Error | null, userId: signUpData?.user?.id ?? null };
   };
 
   const signIn = async (email: string, password: string) => {
