@@ -18,8 +18,12 @@ export async function POST(req: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!stripeKey || !supabaseUrl || !serviceKey) {
+  if (!supabaseUrl || !serviceKey) {
     return NextResponse.json({ error: "Config missing" }, { status: 500 });
+  }
+
+  if (!stripeKey) {
+    return NextResponse.json({ error: "STRIPE_SECRET_KEY not set — sync requires Stripe API access" }, { status: 500 });
   }
 
   const supabase = createClient(supabaseUrl, serviceKey);
