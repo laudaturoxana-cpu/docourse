@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Users, Plus, Save, ExternalLink, Copy, CheckCheck, ArrowLeft, Lock, Unlock } from "lucide-react";
+import { Users, Plus, Save, ExternalLink, Copy, CheckCheck, ArrowLeft, Lock, Unlock, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +41,7 @@ export default function CreatorCommunityDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Form state
@@ -158,6 +159,31 @@ export default function CreatorCommunityDashboard() {
     setCommunity((c) => c ? { ...c, name: name.trim(), description: description.trim() || null, slug: slug.trim() } : c);
     toast({ title: "Salvat!" });
     setIsSaving(false);
+  };
+
+  const handleDelete = async () => {
+    if (!community) return;
+    const confirmed = window.confirm(
+      `Sigur vrei să ștergi comunitatea „${community.name}"? Postările, comentariile și membrii vor fi șterse definitiv. Nu se poate anula.`
+    );
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    const { error } = await supabase.from("creator_communities").delete().eq("id", community.id);
+
+    if (error) {
+      toast({ title: "Eroare", description: error.message, variant: "destructive" });
+      setIsDeleting(false);
+      return;
+    }
+
+    setCommunity(null);
+    setName("");
+    setDescription("");
+    setSlug("");
+    setCourseSettings({});
+    toast({ title: "Comunitate ștearsă" });
+    setIsDeleting(false);
   };
 
   const toggleCourse = (courseId: string) => {
@@ -353,7 +379,16 @@ export default function CreatorCommunityDashboard() {
               )}
             </div>
 
-            <div className="flex justify-end pb-8">
+            <div className="flex items-center justify-between pb-8">
+              <Button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                variant="outline"
+                className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+                {isDeleting ? "Se șterge..." : "Șterge comunitatea"}
+              </Button>
               <Button onClick={handleSave} disabled={isSaving} className="bg-gold hover:bg-gold/90 text-navy font-semibold gap-2 px-8">
                 <Save className="w-4 h-4" />
                 {isSaving ? "Se salvează..." : "Salvează"}
