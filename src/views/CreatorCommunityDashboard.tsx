@@ -144,6 +144,15 @@ export default function CreatorCommunityDashboard() {
         course_id: s.course_id,
         access_type: s.access_type,
       }, { onConflict: "community_id,course_id" });
+
+      // Cursanții care au cumpărat deja acest curs primesc acces instant la comunitate
+      if (s.access_type === "paid") {
+        // Supabase generic mismatch — RPC nu e încă în tipurile generate
+        await (supabase.rpc as unknown as (fn: string, args: Record<string, string>) => Promise<unknown>)(
+          "grant_community_access_for_paid_course",
+          { _community_id: community.id, _course_id: s.course_id }
+        );
+      }
     }
 
     setCommunity((c) => c ? { ...c, name: name.trim(), description: description.trim() || null, slug: slug.trim() } : c);
